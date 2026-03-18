@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BarberShop Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --negro: #0a0a0a;
+    --marron: #8B4513;
+    --oro: #C9A84C;
+    --oro-claro: #E8C97A;
+    --crema: #F5EDD8;
+    --gris: #1a1a1a;
+    --gris-medio: #2a2a2a;
+    --texto-suave: #aaa;
+    --rojo: #c0392b;
+    --verde: #27ae60;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--negro);
+    color: var(--crema);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1009 100%);
+    border-bottom: 1px solid var(--oro);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(201,168,76,0.2);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--oro);
+    letter-spacing: 2px;
+    padding: 1rem 0;
+    margin-right: auto;
+    text-shadow: 0 0 20px rgba(201,168,76,0.4);
+  }
+
+  .logo span { color: var(--crema); }
+
+  nav button {
+    background: none;
+    border: none;
+    color: var(--texto-suave);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 1.2rem 1.4rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    position: relative;
+  }
+
+  nav button:hover { color: var(--oro-claro); }
+  nav button.active {
+    color: var(--oro);
+    border-bottom-color: var(--oro);
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── HEADINGS ── */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--oro);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--oro), transparent);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--gris);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--oro); }
+
+  /* ── SERVICIOS ── */
+  .servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .servicio-card {
+    background: var(--gris);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .servicio-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--oro);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+  }
+
+  .servicio-card:hover { border-color: var(--oro); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.15); }
+  .servicio-card:hover::before { transform: scaleY(1); }
+  .servicio-card.selected { border-color: var(--oro); background: #1e1800; }
+  .servicio-card.selected::before { transform: scaleY(1); }
+
+  .servicio-info h3 { font-size: 1rem; font-weight: 600; color: var(--crema); }
+  .servicio-info p { font-size: 0.8rem; color: var(--texto-suave); margin-top: 2px; }
+  .servicio-precio { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--oro); font-weight: 700; }
+
+  /* form add servicio */
+  .form-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 180px; }
+  .form-group label { font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--oro); }
+
+  input, select, textarea {
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: var(--crema);
+    padding: 0.65rem 0.9rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--oro); }
+  input::placeholder { color: #555; }
+  select option { background: #111; }
+
+  /* ── BOTONES ── */
+  .btn {
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-oro { background: var(--oro); color: #0a0a0a; }
+  .btn-oro:hover { background: var(--oro-claro); transform: translateY(-1px); }
+  .btn-danger { background: var(--rojo); color: white; }
+  .btn-danger:hover { background: #e74c3c; }
+  .btn-success { background: var(--verde); color: white; }
+  .btn-success:hover { background: #2ecc71; }
+  .btn-ghost { background: transparent; border: 1px solid var(--oro); color: var(--oro); }
+  .btn-ghost:hover { background: var(--oro); color: #0a0a0a; }
+  .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.78rem; }
+
+  /* ── CAJA ── */
+  .caja-layout { display: grid; grid-template-columns: 1fr 360px; gap: 1.5rem; }
+
+  @media (max-width: 900px) { .caja-layout { grid-template-columns: 1fr; } }
+
+  .carrito {
+    background: var(--gris);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.2rem;
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  .carrito h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--oro);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #333;
+  }
+
+  .carrito-items { display: flex; flex-direction: column; gap: 0.6rem; min-height: 80px; }
+
+  .carrito-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #2a2a2a;
+  }
+
+  .carrito-item-nombre { font-size: 0.9rem; flex: 1; }
+  .carrito-item-precio { color: var(--oro); font-weight: 600; margin: 0 0.75rem; white-space: nowrap; }
+  .carrito-item-del { background: none; border: none; color: #666; cursor: pointer; font-size: 1.1rem; transition: color 0.2s; padding: 0 4px; }
+  .carrito-item-del:hover { color: var(--rojo); }
+
+  .carrito-vacio { text-align: center; color: var(--texto-suave); padding: 2rem 0; font-size: 0.9rem; }
+
+  .carrito-total {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--oro);
+  }
+
+  .carrito-cliente { margin: 1rem 0; }
+
+  .cobrar-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--oro), var(--marron));
+    border: none;
+    border-radius: 8px;
+    color: #0a0a0a;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.75rem;
+  }
+
+  .cobrar-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
+  .cobrar-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ── AGENDA ── */
+  .agenda-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; }
+  @media (max-width: 900px) { .agenda-layout { grid-template-columns: 1fr; } }
+
+  .calendario-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .mes-label { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--oro); }
+
+  .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .cal-header { text-align: center; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--texto-suave); padding: 0.4rem; }
+  
+  .cal-dia {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    background: #111;
+    border: 1px solid transparent;
+    position: relative;
+  }
+
+  .cal-dia:hover { border-color: var(--oro); color: var(--oro); }
+  .cal-dia.otro-mes { opacity: 0.25; cursor: default; }
+  .cal-dia.otro-mes:hover { border-color: transparent; color: var(--crema); }
+  .cal-dia.hoy { background: #1e1800; border-color: var(--oro); color: var(--oro); font-weight: 700; }
+  .cal-dia.seleccionado { background: var(--oro); color: #0a0a0a; font-weight: 700; }
+  .cal-dia.con-citas::after { content: ''; position: absolute; bottom: 4px; width: 5px; height: 5px; border-radius: 50%; background: var(--oro); }
+  .cal-dia.seleccionado::after { background: #0a0a0a; }
+
+  .citas-panel h3 { font-family: 'Playfair Display', serif; color: var(--oro); font-size: 1.1rem; margin-bottom: 1rem; }
+  .cita-item {
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 0.9rem;
+    margin-bottom: 0.6rem;
+    border-left: 3px solid var(--oro);
+    position: relative;
+  }
+
+  .cita-hora { font-size: 0.78rem; color: var(--texto-suave); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .cita-nombre { font-size: 1rem; font-weight: 600; margin: 2px 0; }
+  .cita-servicio { font-size: 0.82rem; color: var(--oro); }
+  .cita-del { position: absolute; top: 0.7rem; right: 0.7rem; background: none; border: none; color: #555; cursor: pointer; font-size: 1rem; }
+  .cita-del:hover { color: var(--rojo); }
+
+  .nueva-cita-form {
+    background: var(--gris);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.2rem;
+  }
+
+  .nueva-cita-form h3 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--oro); margin-bottom: 1rem; }
+
+  /* ── RESÚMENES ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+
+  .stat-card {
+    background: var(--gris);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.4rem;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--oro); }
+  .stat-card .icono { font-size: 2rem; margin-bottom: 0.5rem; }
+  .stat-card .valor { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--oro); font-weight: 700; }
+  .stat-card .etiqueta { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; color: var(--texto-suave); margin-top: 0.25rem; }
+
+  .toggle-periodo { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+
+  .tabla-ventas { width: 100%; border-collapse: collapse; }
+  .tabla-ventas th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    border-bottom: 1px solid #333;
+  }
+
+  .tabla-ventas td { padding: 0.75rem 1rem; border-bottom: 1px solid #1a1a1a; font-size: 0.92rem; }
+  .tabla-ventas tr:last-child td { border-bottom: none; }
+  .tabla-ventas tr:hover td { background: #111; }
+  .monto-verde { color: var(--verde); font-weight: 600; }
+
+  .chart-bar-container { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 1rem 0; }
+  .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+  .chart-bar {
+    width: 100%;
+    background: linear-gradient(to top, var(--marron), var(--oro));
+    border-radius: 3px 3px 0 0;
+    transition: height 0.5s ease;
+    min-height: 2px;
+  }
+
+  .chart-label { font-size: 0.65rem; color: var(--texto-suave); text-align: center; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--gris);
+    border: 1px solid var(--oro);
+    border-radius: 12px;
+    padding: 2rem;
+    width: min(480px, 90vw);
+    text-align: center;
+    animation: modalIn 0.3s ease;
+  }
+
+  @keyframes modalIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--oro); margin-bottom: 0.5rem; }
+  .modal p { color: var(--texto-suave); margin-bottom: 1.5rem; }
+  .modal .total-modal { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--oro); font-weight: 700; margin: 1rem 0; }
+  .modal .metodo-pago { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .metodo-btn { padding: 0.5rem 1.2rem; border: 1px solid #444; border-radius: 6px; background: #111; color: var(--crema); cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; }
+  .metodo-btn.activo, .metodo-btn:hover { border-color: var(--oro); background: #1e1800; color: var(--oro); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--verde);
+    color: white;
+    padding: 0.9rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 300;
+    font-size: 0.9rem;
+  }
+
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: var(--marron); border-radius: 3px; }
+
+  /* ── SEPARADOR ── */
+  .sep { height: 1px; background: linear-gradient(to right, transparent, #333, transparent); margin: 1.5rem 0; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge-oro { background: rgba(201,168,76,0.15); color: var(--oro); border: 1px solid rgba(201,168,76,0.3); }
+  .badge-verde { background: rgba(39,174,96,0.15); color: var(--verde); border: 1px solid rgba(39,174,96,0.3); }
+
+  .empty-state { text-align: center; color: var(--texto-suave); padding: 3rem 0; }
+  .empty-state .emoji { font-size: 3rem; margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">✂ BARBER<span>SHOP</span></div>
+  <button onclick="showSection('servicios')" id="nav-servicios" class="active">Servicios</button>
+  <button onclick="showSection('caja')" id="nav-caja">Caja</button>
+  <button onclick="showSection('agenda')" id="nav-agenda">Agenda</button>
+  <button onclick="showSection('resumenes')" id="nav-resumenes">Resúmenes</button>
+</nav>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SERVICIOS                                  -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section active" id="sec-servicios">
+  <h2>✂ Servicios</h2>
+
+  <div id="servicios-grid" class="servicios-grid"></div>
+
+  <div class="card">
+    <h3 style="font-family:'Playfair Display',serif;color:var(--oro);margin-bottom:1rem;font-size:1rem;">+ Nuevo Servicio</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input id="s-nombre" placeholder="Ej: Corte clásico" />
+      </div>
+      <div class="form-group" style="flex:0 0 120px">
+        <label>Precio (€)</label>
+        <input id="s-precio" type="number" min="0" step="0.5" placeholder="12.00" />
+      </div>
+      <div class="form-group" style="flex:0 0 140px">
+        <label>Duración (min)</label>
+        <input id="s-duracion" type="number" min="5" step="5" placeholder="30" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Descripción</label>
+        <input id="s-desc" placeholder="Breve descripción del servicio" />
+      </div>
+      <div style="display:flex;align-items:flex-end;">
+        <button class="btn btn-oro" onclick="addServicio()">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAJA REGISTRADORA                          -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="sec-caja">
+  <h2>💰 Caja Registradora</h2>
+  <div class="caja-layout">
+    <!-- IZQUIERDA: selección de servicios -->
+    <div>
+      <p style="color:var(--texto-suave);margin-bottom:1rem;font-size:0.9rem;">Selecciona los servicios para añadir al ticket:</p>
+      <div id="caja-servicios" class="servicios-grid"></div>
+    </div>
+
+    <!-- DERECHA: carrito -->
+    <div class="carrito">
+      <h3>🧾 Ticket</h3>
+      <div class="carrito-cliente">
+        <div class="form-group">
+          <label>Cliente</label>
+          <input id="cliente-nombre" placeholder="Nombre del cliente" />
+        </div>
+      </div>
+      <div id="carrito-items" class="carrito-items">
+        <div class="carrito-vacio">El ticket está vacío</div>
+      </div>
+      <div class="carrito-total">
+        <span>Total</span>
+        <span id="carrito-total">€0.00</span>
+      </div>
+      <button class="cobrar-btn" id="cobrar-btn" onclick="abrirModal()" disabled>COBRAR</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:0.5rem;" onclick="limpiarCarrito()">Limpiar ticket</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- AGENDA                                     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="sec-agenda">
+  <h2>📅 Agenda</h2>
+  <div class="agenda-layout">
+    <!-- Calendario -->
+    <div>
+      <div class="calendario-nav">
+        <button class="btn btn-ghost btn-sm" onclick="cambiarMes(-1)">← Ant.</button>
+        <span class="mes-label" id="mes-label"></span>
+        <button class="btn btn-ghost btn-sm" onclick="cambiarMes(1)">Sig. →</button>
+      </div>
+      <div class="card">
+        <div class="calendario-grid" id="cal-grid"></div>
+      </div>
+    </div>
+
+    <!-- Panel citas -->
+    <div>
+      <div class="citas-panel">
+        <h3>📋 Citas del <span id="dia-seleccionado-label">día</span></h3>
+        <div id="lista-citas"></div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="nueva-cita-form">
+        <h3>+ Nueva Cita</h3>
+        <div class="form-group" style="margin-bottom:0.75rem;">
+          <label>Cliente</label>
+          <input id="cita-cliente" placeholder="Nombre del cliente" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Hora</label>
+            <input id="cita-hora" type="time" value="09:00" />
+          </div>
+          <div class="form-group">
+            <label>Servicio</label>
+            <select id="cita-servicio"></select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:0.75rem;">
+          <label>Notas</label>
+          <input id="cita-notas" placeholder="Opcional..." />
+        </div>
+        <button class="btn btn-oro" style="width:100%;" onclick="addCita()">Agendar Cita</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- RESÚMENES                                  -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="sec-resumenes">
+  <h2>📊 Resúmenes de Ventas</h2>
+
+  <div class="toggle-periodo">
+    <button class="btn btn-oro" id="btn-diario" onclick="setPeriodo('diario')">Diario</button>
+    <button class="btn btn-ghost" id="btn-mensual" onclick="setPeriodo('mensual')">Mensual</button>
+    <button class="btn btn-ghost" id="btn-total" onclick="setPeriodo('total')">Total</button>
+  </div>
+
+  <div id="stats-area"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- MODAL COBRO                                -->
+<!-- ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h3>💰 Cobrar</h3>
+    <p id="modal-cliente-label">Cliente</p>
+    <div class="total-modal" id="modal-total">€0.00</div>
+    <div class="metodo-pago">
+      <button class="metodo-btn activo" id="met-efectivo" onclick="selMetodo('efectivo')">💵 Efectivo</button>
+      <button class="metodo-btn" id="met-tarjeta" onclick="selMetodo('tarjeta')">💳 Tarjeta</button>
+      <button class="metodo-btn" id="met-bizum" onclick="selMetodo('bizum')">📱 Bizum</button>
+    </div>
+    <div style="display:flex;gap:1rem;justify-content:center;">
+      <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn btn-success" onclick="confirmarCobro()">✓ Confirmar Cobro</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════
+// DATOS
+// ═══════════════════════════════════
+let servicios = JSON.parse(localStorage.getItem('bsp_servicios') || '[]');
+let ventas = JSON.parse(localStorage.getItem('bsp_ventas') || '[]');
+let citas = JSON.parse(localStorage.getItem('bsp_citas') || '[]');
+
+// Servicios de ejemplo si no hay ninguno
+if (servicios.length === 0) {
+  servicios = [
+    { id: 1, nombre: 'Corte clásico', precio: 12, duracion: 30, desc: 'Corte tradicional con tijera y máquina' },
+    { id: 2, nombre: 'Corte + Barba', precio: 18, duracion: 45, desc: 'Corte de cabello y arreglo de barba' },
+    { id: 3, nombre: 'Arreglo de barba', precio: 8, duracion: 20, desc: 'Perfilado y arreglo de barba' },
+    { id: 4, nombre: 'Afeitado navaja', precio: 14, duracion: 30, desc: 'Afeitado tradicional con navaja' },
+    { id: 5, nombre: 'Corte niño', precio: 8, duracion: 20, desc: 'Corte para menores de 12 años' },
+    { id: 6, nombre: 'Tinte', precio: 20, duracion: 60, desc: 'Tinte completo con productos profesionales' },
+  ];
+  save('servicios');
+}
+
+let carrito = [];
+let metodoPago = 'efectivo';
+let calendarioDate = new Date();
+let diaSeleccionado = new Date();
+
+function save(clave) {
+  localStorage.setItem('bsp_' + clave, JSON.stringify(eval(clave)));
+}
+
+// ═══════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+
+  if (id === 'servicios') renderServicios();
+  if (id === 'caja') renderCajaServicios();
+  if (id === 'agenda') { renderCalendario(); renderCitas(); actualizarSelectServicios(); }
+  if (id === 'resumenes') renderResumenes();
+}
+
+// ═══════════════════════════════════
+// SERVICIOS
+// ═══════════════════════════════════
+function renderServicios() {
+  const grid = document.getElementById('servicios-grid');
+  if (servicios.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="emoji">✂</div><p>No hay servicios aún. ¡Agrega el primero!</p></div>';
+    return;
+  }
+  grid.innerHTML = servicios.map(s => `
+    <div class="servicio-card">
+      <div class="servicio-info">
+        <h3>${s.nombre}</h3>
+        <p>${s.desc || ''} ${s.duracion ? '· ' + s.duracion + ' min' : ''}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
+        <div class="servicio-precio">€${s.precio.toFixed(2)}</div>
+        <button class="btn btn-danger btn-sm" onclick="delServicio(${s.id})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addServicio() {
+  const nombre = document.getElementById('s-nombre').value.trim();
+  const precio = parseFloat(document.getElementById('s-precio').value);
+  const duracion = parseInt(document.getElementById('s-duracion').value) || 0;
+  const desc = document.getElementById('s-desc').value.trim();
+  if (!nombre || isNaN(precio)) return toast('⚠ Rellena nombre y precio', 'var(--rojo)');
+  const id = Date.now();
+  servicios.push({ id, nombre, precio, duracion, desc });
+  save('servicios');
+  document.getElementById('s-nombre').value = '';
+  document.getElementById('s-precio').value = '';
+  document.getElementById('s-duracion').value = '';
+  document.getElementById('s-desc').value = '';
+  renderServicios();
+  toast('✓ Servicio añadido');
+}
+
+function delServicio(id) {
+  servicios = servicios.filter(s => s.id !== id);
+  save('servicios');
+  renderServicios();
+}
+
+// ═══════════════════════════════════
+// CAJA
+// ═══════════════════════════════════
+function renderCajaServicios() {
+  const grid = document.getElementById('caja-servicios');
+  grid.innerHTML = servicios.map(s => `
+    <div class="servicio-card ${carrito.find(c=>c.id===s.id)?'selected':''}" onclick="toggleCarrito(${s.id})">
+      <div class="servicio-info">
+        <h3>${s.nombre}</h3>
+        <p>${s.desc || ''}</p>
+      </div>
+      <div class="servicio-precio">€${s.precio.toFixed(2)}</div>
+    </div>
+  `).join('') || '<p style="color:var(--texto-suave)">Agrega servicios primero en la pestaña Servicios.</p>';
+}
+
+function toggleCarrito(id) {
+  const s = servicios.find(s => s.id === id);
+  if (!s) return;
+  const idx = carrito.findIndex(c => c.id === id);
+  if (idx >= 0) carrito.splice(idx, 1);
+  else carrito.push({ ...s });
+  renderCajaServicios();
+  renderCarrito();
+}
+
+function renderCarrito() {
+  const el = document.getElementById('carrito-items');
+  if (carrito.length === 0) {
+    el.innerHTML = '<div class="carrito-vacio">El ticket está vacío</div>';
+  } else {
+    el.innerHTML = carrito.map(item => `
+      <div class="carrito-item">
+        <span class="carrito-item-nombre">${item.nombre}</span>
+        <span class="carrito-item-precio">€${item.precio.toFixed(2)}</span>
+        <button class="carrito-item-del" onclick="quitarItem(${item.id})">✕</button>
+      </div>
+    `).join('');
+  }
+  const total = carrito.reduce((a, b) => a + b.precio, 0);
+  document.getElementById('carrito-total').textContent = '€' + total.toFixed(2);
+  document.getElementById('cobrar-btn').disabled = carrito.length === 0;
+}
+
+function quitarItem(id) {
+  carrito = carrito.filter(c => c.id !== id);
+  renderCajaServicios();
+  renderCarrito();
+}
+
+function limpiarCarrito() {
+  carrito = [];
+  document.getElementById('cliente-nombre').value = '';
+  renderCajaServicios();
+  renderCarrito();
+}
+
+// ═══════════════════════════════════
+// MODAL COBRO
+// ═══════════════════════════════════
+function abrirModal() {
+  const total = carrito.reduce((a, b) => a + b.precio, 0);
+  const cliente = document.getElementById('cliente-nombre').value.trim() || 'Cliente';
+  document.getElementById('modal-total').textContent = '€' + total.toFixed(2);
+  document.getElementById('modal-cliente-label').textContent = '👤 ' + cliente;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function selMetodo(m) {
+  metodoPago = m;
+  document.querySelectorAll('.metodo-btn').forEach(b => b.classList.remove('activo'));
+  document.getElementById('met-' + m).classList.add('activo');
+}
+
+function confirmarCobro() {
+  const cliente = document.getElementById('cliente-nombre').value.trim() || 'Anónimo';
+  const total = carrito.reduce((a, b) => a + b.precio, 0);
+  const venta = {
+    id: Date.now(),
+    fecha: new Date().toISOString(),
+    cliente,
+    servicios: carrito.map(c => c.nombre),
+    total,
+    metodo: metodoPago
+  };
+  ventas.push(venta);
+  save('ventas');
+  cerrarModal();
+  limpiarCarrito();
+  toast('✓ Cobro registrado: €' + total.toFixed(2));
+}
+
+// ═══════════════════════════════════
+// AGENDA
+// ═══════════════════════════════════
+function actualizarSelectServicios() {
+  const sel = document.getElementById('cita-servicio');
+  sel.innerHTML = servicios.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('') || '<option>Sin servicios</option>';
+}
+
+function renderCalendario() {
+  const mes = calendarioDate.getMonth();
+  const anio = calendarioDate.getFullYear();
+  const hoy = new Date();
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('mes-label').textContent = meses[mes] + ' ' + anio;
+
+  const primero = new Date(anio, mes, 1);
+  const ultimo = new Date(anio, mes + 1, 0);
+  let diasSemana = primero.getDay();
+  if (diasSemana === 0) diasSemana = 7;
+
+  const dias = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  let html = dias.map(d => `<div class="cal-header">${d}</div>`).join('');
+
+  for (let i = 1; i < diasSemana; i++) {
+    const d = new Date(anio, mes, 1 - (diasSemana - i));
+    html += `<div class="cal-dia otro-mes">${d.getDate()}</div>`;
+  }
+
+  for (let d = 1; d <= ultimo.getDate(); d++) {
+    const fecha = new Date(anio, mes, d);
+    const fechaStr = fechaKey(fecha);
+    const esHoy = fecha.toDateString() === hoy.toDateString();
+    const esSeleccionado = fecha.toDateString() === diaSeleccionado.toDateString();
+    const tieneCitas = citas.some(c => c.fecha === fechaStr);
+    html += `<div class="cal-dia${esHoy?' hoy':''}${esSeleccionado?' seleccionado':''}${tieneCitas?' con-citas':''}" onclick="selDia(${d})">${d}</div>`;
+  }
+
+  const totalCeldas = diasSemana - 1 + ultimo.getDate();
+  const resto = totalCeldas % 7;
+  if (resto > 0) {
+    for (let i = 1; i <= 7 - resto; i++) {
+      html += `<div class="cal-dia otro-mes">${i}</div>`;
+    }
+  }
+
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function cambiarMes(dir) {
+  calendarioDate.setMonth(calendarioDate.getMonth() + dir);
+  renderCalendario();
+}
+
+function selDia(d) {
+  diaSeleccionado = new Date(calendarioDate.getFullYear(), calendarioDate.getMonth(), d);
+  renderCalendario();
+  renderCitas();
+}
+
+function fechaKey(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function renderCitas() {
+  const fechaStr = fechaKey(diaSeleccionado);
+  const dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const meses2 = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('dia-seleccionado-label').textContent =
+    `${dias[diaSeleccionado.getDay()]} ${diaSeleccionado.getDate()} de ${meses2[diaSeleccionado.getMonth()]}`;
+
+  const citasDia = citas.filter(c => c.fecha === fechaStr).sort((a,b) => a.hora.localeCompare(b.hora));
+  const el = document.getElementById('lista-citas');
+  if (citasDia.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="emoji">📅</div><p>Sin citas este día</p></div>';
+  } else {
+    el.innerHTML = citasDia.map(c => `
+      <div class="cita-item">
+        <div class="cita-hora">⏰ ${c.hora}</div>
+        <div class="cita-nombre">${c.cliente}</div>
+        <div class="cita-servicio">${c.servicio}</div>
+        ${c.notas ? `<div style="font-size:0.78rem;color:#888;margin-top:2px">📝 ${c.notas}</div>` : ''}
+        <button class="cita-del" onclick="delCita(${c.id})">✕</button>
+      </div>
+    `).join('');
+  }
+}
+
+function addCita() {
+  const cliente = document.getElementById('cita-cliente').value.trim();
+  const hora = document.getElementById('cita-hora').value;
+  const sid = parseInt(document.getElementById('cita-servicio').value);
+  const notas = document.getElementById('cita-notas').value.trim();
+  const servicio = servicios.find(s => s.id === sid);
+  if (!cliente || !hora) return toast('⚠ Rellena cliente y hora', 'var(--rojo)');
+  citas.push({ id: Date.now(), fecha: fechaKey(diaSeleccionado), hora, cliente, servicio: servicio ? servicio.nombre : 'Servicio', notas });
+  save('citas');
+  document.getElementById('cita-cliente').value = '';
+  document.getElementById('cita-notas').value = '';
+  renderCitas();
+  renderCalendario();
+  toast('✓ Cita agendada');
+}
+
+function delCita(id) {
+  citas = citas.filter(c => c.id !== id);
+  save('citas');
+  renderCitas();
+  renderCalendario();
+}
+
+// ═══════════════════════════════════
+// RESÚMENES
+// ═══════════════════════════════════
+let periodoActual = 'diario';
+
+function setPeriodo(p) {
+  periodoActual = p;
+  ['diario','mensual','total'].forEach(x => {
+    document.getElementById('btn-' + x).className = x === p ? 'btn btn-oro' : 'btn btn-ghost';
+  });
+  renderResumenes();
+}
+
+function renderResumenes() {
+  const area = document.getElementById('stats-area');
+  const hoy = new Date();
+
+  let ventasFiltradas = ventas;
+  let titulo = '';
+
+  if (periodoActual === 'diario') {
+    const hoyStr = fechaKey(hoy);
+    ventasFiltradas = ventas.filter(v => v.fecha.startsWith(hoyStr));
+    titulo = 'Hoy · ' + hoy.toLocaleDateString('es-ES');
+  } else if (periodoActual === 'mensual') {
+    const mesStr = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0');
+    ventasFiltradas = ventas.filter(v => v.fecha.startsWith(mesStr));
+    const meses2 = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    titulo = meses2[hoy.getMonth()] + ' ' + hoy.getFullYear();
+  } else {
+    titulo = 'Histórico completo';
+  }
+
+  const totalEur = ventasFiltradas.reduce((a, b) => a + b.total, 0);
+  const numVentas = ventasFiltradas.length;
+  const ticketMedio = numVentas > 0 ? totalEur / numVentas : 0;
+
+  // Servicio más vendido
+  const conteo = {};
+  ventasFiltradas.forEach(v => v.servicios.forEach(s => { conteo[s] = (conteo[s]||0)+1; }));
+  const topServicio = Object.keys(conteo).sort((a,b) => conteo[b]-conteo[a])[0] || '—';
+
+  area.innerHTML = `
+    <p style="color:var(--texto-suave);margin-bottom:1rem;font-size:0.9rem;">${titulo}</p>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="icono">💰</div><div class="valor">€${totalEur.toFixed(2)}</div><div class="etiqueta">Ingresos</div></div>
+      <div class="stat-card"><div class="icono">🧾</div><div class="valor">${numVentas}</div><div class="etiqueta">Ventas</div></div>
+      <div class="stat-card"><div class="icono">📊</div><div class="valor">€${ticketMedio.toFixed(2)}</div><div class="etiqueta">Ticket Medio</div></div>
+      <div class="stat-card"><div class="icono">⭐</div><div class="valor" style="font-size:1.1rem;padding-top:4px">${topServicio}</div><div class="etiqueta">Top Servicio</div></div>
+    </div>
+
+    ${periodoActual !== 'diario' ? renderGrafica(ventasFiltradas, periodoActual) : ''}
+
+    <div class="card" style="margin-top:1.5rem;">
+      <h3 style="font-family:'Playfair Display',serif;color:var(--oro);margin-bottom:1rem;">Últimas ventas</h3>
+      ${ventasFiltradas.length === 0
+        ? '<div class="empty-state"><div class="emoji">📊</div><p>Sin ventas en este período</p></div>'
+        : `<table class="tabla-ventas">
+            <thead><tr>
+              <th>Fecha/Hora</th>
+              <th>Cliente</th>
+              <th>Servicios</th>
+              <th>Método</th>
+              <th>Total</th>
+            </tr></thead>
+            <tbody>
+              ${[...ventasFiltradas].reverse().slice(0,50).map(v => `
+                <tr>
+                  <td style="color:var(--texto-suave);white-space:nowrap">${new Date(v.fecha).toLocaleDateString('es-ES')} ${new Date(v.fecha).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</td>
+                  <td>${v.cliente}</td>
+                  <td style="font-size:0.82rem;color:var(--texto-suave)">${v.servicios.join(', ')}</td>
+                  <td><span class="badge badge-oro">${v.metodo}</span></td>
+                  <td class="monto-verde">€${v.total.toFixed(2)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>`
+      }
+    </div>
+  `;
+}
+
+function renderGrafica(ventas, periodo) {
+  const agrupar = {};
+  ventas.forEach(v => {
+    const d = new Date(v.fecha);
+    const key = periodo === 'mensual'
+      ? d.getDate()
+      : (d.getMonth()+1) + '/' + d.getFullYear();
+    agrupar[key] = (agrupar[key]||0) + v.total;
+  });
+  const keys = Object.keys(agrupar).sort();
+  if (keys.length === 0) return '';
+  const max = Math.max(...Object.values(agrupar));
+  const bars = keys.slice(-14).map(k => {
+    const h = max > 0 ? Math.round((agrupar[k]/max)*100) : 2;
+    return `<div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${h}%"></div>
+      <div class="chart-label">${k}</div>
+    </div>`;
+  }).join('');
+  return `<div class="card" style="margin-top:1rem;">
+    <h3 style="font-family:'Playfair Display',serif;color:var(--oro);margin-bottom:0.75rem;font-size:0.95rem;">Ventas por ${periodo==='mensual'?'día':'mes'}</h3>
+    <div class="chart-bar-container">${bars}</div>
+  </div>`;
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function toast(msg, color) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = color || 'var(--verde)';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+renderServicios();
+</script>
+</body>
+</html>
