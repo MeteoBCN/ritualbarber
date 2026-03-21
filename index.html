@@ -612,6 +612,12 @@ const CATEGORIAS = [
   { id:'otros',        label:'Otros',         icon:'📦' },
 ];
 
+// Versión del listado de servicios — cambia este número si actualizas los servicios
+const SERVICIOS_VERSION = 2;
+if (localStorage.getItem('rb_servicios_v') !== String(SERVICIOS_VERSION)) {
+  localStorage.removeItem('rb_servicios');
+  localStorage.setItem('rb_servicios_v', SERVICIOS_VERSION);
+}
 let servicios = JSON.parse(localStorage.getItem('rb_servicios') || '[]');
 let ventas    = JSON.parse(localStorage.getItem('rb_ventas')    || '[]');
 let citas     = JSON.parse(localStorage.getItem('rb_citas')     || '[]');
@@ -619,15 +625,28 @@ let clientes  = JSON.parse(localStorage.getItem('rb_clientes')  || '[]');
 
 if (servicios.length === 0) {
   servicios = [
-    { id:1, nombre:'Corte clásico',       precio:12, duracion:30, cat:'corte',        desc:'Tijera y máquina' },
-    { id:2, nombre:'Degradado',           precio:14, duracion:35, cat:'corte',        desc:'Máquina y difuminado' },
-    { id:3, nombre:'Corte niño',          precio:8,  duracion:20, cat:'corte',        desc:'Menores de 12 años' },
-    { id:4, nombre:'Arreglo de barba',    precio:8,  duracion:20, cat:'barberia',     desc:'Perfilado y arreglo' },
-    { id:5, nombre:'Afeitado navaja',     precio:14, duracion:30, cat:'barberia',     desc:'Tradicional con navaja' },
-    { id:6, nombre:'Corte + Barba',       precio:18, duracion:50, cat:'combos',       desc:'Corte completo y arreglo de barba' },
-    { id:7, nombre:'Pack Completo',       precio:22, duracion:60, cat:'combos',       desc:'Corte + Barba + Ceja' },
-    { id:8, nombre:'Tinte',              precio:20, duracion:60, cat:'tratamientos', desc:'Tinte profesional completo' },
-    { id:9, nombre:'Hidratación capilar', precio:15, duracion:40, cat:'tratamientos', desc:'Mascarilla y tratamiento' },
+    // CORTES
+    { id:1,  nombre:'Corte de cabello clásico',                    precio:16.50, duracion:30, cat:'corte',        desc:'' },
+    { id:2,  nombre:'Corte de cabello tendencia',                  precio:18.50, duracion:35, cat:'corte',        desc:'' },
+    { id:3,  nombre:'Corte clásico + Barba express',               precio:21.00, duracion:45, cat:'corte',        desc:'' },
+    { id:4,  nombre:'Corte tendencia + Barba express',             precio:23.00, duracion:50, cat:'corte',        desc:'' },
+    { id:5,  nombre:'Corte de cabello clásico + Cejas',            precio:23.50, duracion:40, cat:'corte',        desc:'' },
+    { id:6,  nombre:'Corte de cabello largo',                      precio:19.50, duracion:40, cat:'corte',        desc:'' },
+    { id:7,  nombre:'Degradado express',                           precio:15.50, duracion:25, cat:'corte',        desc:'' },
+    { id:8,  nombre:'Rapado de cabeza',                            precio:15.50, duracion:20, cat:'corte',        desc:'' },
+    { id:9,  nombre:'Corte Niño (hasta 9 años)',                   precio:14.50, duracion:25, cat:'corte',        desc:'' },
+    { id:10, nombre:'Repaso corte clientes semanales',             precio:14.50, duracion:20, cat:'corte',        desc:'' },
+    { id:11, nombre:'Corte + arreglo de barba con ritual afeitado',precio:0,     duracion:60, cat:'corte',        desc:'Consultar precio' },
+    { id:12, nombre:'Corte + arreglo de barba',                    precio:27.00, duracion:55, cat:'corte',        desc:'' },
+    { id:13, nombre:'Corte Jubilado (+65 años)',                   precio:0,     duracion:30, cat:'corte',        desc:'Consultar precio' },
+    // BARBERÍA
+    { id:14, nombre:'Acondicionamiento de barba',                  precio:0,     duracion:20, cat:'barberia',     desc:'Consultar precio' },
+    { id:15, nombre:'Afeitado',                                    precio:0,     duracion:25, cat:'barberia',     desc:'Consultar precio' },
+    { id:16, nombre:'Afeitado con cuchilla',                       precio:0,     duracion:30, cat:'barberia',     desc:'Consultar precio' },
+    // TRATAMIENTOS
+    { id:17, nombre:'Afeitado clásico + toalla caliente',          precio:0,     duracion:35, cat:'tratamientos', desc:'Consultar precio' },
+    { id:18, nombre:'Tratamiento de hidratación',                  precio:0,     duracion:30, cat:'tratamientos', desc:'Consultar precio' },
+    { id:19, nombre:'Exfoliación de barba',                        precio:0,     duracion:25, cat:'tratamientos', desc:'Consultar precio' },
   ];
   save('servicios');
 }
@@ -728,7 +747,7 @@ function renderServicios() {
         <span class="badge-cat bc-${s.cat}">${c.icon} ${c.label}</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;margin-left:0.65rem;">
-        <div class="servicio-precio">€${s.precio.toFixed(2)}</div>
+        <div class="servicio-precio">${s.precio > 0 ? "€"+s.precio.toFixed(2) : "Consultar"}</div>
         <button class="btn btn-danger btn-sm" onclick="delServicio(${s.id})">✕</button>
       </div>
     </div>`);
@@ -765,7 +784,7 @@ function renderCaja() {
   document.getElementById('caja-servicios-lista').innerHTML = renderPorCat(filtroCaja, (s) => `
     <div class="servicio-card ${carrito.find(x=>x.id===s.id)?'selected':''}" data-cat="${s.cat}" onclick="toggleCarrito(${s.id})">
       <div class="servicio-info"><h3>${s.nombre}</h3><p>${s.desc||''}</p></div>
-      <div class="servicio-precio">€${s.precio.toFixed(2)}</div>
+      <div class="servicio-precio">${s.precio > 0 ? "€"+s.precio.toFixed(2) : "Consultar"}</div>
     </div>`);
 }
 
