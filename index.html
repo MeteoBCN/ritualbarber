@@ -288,6 +288,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .inicio-cards {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  justify-content:center;
   gap:1.2rem;
   padding:2.5rem 2rem;
   max-width:1000px; margin:0 auto;
@@ -368,14 +369,13 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ NAV ════════════ -->
 <nav>
-  <div class="logo">RITUAL BARBER <span>Est. 2024</span></div>
-  <button onclick="showSection('inicio')"    id="nav-inicio"    class="active">🏠 Inicio</button>
-  <button onclick="showSection('caja')"      id="nav-caja">💰 Caja</button>
-  <button onclick="showSection('agenda')"    id="nav-agenda">📅 Agenda</button>
-  <button onclick="showSection('clientes')"  id="nav-clientes">👥 Clientes</button>
+  <div class="logo">RITUAL BARBER</div>
+  <button onclick="showSection('inicio')"    id="nav-inicio"    class="active">Inicio</button>
+  <button onclick="showSection('caja')"      id="nav-caja">Caja</button>
+  <button onclick="showSection('clientes')"  id="nav-clientes">Clientes</button>
   <div style="width:1px;background:var(--borde);height:1.4rem;margin:0 0.4rem;align-self:center;"></div>
-  <button onclick="accederPrivado('servicios')" id="nav-servicios">🔒 Servicios</button>
-  <button onclick="accederPrivado('resumenes')" id="nav-resumenes">🔒 Resúmenes</button>
+  <button onclick="accederPrivado('servicios')" id="nav-servicios">Servicios</button>
+  <button onclick="accederPrivado('resumenes')" id="nav-resumenes">Resúmenes</button>
   <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
 </nav>
 
@@ -390,21 +390,60 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
   <div class="inicio-stats" id="inicio-stats" style="margin-top:2rem;"></div>
 
-  <div class="inicio-cards">
+  <div class="inicio-cards" style="justify-content:center;">
     <div class="inicio-card" onclick="showSection('caja')">
       <div class="ic-titulo">Caja</div>
       <div class="ic-desc">Registrar cobros y tickets</div>
-    </div>
-    <div class="inicio-card" onclick="showSection('agenda')">
-      <div class="ic-titulo">Agenda</div>
-      <div class="ic-desc">Citas y reservas del día</div>
     </div>
     <div class="inicio-card" onclick="showSection('clientes')">
       <div class="ic-titulo">Clientes</div>
       <div class="ic-desc">Base de datos de clientes</div>
     </div>
   </div>
-  <div class="inicio-fecha" id="inicio-citas-hoy"></div>
+
+  <!-- AGENDA DEL DÍA INLINE -->
+  <div style="max-width:1000px;margin:0 auto;padding:0 2rem 2.5rem;">
+    <div class="agenda-layout" id="inicio-agenda-layout">
+      <div>
+        <div class="calendario-nav">
+          <button class="btn btn-ghost btn-sm" onclick="cambiarMesInicio(-1)">← Ant.</button>
+          <span class="mes-label" id="mes-label-inicio"></span>
+          <button class="btn btn-ghost btn-sm" onclick="cambiarMesInicio(1)">Sig. →</button>
+        </div>
+        <div class="card"><div class="calendario-grid" id="cal-grid-inicio"></div></div>
+      </div>
+      <div>
+        <div class="citas-panel">
+          <h3>Citas del <span id="dia-seleccionado-label-inicio">día</span></h3>
+          <div id="lista-citas-inicio"></div>
+        </div>
+        <div class="sep"></div>
+        <div class="nueva-cita-form">
+          <h3>+ Nueva Cita</h3>
+          <div class="form-group" style="margin-bottom:0.6rem;">
+            <label>Cliente</label>
+            <input id="cita-cliente-inicio" placeholder="Nombre" list="clientes-datalist3"/>
+            <datalist id="clientes-datalist3"></datalist>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Hora</label>
+              <input id="cita-hora-inicio" type="time" value="09:00"/>
+            </div>
+            <div class="form-group">
+              <label>Servicio</label>
+              <select id="cita-servicio-inicio"></select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0.65rem;">
+            <label>Notas</label>
+            <input id="cita-notas-inicio" placeholder="Opcional..."/>
+          </div>
+          <button class="btn btn-oro" style="width:100%;" onclick="addCitaInicio()">Agendar Cita</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ════════════ CAJA ════════════ -->
@@ -706,8 +745,8 @@ function verificarPass() {
     document.getElementById('modal-login').classList.remove('open');
     document.getElementById('btn-cerrar-sesion').style.display = 'inline-flex';
     // Actualizar iconos del nav
-    document.getElementById('nav-servicios').textContent = '✂ Servicios';
-    document.getElementById('nav-resumenes').textContent = '📊 Resúmenes';
+    document.getElementById('nav-servicios').textContent = 'Servicios';
+    document.getElementById('nav-resumenes').textContent = 'Resúmenes';
     if (seccionPendiente) { showSection(seccionPendiente); seccionPendiente = null; }
   } else {
     const err = document.getElementById('login-error');
@@ -726,8 +765,8 @@ function cerrarLogin() {
 function cerrarSesion() {
   sesionActiva = false;
   document.getElementById('btn-cerrar-sesion').style.display = 'none';
-  document.getElementById('nav-servicios').textContent = '🔒 Servicios';
-  document.getElementById('nav-resumenes').textContent = '🔒 Resúmenes';
+  document.getElementById('nav-servicios').textContent = 'Servicios';
+  document.getElementById('nav-resumenes').textContent = 'Resúmenes';
   showSection('inicio');
   toast('🔒 Sesión cerrada');
 }
@@ -746,6 +785,101 @@ function showSection(id) {
   if (id === 'servicios')  renderServicios();
   if (id === 'clientes')   renderClientes();
   if (id === 'resumenes')  renderResumenes();
+}
+
+// ══════════════════════════════════════
+// AGENDA INLINE EN INICIO
+// ══════════════════════════════════════
+let calendarioDateInicio = new Date();
+let diaSeleccionadoInicio = new Date();
+
+function cambiarMesInicio(dir) {
+  calendarioDateInicio.setMonth(calendarioDateInicio.getMonth() + dir);
+  renderCalendarioInicio();
+}
+
+function selDiaInicio(d) {
+  diaSeleccionadoInicio = new Date(calendarioDateInicio.getFullYear(), calendarioDateInicio.getMonth(), d);
+  renderCalendarioInicio();
+  renderCitasInicio();
+}
+
+function renderCalendarioInicio() {
+  const hoy = new Date();
+  const y = calendarioDateInicio.getFullYear(), m = calendarioDateInicio.getMonth();
+  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const lbl = document.getElementById('mes-label-inicio');
+  if (lbl) lbl.textContent = MESES[m] + ' ' + y;
+  const grid = document.getElementById('cal-grid-inicio');
+  if (!grid) return;
+  const dias = ['L','M','X','J','V','S','D'];
+  let html = dias.map(d => `<div class="cal-header">${d}</div>`).join('');
+  const primerDia = new Date(y, m, 1).getDay();
+  const offset = (primerDia === 0 ? 6 : primerDia - 1);
+  const totalDias = new Date(y, m+1, 0).getDate();
+  const prevDias = new Date(y, m, 0).getDate();
+  for (let i = offset - 1; i >= 0; i--) {
+    html += `<div class="cal-dia otro-mes">${prevDias - i}</div>`;
+  }
+  for (let d = 1; d <= totalDias; d++) {
+    const fk = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const tieneC = citas.some(c => c.fecha === fk);
+    const esHoy = hoy.getFullYear()===y && hoy.getMonth()===m && hoy.getDate()===d;
+    const esSel = diaSeleccionadoInicio.getFullYear()===y && diaSeleccionadoInicio.getMonth()===m && diaSeleccionadoInicio.getDate()===d;
+    html += `<div class="cal-dia${esHoy?' hoy':''}${esSel?' seleccionado':''}${tieneC?' con-citas':''}" onclick="selDiaInicio(${d})">${d}</div>`;
+  }
+  const rest = (offset + totalDias) % 7;
+  if (rest > 0) for (let i = 1; i <= 7 - rest; i++) html += `<div class="cal-dia otro-mes">${i}</div>`;
+  grid.innerHTML = html;
+}
+
+function renderCitasInicio() {
+  const fk = fechaKey(diaSeleccionadoInicio);
+  const lbl = document.getElementById('dia-seleccionado-label-inicio');
+  if (lbl) lbl.textContent = diaSeleccionadoInicio.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+  const lista = document.getElementById('lista-citas-inicio');
+  if (!lista) return;
+  const del_dia = citas.filter(c => c.fecha === fk).sort((a,b) => a.hora.localeCompare(b.hora));
+  lista.innerHTML = del_dia.length === 0
+    ? '<div class="empty-state" style="padding:1rem 0;"><p>Sin citas este día</p></div>'
+    : del_dia.map(c => `<div class="cita-item">
+        <div class="cita-hora">${c.hora}</div>
+        <div class="cita-nombre">${c.cliente}</div>
+        <div class="cita-servicio">${c.servicio}</div>
+        ${c.notas ? `<div style="font-size:0.72rem;color:var(--suave);margin-top:3px;">${c.notas}</div>` : ''}
+        <button class="cita-del" onclick="delCitaInicio(${c.id})">✕</button>
+      </div>`).join('');
+}
+
+function delCitaInicio(id) {
+  citas = citas.filter(c => c.id !== id);
+  save('citas');
+  renderCitasInicio();
+  renderCalendarioInicio();
+}
+
+function actualizarSelectServiciosInicio() {
+  const sel = document.getElementById('cita-servicio-inicio');
+  if (!sel) return;
+  sel.innerHTML = servicios.map(s => `<option value="${s.nombre}">${s.nombre}${s.precio ? ' — €'+s.precio : ''}</option>`).join('');
+  const dl = document.getElementById('clientes-datalist3');
+  if (dl) dl.innerHTML = clientes.filter(c=>!c.archivado).map(c=>`<option value="${c.nombre}">`).join('');
+}
+
+function addCitaInicio() {
+  const cliente = document.getElementById('cita-cliente-inicio').value.trim();
+  const hora    = document.getElementById('cita-hora-inicio').value;
+  const servicio= document.getElementById('cita-servicio-inicio').value;
+  const notas   = document.getElementById('cita-notas-inicio').value.trim();
+  if (!cliente || !hora) return toast('⚠ Cliente y hora son obligatorios','#c0392b');
+  const fk = fechaKey(diaSeleccionadoInicio);
+  citas.push({ id:Date.now(), fecha:fk, hora, cliente, servicio, notas });
+  save('citas');
+  document.getElementById('cita-cliente-inicio').value = '';
+  document.getElementById('cita-notas-inicio').value = '';
+  renderCitasInicio();
+  renderCalendarioInicio();
+  toast('✓ Cita agendada');
 }
 
 // ══════════════════════════════════════
@@ -771,10 +905,9 @@ function renderInicio() {
     <div class="inicio-stat"><div class="v">${totalClientes}</div><div class="l">Clientes</div></div>
   `;
 
-  const proxCitas = citas.filter(c => c.fecha === hoyStr).sort((a,b) => a.hora.localeCompare(b.hora)).slice(0,3);
-  document.getElementById('inicio-citas-hoy').textContent = proxCitas.length > 0
-    ? 'Próximas citas hoy: ' + proxCitas.map(c => c.hora + ' ' + c.cliente).join(' · ')
-    : 'Sin citas para hoy';
+  renderCalendarioInicio();
+  renderCitasInicio();
+  actualizarSelectServiciosInicio();
 }
 
 // ══════════════════════════════════════
