@@ -420,9 +420,12 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   </div>
 
   <!-- AGENDA DEL DÍA -->
-  <div style="max-width:1240px;margin:2rem auto 0;padding:0 2rem 3rem;">
-    <div style="display:grid;grid-template-columns:240px 1fr;gap:1.5rem;align-items:start;">
-      <!-- Calendario -->
+  <div style="max-width:1240px;margin:1.5rem auto 0;padding:0 2rem 3rem;">
+
+    <!-- Fila superior: Calendario + Form nueva cita lado a lado -->
+    <div style="display:grid;grid-template-columns:220px 1fr;gap:1.2rem;align-items:start;margin-bottom:1.2rem;">
+
+      <!-- Calendario mensual -->
       <div>
         <div class="calendario-nav">
           <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
@@ -430,46 +433,68 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
           <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
         </div>
         <div class="card"><div class="calendario-grid" id="cal-grid-i"></div></div>
-        <!-- Form nueva cita -->
-        <div class="nueva-cita-form" style="margin-top:1rem;">
-          <h3 style="margin-bottom:0.8rem;">NUEVA CITA</h3>
-          <div class="form-group" style="margin-bottom:0.5rem;">
+      </div>
+
+      <!-- Form nueva cita -->
+      <div class="nueva-cita-form">
+        <h3 style="margin-bottom:0.8rem;">NUEVA CITA</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div class="form-group">
             <label>Cliente</label>
             <input id="i-cita-cliente" placeholder="Nombre" list="dl-cli-i"/>
             <datalist id="dl-cli-i"></datalist>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Hora</label>
-              <input id="i-cita-hora" type="time" value="09:00"/>
-            </div>
-            <div class="form-group">
-              <label>Empleado</label>
-              <select id="i-cita-emp">
-                <option value="Empleado 1">Empleado 1</option>
-                <option value="Empleado 2">Empleado 2</option>
-                <option value="Empleado 3">Empleado 3</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:0.5rem;">
+          <div class="form-group">
             <label>Servicio</label>
             <select id="i-cita-serv"></select>
           </div>
-          <div class="form-group" style="margin-bottom:0.65rem;">
+          <div class="form-group">
+            <label>Hora</label>
+            <input id="i-cita-hora" type="time" value="09:00"/>
+          </div>
+          <div class="form-group">
+            <label>Empleado</label>
+            <select id="i-cita-emp">
+              <option value="Empleado 1">Empleado 1</option>
+              <option value="Empleado 2">Empleado 2</option>
+              <option value="Empleado 3">Empleado 3</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
             <label>Notas</label>
             <input id="i-cita-notas" placeholder="Opcional..."/>
           </div>
-          <button class="btn btn-oro" style="width:100%;" onclick="addCitaI()">Agendar Cita</button>
         </div>
+        <button class="btn btn-oro" style="width:100%;margin-top:0.65rem;" onclick="addCitaI()">Agendar Cita</button>
       </div>
-      <!-- Vista día por empleado -->
-      <div style="max-height:calc(100vh - 180px);overflow-y:auto;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem;">
-          <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1.1rem;font-weight:700;" id="dia-label-i">Hoy</h3>
-        </div>
-        <div id="vista-dia-i"></div>
+    </div>
+
+    <!-- Horario diario empleados — ancho completo, debajo -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.7rem;">
+        <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1rem;font-weight:700;" id="dia-label-i">Hoy</h3>
       </div>
+      <div id="vista-dia-i" style="overflow-x:auto;"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ MODAL CITA → CAJA ════════ -->
+<div id="modal-cita-caja" class="modal-overlay">
+  <div class="modal" style="text-align:left;max-width:400px;">
+    <h3 style="text-align:center;margin-bottom:0.3rem;">📋 Pasar a Caja</h3>
+    <p style="text-align:center;font-size:0.82rem;color:var(--suave);margin-bottom:1.2rem;" id="mcj-subtitulo"></p>
+    <div style="background:#1a2d27;border-radius:8px;padding:0.9rem 1rem;margin-bottom:1rem;">
+      <div style="font-size:0.72rem;color:var(--suave);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.35rem;">Cliente</div>
+      <div id="mcj-cliente" style="color:var(--oro);font-weight:600;font-size:0.95rem;"></div>
+      <div style="font-size:0.72rem;color:var(--suave);letter-spacing:1px;text-transform:uppercase;margin:0.6rem 0 0.35rem;">Servicio</div>
+      <div id="mcj-servicio" style="color:var(--oro2);font-size:0.88rem;"></div>
+    </div>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+      <button class="btn btn-oro" style="flex:1;" onclick="confirmarPasarCaja()">💰 Abrir en Caja</button>
+      <button class="btn btn-danger btn-sm" style="flex:0 0 auto;" onclick="confirmarEliminarCitaCaja()">🗑 Eliminar cita</button>
+      <button class="btn btn-ghost" style="flex:0 0 auto;" onclick="cerrarModalCitaCaja()">Cancelar</button>
     </div>
   </div>
 </div>
@@ -894,7 +919,7 @@ function renderVistaDiaI() {
         onclick="clickSlotI('${horaStr}','${emp}')" 
         title="Añadir cita ${horaStr} - ${emp}">`;
       if (cita) {
-        html += `<div class="vd-cita-bloque" onclick="event.stopPropagation();delCitaI(${cita.id})" title="Borrar: ${cita.cliente}">
+        html += `<div class="vd-cita-bloque" onclick="event.stopPropagation();abrirModalCitaCaja(${cita.id})" title="${cita.cliente} — ${cita.servicio||'sin servicio'}">
           <div>${cita.cliente}</div>
           <div style="font-weight:400;opacity:0.8;font-size:0.6rem;">${cita.servicio||''}</div>
         </div>`;
@@ -940,6 +965,52 @@ function delCitaI(id) {
   if (!confirm('¿Eliminar esta cita?')) return;
   citas = citas.filter(c => c.id !== id);
   save('citas');
+  renderVistaDiaI();
+  renderCalI();
+  toast('Cita eliminada');
+}
+
+// ── MODAL CITA → CAJA ──
+let _citaCajaId = null;
+
+function abrirModalCitaCaja(id) {
+  const cita = citas.find(c => c.id === id); if (!cita) return;
+  _citaCajaId = id;
+  document.getElementById('mcj-subtitulo').textContent = (cita.hora||'') + ' · ' + (cita.empleado||'');
+  document.getElementById('mcj-cliente').textContent   = cita.cliente || '—';
+  document.getElementById('mcj-servicio').textContent  = cita.servicio || '(sin servicio asignado)';
+  document.getElementById('modal-cita-caja').classList.add('open');
+}
+
+function cerrarModalCitaCaja() {
+  document.getElementById('modal-cita-caja').classList.remove('open');
+  _citaCajaId = null;
+}
+
+function confirmarPasarCaja() {
+  const cita = citas.find(c => c.id === _citaCajaId); if (!cita) return;
+  // Limpiar carrito y cargar servicio
+  carrito = [];
+  const serv = servicios.find(s => s.nombre === cita.servicio);
+  if (serv) carrito.push({...serv});
+  // Poner cliente en caja
+  cerrarModalCitaCaja();
+  showSection('caja');
+  setTimeout(() => {
+    document.getElementById('cliente-nombre').value = cita.cliente || '';
+    renderCaja();
+    renderCarrito();
+    actualizarDatalistClientes();
+    if (serv) toast('✓ Cita cargada en caja: ' + serv.nombre);
+    else toast('⚠ Servicio no encontrado, añádelo manualmente', '#c0392b');
+  }, 80);
+}
+
+function confirmarEliminarCitaCaja() {
+  if (!confirm('¿Eliminar esta cita?')) return;
+  citas = citas.filter(c => c.id !== _citaCajaId);
+  save('citas');
+  cerrarModalCitaCaja();
   renderVistaDiaI();
   renderCalI();
   toast('Cita eliminada');
