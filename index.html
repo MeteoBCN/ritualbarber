@@ -410,7 +410,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
   <div class="inicio-stats" id="inicio-stats" style="margin-top:2rem;"></div>
 
-  <div class="inicio-cards" style="justify-content:center;max-width:600px;margin:0 auto;">
+  <div class="inicio-cards" style="justify-content:center;max-width:600px;margin:0 auto 0.5rem;">
     <div class="inicio-card" onclick="showSection('caja')">
       <div class="ic-titulo">CAJA</div>
     </div>
@@ -422,23 +422,23 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   <!-- AGENDA DEL DÍA -->
   <div style="max-width:1240px;margin:1.5rem auto 0;padding:0 2rem 3rem;">
 
-    <!-- Fila superior: Calendario + Form nueva cita lado a lado -->
-    <div style="display:grid;grid-template-columns:220px 1fr;gap:1.2rem;align-items:start;margin-bottom:1.2rem;">
+    <!-- FILA 1: Calendario + Formulario nueva cita (flexbox, no grid) -->
+    <div style="display:flex;gap:1.2rem;align-items:flex-start;flex-wrap:wrap;margin-bottom:1.4rem;">
 
-      <!-- Calendario mensual -->
-      <div>
-        <div class="calendario-nav">
+      <!-- Calendario mensual — ancho fijo, no crece -->
+      <div style="flex:0 0 210px;min-width:210px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
           <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
-          <span class="mes-label" id="mes-label-i"></span>
+          <span class="mes-label" id="mes-label-i" style="font-size:0.88rem;"></span>
           <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
         </div>
-        <div class="card"><div class="calendario-grid" id="cal-grid-i"></div></div>
+        <div class="card" style="padding:0.7rem;"><div class="calendario-grid" id="cal-grid-i"></div></div>
       </div>
 
-      <!-- Form nueva cita -->
-      <div class="nueva-cita-form">
-        <h3 style="margin-bottom:0.8rem;">NUEVA CITA</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+      <!-- Formulario nueva cita — ocupa el resto -->
+      <div class="nueva-cita-form" style="flex:1;min-width:260px;">
+        <h3 style="margin-bottom:0.75rem;font-size:0.85rem;">NUEVA CITA</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
           <div class="form-group">
             <label>Cliente</label>
             <input id="i-cita-cliente" placeholder="Nombre" list="dl-cli-i"/>
@@ -465,15 +465,13 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
             <input id="i-cita-notas" placeholder="Opcional..."/>
           </div>
         </div>
-        <button class="btn btn-oro" style="width:100%;margin-top:0.65rem;" onclick="addCitaI()">Agendar Cita</button>
+        <button class="btn btn-oro" style="width:100%;margin-top:0.6rem;" onclick="addCitaI()">Agendar Cita</button>
       </div>
     </div>
 
-    <!-- Horario diario empleados — ancho completo, debajo -->
-    <div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.7rem;">
-        <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1rem;font-weight:700;" id="dia-label-i">Hoy</h3>
-      </div>
+    <!-- FILA 2: Horario diario empleados — ancho completo, separado -->
+    <div style="border-top:1px solid var(--borde);padding-top:1rem;">
+      <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1rem;font-weight:700;margin-bottom:0.7rem;" id="dia-label-i">Hoy</h3>
       <div id="vista-dia-i" style="overflow-x:auto;"></div>
     </div>
 
