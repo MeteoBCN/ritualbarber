@@ -189,8 +189,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .calendario-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
 .mes-label { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--oro); font-weight:600; }
 .calendario-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
-.cal-header { text-align:center; font-size:0.55rem; font-weight:700; letter-spacing:0; text-transform:uppercase; color:var(--suave); padding:0.18rem 0; }
-.cal-dia { display:flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer; font-size:0.7rem; transition:all 0.2s; background:#26413a; border:1px solid transparent; position:relative; color:#ccb57f; padding:0.2rem 0; }
+.cal-header { text-align:center; font-size:0.6rem; font-weight:700; letter-spacing:0; text-transform:uppercase; color:var(--suave); padding:0.25rem 0; }
+.cal-dia { display:flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer; font-size:0.78rem; transition:all 0.2s; background:#26413a; border:1px solid transparent; position:relative; color:#ccb57f; padding:0.28rem 0; }
 .cal-dia:hover { border-color:var(--oro); color:var(--oro); }
 .cal-dia.otro-mes { opacity:0.2; cursor:default; }
 .cal-dia.otro-mes:hover { border-color:transparent; color:var(--texto); }
@@ -348,10 +348,10 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 
 /* ── VISTA DÍA EMPLEADOS ── */
-.vd-grid { display:grid; grid-template-columns:60px repeat(3,1fr); gap:0; border:1px solid var(--borde); border-radius:10px; overflow:hidden; }
-.vd-head { background:#1a2d27; padding:0.35rem 0.3rem; text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--oro); border-bottom:2px solid var(--borde); }
+.vd-grid { display:grid; grid-template-columns:44px repeat(3,1fr); gap:0; border:1px solid var(--borde); border-radius:10px; overflow:hidden; max-width:680px; }
+.vd-head { background:#1a2d27; padding:0.3rem 0.2rem; text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--oro); border-bottom:2px solid var(--borde); }
 .vd-hora { background:#1a2d27; padding:0 0.3rem; display:flex; align-items:flex-start; justify-content:flex-end; font-size:0.56rem; color:var(--suave); font-weight:600; letter-spacing:0.5px; padding-top:2px; border-right:1px solid var(--borde); }
-.vd-cell { background:var(--card); border-left:1px solid var(--borde); border-bottom:1px solid rgba(61,96,87,0.4); min-height:18px; position:relative; cursor:pointer; transition:background 0.15s; }
+.vd-cell { background:var(--card); border-left:1px solid var(--borde); border-bottom:1px solid rgba(61,96,87,0.4); min-height:16px; position:relative; cursor:pointer; transition:background 0.15s; }
 .vd-cell:hover { background:var(--card2); }
 .vd-cell.hora-par { background:rgba(26,45,39,0.5); }
 .vd-cell.hora-par:hover { background:var(--card2); }
@@ -417,66 +417,54 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   <!-- AGENDA -->
   <div style="padding:1.5rem 2rem 3rem;">
 
-    <!-- Fila 1: Calendario + Formulario, usando table-layout para evitar cualquier solapamiento -->
-    <div style="display:block;margin-bottom:1.2rem;">
-      <div style="display:flex;gap:1rem;align-items:flex-start;">
+    <!-- Fila 1: Calendario (izq) + Formulario compacto (der) — misma altura -->
+    <div style="display:flex;gap:0.9rem;align-items:stretch;margin-bottom:1.2rem;">
 
-        <!-- Calendario: contenedor con overflow:hidden para evitar que se salga -->
-        <div style="width:195px;flex-shrink:0;overflow:hidden;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
-            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
-            <span style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
-            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.6rem;box-sizing:border-box;">
-            <div class="calendario-grid" id="cal-grid-i"></div>
-          </div>
+      <!-- Calendario: 260px fijo, más grande -->
+      <div style="width:260px;flex-shrink:0;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
+          <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:0.92rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
+          <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
         </div>
-
-        <!-- Formulario: ocupa el resto, overflow:hidden también -->
-        <div style="flex:1;overflow:hidden;background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.65rem;box-sizing:border-box;">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:0.82rem;color:var(--oro);font-weight:600;margin-bottom:0.5rem;letter-spacing:1px;">NUEVA CITA</div>
-          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.4rem;">
-            <div style="flex:1;min-width:110px;">
-              <div class="form-group">
-                <label>Cliente</label>
-                <input id="i-cita-cliente" placeholder="Nombre" list="dl-cli-i"/>
-                <datalist id="dl-cli-i"></datalist>
-              </div>
-            </div>
-            <div style="flex:1;min-width:120px;">
-              <div class="form-group">
-                <label>Servicio</label>
-                <select id="i-cita-serv"></select>
-              </div>
-            </div>
-            <div style="flex:0 0 90px;">
-              <div class="form-group">
-                <label>Hora</label>
-                <input id="i-cita-hora" type="time" value="09:00"/>
-              </div>
-            </div>
-            <div style="flex:0 0 110px;">
-              <div class="form-group">
-                <label>Empleado</label>
-                <select id="i-cita-emp">
-                  <option value="Empleado 1">Empleado 1</option>
-                  <option value="Empleado 2">Empleado 2</option>
-                  <option value="Empleado 3">Empleado 3</option>
-                </select>
-              </div>
-            </div>
-            <div style="flex:1;min-width:140px;">
-              <div class="form-group">
-                <label>Notas</label>
-                <input id="i-cita-notas" placeholder="Opcional..."/>
-              </div>
-            </div>
-          </div>
-          <button class="btn btn-oro btn-sm" style="width:100%;padding:0.42rem;" onclick="addCitaI()">Agendar Cita</button>
+        <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;box-sizing:border-box;flex:1;">
+          <div class="calendario-grid" id="cal-grid-i"></div>
         </div>
-
       </div>
+
+      <!-- Formulario: ocupa el resto, mismo alto que el calendario -->
+      <div style="flex:1;min-width:0;background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:0.8rem;color:var(--oro);font-weight:600;margin-bottom:0.45rem;letter-spacing:1px;">NUEVA CITA</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 80px 110px;gap:0.4rem;margin-bottom:0.4rem;">
+          <div class="form-group" style="margin:0;">
+            <label>Cliente</label>
+            <input id="i-cita-cliente" placeholder="Nombre" list="dl-cli-i"/>
+            <datalist id="dl-cli-i"></datalist>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label>Servicio</label>
+            <select id="i-cita-serv"></select>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label>Hora</label>
+            <input id="i-cita-hora" type="time" value="09:00"/>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label>Empleado</label>
+            <select id="i-cita-emp">
+              <option value="Empleado 1">Empleado 1</option>
+              <option value="Empleado 2">Empleado 2</option>
+              <option value="Empleado 3">Empleado 3</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0;grid-column:1/-1;">
+            <label>Notas</label>
+            <input id="i-cita-notas" placeholder="Opcional..."/>
+          </div>
+        </div>
+        <button class="btn btn-oro" style="width:100%;padding:0.38rem 0;font-size:0.75rem;" onclick="addCitaI()">Agendar Cita</button>
+      </div>
+
     </div>
 
     <!-- Fila 2: Horario empleados, siempre debajo -->
