@@ -1034,14 +1034,6 @@ function renderInicio() {
   document.getElementById('hero-fecha').textContent =
     DIAS[hoy.getDay()].toUpperCase() + ', ' + hoy.getDate() + ' DE ' + MESES[hoy.getMonth()].toUpperCase() + ' ' + hoy.getFullYear();
 
-  const hoyStr = fechaKey(hoy);
-  const ventasHoy = ventas.filter(v => v.fecha.startsWith(hoyStr));
-  const totalHoy  = ventasHoy.reduce((a,b) => a+b.total, 0);
-  const citasHoy  = citas.filter(c => c.fecha === hoyStr).length;
-  const totalClientes = clientes.filter(c => !c.archivado).length;
-
-  document.getElementById('inicio-stats').innerHTML = '';
-
   renderCalI();
   renderVistaDiaI();
 }
