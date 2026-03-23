@@ -7,17 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --fondo:    #26413a;
-  --fondo2:   #1e332c;
-  --fondo3:   #1a2d27;
-  --card:     #2e4e46;
-  --card2:    #354f48;
+  --fondo:    #ffffff;
+  --fondo2:   #f4f4f2;
+  --fondo3:   #eeeeeb;
+  --card:     #26413a;
+  --card2:    #2e4e46;
   --borde:    #3d6057;
   --oro:      #ccb57f;
-  --oro2:     #e0cc9e;
-  --oro3:     #a8914a;
-  --texto:    #ccb57f;
-  --suave:    #8aaa9e;
+  --oro2:     #a8914a;
+  --oro3:     #8a7339;
+  --texto:    #26413a;
+  --suave:    #4a7068;
   --rojo:     #c0392b;
   --verde:    #2e7d5a;
   --verde2:   #38a16e;
@@ -28,7 +28,7 @@ body { background:var(--fondo); color:var(--texto); font-family:'Barlow',sans-se
 
 /* ── NAV ── */
 nav {
-  background:var(--fondo3);
+  background:#1a2d27;
   border-bottom:1px solid var(--borde);
   padding:0 1.5rem;
   display:flex; align-items:center; flex-wrap:wrap;
@@ -84,7 +84,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 .form-group label { font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--suave); }
 
 input, select, textarea {
-  background:var(--fondo2);
+  background:#26413a;
   border:1px solid var(--borde);
   border-radius:7px; color:var(--oro);
   padding:0.58rem 0.85rem;
@@ -118,8 +118,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .cat-tabs { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.4rem; }
 .cat-tab {
   padding:0.38rem 0.95rem; border-radius:99px;
-  border:1px solid var(--borde); background:var(--fondo2);
-  color:var(--suave); font-family:'Barlow Condensed',sans-serif;
+  border:1px solid var(--borde); background:#26413a;
+  color:#ccb57f; font-family:'Barlow Condensed',sans-serif;
   font-size:0.75rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
   cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:0.4rem;
 }
@@ -172,7 +172,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 }
 .carrito h3 { font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--oro); margin-bottom:0.9rem; padding-bottom:0.6rem; border-bottom:1px solid var(--borde); }
 .carrito-items { display:flex; flex-direction:column; gap:0.45rem; min-height:55px; }
-.carrito-item { display:flex; justify-content:space-between; align-items:center; background:var(--fondo2); border-radius:6px; padding:0.5rem 0.7rem; border:1px solid var(--borde); }
+.carrito-item { display:flex; justify-content:space-between; align-items:center; background:#26413a; border-radius:6px; padding:0.5rem 0.7rem; border:1px solid var(--borde); }
 .carrito-item-nombre { font-size:0.84rem; flex:1; color:var(--oro); }
 .carrito-item-precio { color:var(--oro2); font-weight:600; margin:0 0.55rem; white-space:nowrap; font-size:0.88rem; }
 .carrito-item-del { background:none; border:none; color:var(--suave); cursor:pointer; font-size:0.9rem; transition:color 0.2s; }
@@ -190,7 +190,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .mes-label { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--oro); font-weight:600; }
 .calendario-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
 .cal-header { text-align:center; font-size:0.63rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--suave); padding:0.38rem; }
-.cal-dia { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; font-size:0.84rem; transition:all 0.2s; background:var(--fondo2); border:1px solid transparent; position:relative; }
+.cal-dia { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; font-size:0.84rem; transition:all 0.2s; background:#26413a; border:1px solid transparent; position:relative; color:#ccb57f; }
 .cal-dia:hover { border-color:var(--oro); color:var(--oro); }
 .cal-dia.otro-mes { opacity:0.2; cursor:default; }
 .cal-dia.otro-mes:hover { border-color:transparent; color:var(--texto); }
@@ -199,7 +199,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .cal-dia.con-citas::after { content:''; position:absolute; bottom:3px; width:4px; height:4px; border-radius:50%; background:var(--oro); }
 .cal-dia.seleccionado::after { background:var(--fondo3); }
 .citas-panel h3 { font-family:'Cormorant Garamond',serif; color:var(--oro); font-size:1rem; margin-bottom:0.85rem; font-weight:600; }
-.cita-item { background:var(--fondo2); border:1px solid var(--borde); border-radius:8px; padding:0.78rem; margin-bottom:0.5rem; border-left:3px solid var(--oro); position:relative; }
+.cita-item { background:#26413a; border:1px solid var(--borde); border-radius:8px; padding:0.78rem; margin-bottom:0.5rem; border-left:3px solid var(--oro); position:relative; }
 .cita-hora { font-size:0.7rem; color:var(--suave); font-weight:600; letter-spacing:1px; text-transform:uppercase; }
 .cita-nombre { font-size:0.9rem; font-weight:600; color:var(--oro); margin:2px 0; }
 .cita-servicio { font-size:0.76rem; color:var(--oro2); }
@@ -256,7 +256,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 /* ── INICIO ── */
 #sec-inicio { padding:0; max-width:none; }
 .inicio-hero {
-  background:linear-gradient(160deg, var(--fondo3) 0%, var(--fondo) 60%);
+  background:linear-gradient(160deg, #1a2d27 0%, #26413a 60%);
   padding:4rem 2rem 3rem;
   text-align:center;
   border-bottom:1px solid var(--borde);
@@ -347,6 +347,21 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .empty-state .emoji { font-size:2.2rem; margin-bottom:0.6rem; }
 
 ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--fondo2);} ::-webkit-scrollbar-thumb{background:var(--oro3);border-radius:3px;}
+
+/* ── ÁREA PRIVADA ── */
+#modal-login { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:500; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+#modal-login.open { display:flex; }
+.login-box { background:#1a2d27; border:1px solid var(--oro); border-radius:16px; padding:2.4rem 2rem; width:min(380px,90vw); text-align:center; animation:modalIn 0.3s ease; box-shadow:0 24px 60px rgba(0,0,0,0.6); }
+.login-box .lock-grande { font-size:2.8rem; margin-bottom:0.7rem; display:block; }
+.login-box h3 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--oro); font-weight:700; margin-bottom:0.25rem; }
+.login-box p { color:var(--suave); font-size:0.82rem; margin-bottom:1.4rem; letter-spacing:0.5px; }
+.login-box input[type=password] { background:#26413a; border:1px solid var(--borde); border-radius:8px; color:var(--oro); padding:0.75rem 1rem; font-size:1rem; width:100%; margin-bottom:0.9rem; text-align:center; letter-spacing:4px; font-family:'Barlow',sans-serif; }
+.login-box input[type=password]:focus { outline:none; border-color:var(--oro); }
+.login-box input[type=password]::placeholder { letter-spacing:1px; font-size:0.85rem; }
+.login-error { color:#e74c3c; font-size:0.8rem; margin-bottom:0.7rem; min-height:1.1rem; }
+.login-btns { display:flex; gap:0.8rem; justify-content:center; margin-top:0.3rem; }
+.btn-cerrar-sesion { background:transparent; border:1px solid rgba(204,181,127,0.25); color:var(--suave); font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:0.45rem 0.9rem; cursor:pointer; border-radius:6px; transition:all 0.2s; }
+.btn-cerrar-sesion:hover { border-color:#c0392b; color:#c0392b; }
 </style>
 </head>
 <body>
@@ -357,9 +372,11 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   <button onclick="showSection('inicio')"    id="nav-inicio"    class="active">🏠 Inicio</button>
   <button onclick="showSection('caja')"      id="nav-caja">💰 Caja</button>
   <button onclick="showSection('agenda')"    id="nav-agenda">📅 Agenda</button>
-  <button onclick="showSection('servicios')" id="nav-servicios">✂ Servicios</button>
   <button onclick="showSection('clientes')"  id="nav-clientes">👥 Clientes</button>
-  <button onclick="showSection('resumenes')" id="nav-resumenes">📊 Resúmenes</button>
+  <div style="width:1px;background:var(--borde);height:1.4rem;margin:0 0.4rem;align-self:center;"></div>
+  <button onclick="accederPrivado('servicios')" id="nav-servicios">🔒 Servicios</button>
+  <button onclick="accederPrivado('resumenes')" id="nav-resumenes">🔒 Resúmenes</button>
+  <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
 </nav>
 
 <!-- ════════════ INICIO ════════════ -->
@@ -384,7 +401,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="ic-titulo">Agenda</div>
       <div class="ic-desc">Citas y reservas del día</div>
     </div>
-    <div class="inicio-card" onclick="showSection('servicios')">
+    <div class="inicio-card" onclick="accederPrivado('servicios')">
       <span class="ic-emoji">✂</span>
       <div class="ic-titulo">Servicios</div>
       <div class="ic-desc">Gestionar precios y categorías</div>
@@ -394,7 +411,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="ic-titulo">Clientes</div>
       <div class="ic-desc">Base de datos de clientes</div>
     </div>
-    <div class="inicio-card" onclick="showSection('resumenes')">
+    <div class="inicio-card" onclick="accederPrivado('resumenes')">
       <span class="ic-emoji">📊</span>
       <div class="ic-titulo">Resúmenes</div>
       <div class="ic-desc">Ventas diarias y mensuales</div>
@@ -598,6 +615,22 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   </div>
 </div>
 
+
+<!-- ════════════ MODAL LOGIN PRIVADO ════════════ -->
+<div id="modal-login">
+  <div class="login-box">
+    <span class="lock-grande">🔐</span>
+    <h3>Área Privada</h3>
+    <p>Introduce la contraseña para acceder</p>
+    <input type="password" id="login-pass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')verificarPass()" autocomplete="off" />
+    <div class="login-error" id="login-error"></div>
+    <div class="login-btns">
+      <button class="btn btn-ghost" onclick="cerrarLogin()">Cancelar</button>
+      <button class="btn btn-oro" onclick="verificarPass()">🔓 Acceder</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -660,6 +693,56 @@ let calendarioDate = new Date(), diaSeleccionado = new Date();
 function save(c) {
   const data = c === 'servicios' ? servicios : c === 'ventas' ? ventas : c === 'citas' ? citas : clientes;
   localStorage.setItem('rb_' + c, JSON.stringify(data));
+}
+
+// ══════════════════════════════════════
+// ÁREA PRIVADA — AUTENTICACIÓN
+// ══════════════════════════════════════
+const PASS_HASH = 'ritual2024'; // ← cambia aquí la contraseña
+const SECCIONES_PRIVADAS = ['servicios', 'resumenes'];
+let sesionActiva = false;
+let seccionPendiente = null;
+
+function accederPrivado(id) {
+  if (sesionActiva) { showSection(id); return; }
+  seccionPendiente = id;
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('modal-login').classList.add('open');
+  setTimeout(() => document.getElementById('login-pass').focus(), 100);
+}
+
+function verificarPass() {
+  const pass = document.getElementById('login-pass').value;
+  if (pass === PASS_HASH) {
+    sesionActiva = true;
+    document.getElementById('modal-login').classList.remove('open');
+    document.getElementById('btn-cerrar-sesion').style.display = 'inline-flex';
+    // Actualizar iconos del nav
+    document.getElementById('nav-servicios').textContent = '✂ Servicios';
+    document.getElementById('nav-resumenes').textContent = '📊 Resúmenes';
+    if (seccionPendiente) { showSection(seccionPendiente); seccionPendiente = null; }
+  } else {
+    const err = document.getElementById('login-error');
+    err.textContent = '✕ Contraseña incorrecta';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+    setTimeout(() => err.textContent = '', 2500);
+  }
+}
+
+function cerrarLogin() {
+  document.getElementById('modal-login').classList.remove('open');
+  seccionPendiente = null;
+}
+
+function cerrarSesion() {
+  sesionActiva = false;
+  document.getElementById('btn-cerrar-sesion').style.display = 'none';
+  document.getElementById('nav-servicios').textContent = '🔒 Servicios';
+  document.getElementById('nav-resumenes').textContent = '🔒 Resúmenes';
+  showSection('inicio');
+  toast('🔒 Sesión cerrada');
 }
 
 // ══════════════════════════════════════
