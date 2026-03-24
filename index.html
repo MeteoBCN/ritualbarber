@@ -368,6 +368,93 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 }
 .vd-cita-bloque:hover { filter:brightness(1.1); }
 
+
+/* ══ RESPONSIVE MOBILE ══ */
+
+/* Hamburger */
+.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:0.6rem; margin-left:auto; }
+.hamburger span { display:block; width:22px; height:2px; background:var(--oro); border-radius:2px; transition:all 0.3s; }
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+.nav-links { display:flex; align-items:center; flex-wrap:wrap; flex:1; }
+.nav-sep { width:1px; background:var(--borde); height:1.4rem; margin:0 0.4rem; align-self:center; }
+
+@media(max-width:700px) {
+  /* Nav */
+  nav { flex-wrap:nowrap; padding:0 1rem; position:relative; }
+  .logo { font-size:1.1rem; letter-spacing:2px; }
+  .hamburger { display:flex; }
+  .nav-links {
+    display:none; flex-direction:column; align-items:stretch;
+    position:absolute; top:100%; left:0; right:0;
+    background:#1a2d27; border-top:1px solid var(--borde);
+    box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:300;
+    padding:0.5rem 0;
+  }
+  .nav-links.open { display:flex; }
+  .nav-links button { padding:0.9rem 1.5rem; text-align:left; border-bottom:1px solid rgba(61,96,87,0.3); font-size:0.85rem; }
+  .nav-links button:last-child { border-bottom:none; }
+  .nav-sep { display:none; }
+  .btn-cerrar-sesion { margin:0.3rem 1rem; width:calc(100% - 2rem); text-align:center; }
+
+  /* Secciones */
+  .section { padding:1rem; }
+  h2 { font-size:1.4rem; }
+
+  /* Inicio: galletas en fila */
+  #sec-inicio { padding:0; }
+  .inicio-stats { grid-template-columns:repeat(2,1fr); padding:1rem; gap:0.6rem; }
+  .inicio-stat .v { font-size:1.4rem; }
+
+  /* Caja */
+  .caja-layout { grid-template-columns:1fr; }
+  .carrito { position:static; max-height:none; }
+  .servicios-grid { grid-template-columns:1fr; }
+
+  /* Clientes */
+  .clientes-layout { grid-template-columns:1fr; }
+  .cliente-card { flex-wrap:wrap; gap:0.5rem; }
+  .cliente-acciones { width:100%; justify-content:flex-end; }
+
+  /* Agenda */
+  .agenda-layout { grid-template-columns:1fr; }
+
+  /* Resúmenes */
+  .stats-grid { grid-template-columns:repeat(2,1fr); gap:0.6rem; }
+  .tabla-ventas th:nth-child(3),
+  .tabla-ventas td:nth-child(3) { display:none; }
+  .tabla-ventas th,
+  .tabla-ventas td { padding:0.45rem 0.5rem; font-size:0.75rem; }
+
+  /* Modal */
+  .modal { padding:1.2rem; }
+
+  /* Vista día empleados */
+  #sec-inicio .vd-grid { font-size:0.55rem; }
+  .vd-head { font-size:0.55rem; padding:0.25rem 0.1rem; letter-spacing:0; }
+  .vd-cita-bloque { font-size:0.52rem; padding:1px 2px; }
+
+  /* Toast abajo centrado */
+  #toast { right:1rem; left:1rem; text-align:center; bottom:1rem; }
+
+  /* Inicio agenda en móvil: apilar vertical */
+  .inicio-agenda-row { flex-direction:column !important; }
+  .inicio-form-col { width:100% !important; }
+
+  /* Inputs más grandes para touch */
+  input, select, textarea { padding:0.75rem 0.85rem; font-size:1rem; }
+  .btn { padding:0.7rem 1.2rem; font-size:0.85rem; }
+  .cobrar-btn { padding:1rem; font-size:1rem; }
+}
+
+@media(max-width:400px) {
+  .logo { font-size:0.95rem; letter-spacing:1px; }
+  .inicio-stats { grid-template-columns:repeat(2,1fr); }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+}
+
 ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--fondo2);} ::-webkit-scrollbar-thumb{background:var(--oro3);border-radius:3px;}
 
 /* ── ÁREA PRIVADA ── */
@@ -391,17 +478,28 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 <!-- ════════════ NAV ════════════ -->
 <nav>
   <div class="logo">RITUAL BARBER</div>
-  <button onclick="showSection('inicio')"       id="nav-inicio"    class="active">Inicio</button>
-  <button onclick="showSection('caja')"         id="nav-caja">Caja</button>
-  <button onclick="showSection('clientes')"     id="nav-clientes">Clientes</button>
-  <div style="width:1px;background:var(--borde);height:1.4rem;margin:0 0.4rem;align-self:center;"></div>
-  <button onclick="accederPrivado('servicios')" id="nav-servicios">Servicios</button>
-  <button onclick="accederPrivado('resumenes')" id="nav-resumenes">Resúmenes</button>
-  <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
+    <button onclick="showSection('inicio');cerrarMenu()"       id="nav-inicio"    class="active">Inicio</button>
+    <button onclick="showSection('caja');cerrarMenu()"         id="nav-caja">Caja</button>
+    <button onclick="showSection('clientes');cerrarMenu()"     id="nav-clientes">Clientes</button>
+    <div class="nav-sep"></div>
+    <button onclick="accederPrivado('servicios')" id="nav-servicios">Servicios</button>
+    <button onclick="accederPrivado('resumenes')" id="nav-resumenes">Resúmenes</button>
+    <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
+  </div>
 </nav>
 
 <!-- ════════════ INICIO ════════════ -->
 <div class="section active" id="sec-inicio">
+  <div class="inicio-hero">
+    <div class="hero-titulo">RITUAL BARBER</div>
+    <div class="hero-linea"></div>
+    <p id="hero-fecha" style="color:var(--suave);font-size:0.8rem;letter-spacing:2px;"></p>
+  </div>
+
   <!-- Botones acceso rápido -->
   <div style="display:flex;gap:1.2rem;justify-content:center;padding:1.5rem 2rem 0;">
     <div class="inicio-card" style="width:180px;" onclick="showSection('caja')"><div class="ic-titulo">CAJA</div></div>
@@ -424,10 +522,10 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     </div>
 
     <!-- FILA 2: Nueva Cita (izq, fijo) | Horario empleados (der, resto) -->
-    <div style="display:flex;gap:0.9rem;align-items:flex-start;">
+    <div class="inicio-agenda-row" style="display:flex;gap:0.9rem;align-items:flex-start;">
 
       <!-- Nueva Cita: columna fija izquierda -->
-      <div style="width:210px;flex-shrink:0;background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.8rem;box-sizing:border-box;">
+      <div class="inicio-form-col" style="width:210px;flex-shrink:0;background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.8rem;box-sizing:border-box;">
         <div style="font-family:'Cormorant Garamond',serif;font-size:0.82rem;color:var(--oro);font-weight:600;margin-bottom:0.6rem;letter-spacing:1px;">NUEVA CITA</div>
         <div class="form-group" style="margin-bottom:0.45rem;">
           <label>Cliente</label>
@@ -1008,6 +1106,12 @@ function confirmarEliminarCitaCaja() {
 // INICIO
 // ══════════════════════════════════════
 function renderInicio() {
+  const hoy = new Date();
+  const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('hero-fecha').textContent =
+    DIAS[hoy.getDay()].toUpperCase() + ', ' + hoy.getDate() + ' DE ' + MESES[hoy.getMonth()].toUpperCase() + ' ' + hoy.getFullYear();
+
   renderCalI();
   renderVistaDiaI();
 }
@@ -1401,6 +1505,24 @@ function toast(msg,color){
   el.textContent=msg; el.style.background=color||'var(--verde)';
   el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2800);
 }
+
+
+// ── MENÚ HAMBURGUESA ──
+function toggleMenu() {
+  const links = document.getElementById('nav-links');
+  const btn   = document.getElementById('hamburger');
+  links.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+function cerrarMenu() {
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+// Cerrar al tocar fuera
+document.addEventListener('click', function(e) {
+  const nav = document.querySelector('nav');
+  if (!nav.contains(e.target)) cerrarMenu();
+});
 
 // ── INIT ──
 renderInicio();
