@@ -188,9 +188,9 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 @media(max-width:900px){.agenda-layout{grid-template-columns:1fr;}}
 .calendario-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
 .mes-label { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--oro); font-weight:600; }
-.calendario-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
-.cal-header { text-align:center; font-size:0.6rem; font-weight:700; letter-spacing:0; text-transform:uppercase; color:var(--suave); padding:0.25rem 0; }
-.cal-dia { display:flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer; font-size:0.78rem; transition:all 0.2s; background:#26413a; border:1px solid transparent; position:relative; color:#ccb57f; padding:0.28rem 0; }
+.calendario-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cal-header { text-align:center; font-size:0.63rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--suave); padding:0.38rem; }
+.cal-dia { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; font-size:0.84rem; transition:all 0.2s; background:#26413a; border:1px solid transparent; position:relative; color:#ccb57f; }
 .cal-dia:hover { border-color:var(--oro); color:var(--oro); }
 .cal-dia.otro-mes { opacity:0.2; cursor:default; }
 .cal-dia.otro-mes:hover { border-color:transparent; color:var(--texto); }
@@ -346,28 +346,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .empty-state { text-align:center; color:var(--suave); padding:2.5rem 0; }
 .empty-state .emoji { font-size:2.2rem; margin-bottom:0.6rem; }
 
-
-/* ── VISTA DÍA EMPLEADOS ── */
-.vd-grid { display:grid; grid-template-columns:40px repeat(3,1fr); gap:0; border:1px solid var(--borde); border-radius:10px; overflow:hidden; }
-.vd-head { background:#1a2d27; padding:0.3rem 0.2rem; text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--oro); border-bottom:2px solid var(--borde); }
-.vd-hora { background:#1a2d27; padding:0 0.3rem; display:flex; align-items:flex-start; justify-content:flex-end; font-size:0.56rem; color:var(--suave); font-weight:600; letter-spacing:0.5px; padding-top:2px; border-right:1px solid var(--borde); }
-.vd-cell { background:var(--card); border-left:1px solid var(--borde); border-bottom:1px solid rgba(61,96,87,0.4); min-height:16px; position:relative; cursor:pointer; transition:background 0.15s; }
-.vd-cell:hover { background:var(--card2); }
-.vd-cell.hora-par { background:rgba(26,45,39,0.5); }
-.vd-cell.hora-par:hover { background:var(--card2); }
-.vd-hora-row { border-bottom:1px solid rgba(61,96,87,0.4); }
-.vd-hora-row.hora-par .vd-hora { border-bottom:1px solid var(--borde); }
-.vd-cita-bloque {
-  position:absolute; left:2px; right:2px; top:1px;
-  background:linear-gradient(135deg,var(--oro3),var(--oro));
-  border-radius:3px; padding:1px 4px;
-  font-size:0.58rem; font-weight:700; color:#1a2d27;
-  overflow:hidden; z-index:2; cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,0.3);
-  line-height:1.2;
-}
-.vd-cita-bloque:hover { filter:brightness(1.1); }
-
 ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--fondo2);} ::-webkit-scrollbar-thumb{background:var(--oro3);border-radius:3px;}
 
 /* ── ÁREA PRIVADA ── */
@@ -390,107 +368,49 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ NAV ════════════ -->
 <nav>
-  <div class="logo">RITUAL BARBER</div>
-  <button onclick="showSection('inicio')"       id="nav-inicio"    class="active">Inicio</button>
-  <button onclick="showSection('caja')"         id="nav-caja">Caja</button>
-  <button onclick="showSection('clientes')"     id="nav-clientes">Clientes</button>
+  <div class="logo">RITUAL BARBER <span>Est. 2024</span></div>
+  <button onclick="showSection('inicio')"    id="nav-inicio"    class="active">🏠 Inicio</button>
+  <button onclick="showSection('caja')"      id="nav-caja">💰 Caja</button>
+  <button onclick="showSection('agenda')"    id="nav-agenda">📅 Agenda</button>
+  <button onclick="showSection('clientes')"  id="nav-clientes">👥 Clientes</button>
   <div style="width:1px;background:var(--borde);height:1.4rem;margin:0 0.4rem;align-self:center;"></div>
-  <button onclick="accederPrivado('servicios')" id="nav-servicios">Servicios</button>
-  <button onclick="accederPrivado('resumenes')" id="nav-resumenes">Resúmenes</button>
+  <button onclick="accederPrivado('servicios')" id="nav-servicios">🔒 Servicios</button>
+  <button onclick="accederPrivado('resumenes')" id="nav-resumenes">🔒 Resúmenes</button>
   <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
 </nav>
 
 <!-- ════════════ INICIO ════════════ -->
 <div class="section active" id="sec-inicio">
-  <div class="inicio-hero">
-    <div class="hero-titulo">RITUAL BARBER</div>
-    <div class="hero-linea"></div>
-    <p id="hero-fecha" style="color:var(--suave);font-size:0.8rem;letter-spacing:2px;"></p>
-  </div>
+  <div class="inicio-stats" id="inicio-stats" style="margin-top:2rem;"></div>
 
-  <!-- Botones acceso rápido -->
-  <div style="display:flex;gap:1.2rem;justify-content:center;padding:1.5rem 2rem 0;">
-    <div class="inicio-card" style="width:180px;" onclick="showSection('caja')"><div class="ic-titulo">CAJA</div></div>
-    <div class="inicio-card" style="width:180px;" onclick="showSection('clientes')"><div class="ic-titulo">CLIENTES</div></div>
-  </div>
-
-  <!-- AGENDA -->
-  <div style="padding:1rem 2rem 3rem;">
-
-    <!-- FILA 1: Calendario mensual ancho completo -->
-    <div style="margin-bottom:1rem;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
-        <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
-        <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
-        <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;">
-        <div class="calendario-grid" id="cal-grid-i"></div>
-      </div>
+  <div class="inicio-cards">
+    <div class="inicio-card" onclick="showSection('caja')">
+      <span class="ic-emoji">💰</span>
+      <div class="ic-titulo">Caja</div>
+      <div class="ic-desc">Registrar cobros y tickets</div>
     </div>
-
-    <!-- FILA 2: Nueva Cita (izq, fijo) | Horario empleados (der, resto) -->
-    <div style="display:flex;gap:0.9rem;align-items:flex-start;">
-
-      <!-- Nueva Cita: columna fija izquierda -->
-      <div style="width:210px;flex-shrink:0;background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.8rem;box-sizing:border-box;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:0.82rem;color:var(--oro);font-weight:600;margin-bottom:0.6rem;letter-spacing:1px;">NUEVA CITA</div>
-        <div class="form-group" style="margin-bottom:0.45rem;">
-          <label>Cliente</label>
-          <input id="i-cita-cliente" placeholder="Nombre" list="dl-cli-i"/>
-          <datalist id="dl-cli-i"></datalist>
-        </div>
-        <div class="form-group" style="margin-bottom:0.45rem;">
-          <label>Servicio</label>
-          <select id="i-cita-serv"></select>
-        </div>
-        <div class="form-group" style="margin-bottom:0.45rem;">
-          <label>Hora</label>
-          <input id="i-cita-hora" type="time" value="09:00"/>
-        </div>
-        <div class="form-group" style="margin-bottom:0.45rem;">
-          <label>Empleado</label>
-          <select id="i-cita-emp">
-            <option value="Empleado 1">Empleado 1</option>
-            <option value="Empleado 2">Empleado 2</option>
-            <option value="Empleado 3">Empleado 3</option>
-          </select>
-        </div>
-        <div class="form-group" style="margin-bottom:0.6rem;">
-          <label>Notas</label>
-          <input id="i-cita-notas" placeholder="Opcional..."/>
-        </div>
-        <button class="btn btn-oro" style="width:100%;padding:0.4rem 0;font-size:0.75rem;" onclick="addCitaI()">Agendar Cita</button>
-      </div>
-
-      <!-- Horario empleados: ocupa el resto -->
-      <div style="flex:1;min-width:0;">
-        <div style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:0.92rem;font-weight:700;margin-bottom:0.5rem;" id="dia-label-i">Hoy</div>
-        <div id="vista-dia-i" style="overflow-x:auto;"></div>
-      </div>
-
+    <div class="inicio-card" onclick="showSection('agenda')">
+      <span class="ic-emoji">📅</span>
+      <div class="ic-titulo">Agenda</div>
+      <div class="ic-desc">Citas y reservas del día</div>
     </div>
-
-  </div>
-</div>
-
-<!-- ════════ MODAL CITA → CAJA ════════ -->
-<div id="modal-cita-caja" class="modal-overlay">
-  <div class="modal" style="text-align:left;max-width:400px;">
-    <h3 style="text-align:center;margin-bottom:0.3rem;">📋 Pasar a Caja</h3>
-    <p style="text-align:center;font-size:0.82rem;color:var(--suave);margin-bottom:1.2rem;" id="mcj-subtitulo"></p>
-    <div style="background:#1a2d27;border-radius:8px;padding:0.9rem 1rem;margin-bottom:1rem;">
-      <div style="font-size:0.72rem;color:var(--suave);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.35rem;">Cliente</div>
-      <div id="mcj-cliente" style="color:var(--oro);font-weight:600;font-size:0.95rem;"></div>
-      <div style="font-size:0.72rem;color:var(--suave);letter-spacing:1px;text-transform:uppercase;margin:0.6rem 0 0.35rem;">Servicio</div>
-      <div id="mcj-servicio" style="color:var(--oro2);font-size:0.88rem;"></div>
+    <div class="inicio-card" onclick="accederPrivado('servicios')">
+      <span class="ic-emoji">✂</span>
+      <div class="ic-titulo">Servicios</div>
+      <div class="ic-desc">Gestionar precios y categorías</div>
     </div>
-    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
-      <button class="btn btn-oro" style="flex:1;" onclick="confirmarPasarCaja()">💰 Abrir en Caja</button>
-      <button class="btn btn-danger btn-sm" style="flex:0 0 auto;" onclick="confirmarEliminarCitaCaja()">🗑 Eliminar cita</button>
-      <button class="btn btn-ghost" style="flex:0 0 auto;" onclick="cerrarModalCitaCaja()">Cancelar</button>
+    <div class="inicio-card" onclick="showSection('clientes')">
+      <span class="ic-emoji">👥</span>
+      <div class="ic-titulo">Clientes</div>
+      <div class="ic-desc">Base de datos de clientes</div>
+    </div>
+    <div class="inicio-card" onclick="accederPrivado('resumenes')">
+      <span class="ic-emoji">📊</span>
+      <div class="ic-titulo">Resúmenes</div>
+      <div class="ic-desc">Ventas diarias y mensuales</div>
     </div>
   </div>
+  <div class="inicio-fecha" id="inicio-citas-hoy"></div>
 </div>
 
 <!-- ════════════ CAJA ════════════ -->
@@ -792,8 +712,8 @@ function verificarPass() {
     document.getElementById('modal-login').classList.remove('open');
     document.getElementById('btn-cerrar-sesion').style.display = 'inline-flex';
     // Actualizar iconos del nav
-    document.getElementById('nav-servicios').textContent = 'Servicios';
-    document.getElementById('nav-resumenes').textContent = 'Resúmenes';
+    document.getElementById('nav-servicios').textContent = '✂ Servicios';
+    document.getElementById('nav-resumenes').textContent = '📊 Resúmenes';
     if (seccionPendiente) { showSection(seccionPendiente); seccionPendiente = null; }
   } else {
     const err = document.getElementById('login-error');
@@ -812,8 +732,8 @@ function cerrarLogin() {
 function cerrarSesion() {
   sesionActiva = false;
   document.getElementById('btn-cerrar-sesion').style.display = 'none';
-  document.getElementById('nav-servicios').textContent = 'Servicios';
-  document.getElementById('nav-resumenes').textContent = 'Resúmenes';
+  document.getElementById('nav-servicios').textContent = '🔒 Servicios';
+  document.getElementById('nav-resumenes').textContent = '🔒 Resúmenes';
   showSection('inicio');
   toast('🔒 Sesión cerrada');
 }
@@ -835,193 +755,27 @@ function showSection(id) {
 }
 
 // ══════════════════════════════════════
-// AGENDA INLINE INICIO (vista por empleados)
-// ══════════════════════════════════════
-const EMPLEADOS = ['Empleado 1', 'Empleado 2', 'Empleado 3'];
-const HORA_INI  = 9;   // 09:00
-const HORA_FIN  = 21;  // 21:00
-const SLOT_MIN  = 20;  // minutos por slot
-
-let calDateI = new Date();
-let diaSel_I = new Date();
-
-function cambiarMesI(dir) {
-  calDateI.setMonth(calDateI.getMonth() + dir);
-  renderCalI();
-}
-function selDiaI(d) {
-  diaSel_I = new Date(calDateI.getFullYear(), calDateI.getMonth(), d);
-  renderCalI();
-  renderVistaDiaI();
-}
-
-function renderCalI() {
-  const hoy = new Date();
-  const y = calDateI.getFullYear(), m = calDateI.getMonth();
-  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const lbl = document.getElementById('mes-label-i');
-  if (lbl) lbl.textContent = MESES[m] + ' ' + y;
-  const grid = document.getElementById('cal-grid-i');
-  if (!grid) return;
-  let dS = new Date(y,m,1).getDay(); if(dS===0) dS=7;
-  let html = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d=>`<div class="cal-header">${d}</div>`).join('');
-  for(let i=1;i<dS;i++){const d=new Date(y,m,1-(dS-i));html+=`<div class="cal-dia otro-mes">${d.getDate()}</div>`;}
-  const tot=new Date(y,m+1,0).getDate();
-  for(let d=1;d<=tot;d++){
-    const fk=fechaKey(new Date(y,m,d));
-    const esH=new Date(y,m,d).toDateString()===hoy.toDateString();
-    const esS=new Date(y,m,d).toDateString()===diaSel_I.toDateString();
-    const tiC=citas.some(c=>c.fecha===fk);
-    html+=`<div class="cal-dia${esH?' hoy':''}${esS?' seleccionado':''}${tiC?' con-citas':''}" onclick="selDiaI(${d})">${d}</div>`;
-  }
-  const r=(dS-1+tot)%7; if(r>0) for(let i=1;i<=7-r;i++) html+=`<div class="cal-dia otro-mes">${i}</div>`;
-  grid.innerHTML = html;
-}
-
-function renderVistaDiaI() {
-  const fk = fechaKey(diaSel_I);
-  const D=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  const M=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  const lbl = document.getElementById('dia-label-i');
-  if (lbl) lbl.textContent = D[diaSel_I.getDay()].charAt(0).toUpperCase()+D[diaSel_I.getDay()].slice(1)+', '+diaSel_I.getDate()+' de '+M[diaSel_I.getMonth()];
-
-  const citasDia = citas.filter(c => c.fecha === fk);
-  const totalSlots = (HORA_FIN - HORA_INI) * 60 / SLOT_MIN;
-
-  // Cabecera
-  let html = `<div class="vd-grid" id="vd-main">`;
-  html += `<div class="vd-head" style="background:#1a2d27;"></div>`;
-  EMPLEADOS.forEach(e => { html += `<div class="vd-head">${e}</div>`; });
-
-  // Slots
-  for (let s = 0; s < totalSlots; s++) {
-    const totalMins = HORA_INI * 60 + s * SLOT_MIN;
-    const hh = String(Math.floor(totalMins/60)).padStart(2,'0');
-    const mm = String(totalMins%60).padStart(2,'0');
-    const horaStr = hh + ':' + mm;
-    const esPar = s % 2 === 0;
-    const mostrarHora = mm === '00'; // solo marca horas en punto
-
-    html += `<div class="vd-hora${esPar?'':''}" style="background:#1a2d27;padding:0 0.4rem;display:flex;align-items:flex-start;justify-content:flex-end;font-size:0.62rem;color:var(--suave);font-weight:600;padding-top:4px;border-right:1px solid var(--borde);border-bottom:1px solid rgba(61,96,87,${mostrarHora?'0.8':'0.3'});">
-      ${mostrarHora ? horaStr : ''}
-    </div>`;
-
-    EMPLEADOS.forEach((emp, ei) => {
-      const cita = citasDia.find(c => c.hora === horaStr && (c.empleado||'Empleado 1') === emp);
-      html += `<div class="vd-cell${esPar?' hora-par':''}" 
-        style="border-bottom:1px solid rgba(61,96,87,${mostrarHora?'0.8':'0.25'});"
-        onclick="clickSlotI('${horaStr}','${emp}')" 
-        title="Añadir cita ${horaStr} - ${emp}">`;
-      if (cita) {
-        html += `<div class="vd-cita-bloque" onclick="event.stopPropagation();abrirModalCitaCaja(${cita.id})" title="${cita.cliente} — ${cita.servicio||'sin servicio'}">
-          <div>${cita.cliente}</div>
-          <div style="font-weight:400;opacity:0.8;font-size:0.6rem;">${cita.servicio||''}</div>
-        </div>`;
-      }
-      html += `</div>`;
-    });
-  }
-  html += `</div>`;
-
-  const cont = document.getElementById('vista-dia-i');
-  if (cont) cont.innerHTML = html;
-
-  // Actualizar select servicios y datalist
-  const sel = document.getElementById('i-cita-serv');
-  if (sel) sel.innerHTML = servicios.map(s=>`<option value="${s.nombre}">${s.nombre}${s.precio?' — €'+s.precio:''}</option>`).join('');
-  const dl = document.getElementById('dl-cli-i');
-  if (dl) dl.innerHTML = clientes.filter(c=>!c.archivado).map(c=>`<option value="${c.nombre}"></option>`).join('');
-}
-
-function clickSlotI(hora, emp) {
-  document.getElementById('i-cita-hora').value = hora;
-  document.getElementById('i-cita-emp').value = emp;
-  document.getElementById('i-cita-cliente').focus();
-}
-
-function addCitaI() {
-  const cliente = document.getElementById('i-cita-cliente').value.trim();
-  const hora    = document.getElementById('i-cita-hora').value;
-  const emp     = document.getElementById('i-cita-emp').value;
-  const serv    = document.getElementById('i-cita-serv').value;
-  const notas   = document.getElementById('i-cita-notas').value.trim();
-  if (!cliente || !hora) return toast('⚠ Cliente y hora son obligatorios','#c0392b');
-  citas.push({id:Date.now(), fecha:fechaKey(diaSel_I), hora, cliente, empleado:emp, servicio:serv, notas});
-  save('citas');
-  document.getElementById('i-cita-cliente').value = '';
-  document.getElementById('i-cita-notas').value   = '';
-  renderVistaDiaI();
-  renderCalI();
-  toast('✓ Cita agendada');
-}
-
-function delCitaI(id) {
-  if (!confirm('¿Eliminar esta cita?')) return;
-  citas = citas.filter(c => c.id !== id);
-  save('citas');
-  renderVistaDiaI();
-  renderCalI();
-  toast('Cita eliminada');
-}
-
-// ── MODAL CITA → CAJA ──
-let _citaCajaId = null;
-
-function abrirModalCitaCaja(id) {
-  const cita = citas.find(c => c.id === id); if (!cita) return;
-  _citaCajaId = id;
-  document.getElementById('mcj-subtitulo').textContent = (cita.hora||'') + ' · ' + (cita.empleado||'');
-  document.getElementById('mcj-cliente').textContent   = cita.cliente || '—';
-  document.getElementById('mcj-servicio').textContent  = cita.servicio || '(sin servicio asignado)';
-  document.getElementById('modal-cita-caja').classList.add('open');
-}
-
-function cerrarModalCitaCaja() {
-  document.getElementById('modal-cita-caja').classList.remove('open');
-  _citaCajaId = null;
-}
-
-function confirmarPasarCaja() {
-  const cita = citas.find(c => c.id === _citaCajaId); if (!cita) return;
-  // Limpiar carrito y cargar servicio
-  carrito = [];
-  const serv = servicios.find(s => s.nombre === cita.servicio);
-  if (serv) carrito.push({...serv});
-  // Poner cliente en caja
-  cerrarModalCitaCaja();
-  showSection('caja');
-  setTimeout(() => {
-    document.getElementById('cliente-nombre').value = cita.cliente || '';
-    renderCaja();
-    renderCarrito();
-    actualizarDatalistClientes();
-    if (serv) toast('✓ Cita cargada en caja: ' + serv.nombre);
-    else toast('⚠ Servicio no encontrado, añádelo manualmente', '#c0392b');
-  }, 80);
-}
-
-function confirmarEliminarCitaCaja() {
-  if (!confirm('¿Eliminar esta cita?')) return;
-  citas = citas.filter(c => c.id !== _citaCajaId);
-  save('citas');
-  cerrarModalCitaCaja();
-  renderVistaDiaI();
-  renderCalI();
-  toast('Cita eliminada');
-}
-
-// ══════════════════════════════════════
 // INICIO
 // ══════════════════════════════════════
 function renderInicio() {
   const hoy = new Date();
-  const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  document.getElementById('hero-fecha').textContent =
-    DIAS[hoy.getDay()].toUpperCase() + ', ' + hoy.getDate() + ' DE ' + MESES[hoy.getMonth()].toUpperCase() + ' ' + hoy.getFullYear();
+  const hoyStr = fechaKey(hoy);
+  const ventasHoy = ventas.filter(v => v.fecha.startsWith(hoyStr));
+  const totalHoy  = ventasHoy.reduce((a,b) => a+b.total, 0);
+  const citasHoy  = citas.filter(c => c.fecha === hoyStr).length;
+  const totalClientes = clientes.filter(c => !c.archivado).length;
 
-  renderCalI();
-  renderVistaDiaI();
+  document.getElementById('inicio-stats').innerHTML = `
+    <div class="inicio-stat"><div class="v">€${totalHoy.toFixed(2)}</div><div class="l">Hoy</div></div>
+    <div class="inicio-stat"><div class="v">${ventasHoy.length}</div><div class="l">Cobros hoy</div></div>
+    <div class="inicio-stat"><div class="v">${citasHoy}</div><div class="l">Citas hoy</div></div>
+    <div class="inicio-stat"><div class="v">${totalClientes}</div><div class="l">Clientes</div></div>
+  `;
+
+  const proxCitas = citas.filter(c => c.fecha === hoyStr).sort((a,b) => a.hora.localeCompare(b.hora)).slice(0,3);
+  document.getElementById('inicio-citas-hoy').textContent = proxCitas.length > 0
+    ? 'Próximas citas hoy: ' + proxCitas.map(c => c.hora + ' ' + c.cliente).join(' · ')
+    : 'Sin citas para hoy';
 }
 
 // ══════════════════════════════════════
