@@ -1100,12 +1100,6 @@ function confirmarEliminarCitaCaja() {
 // INICIO
 // ══════════════════════════════════════
 function renderInicio() {
-  const hoy = new Date();
-  const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  document.getElementById('hero-fecha').textContent =
-    DIAS[hoy.getDay()].toUpperCase() + ', ' + hoy.getDate() + ' DE ' + MESES[hoy.getMonth()].toUpperCase() + ' ' + hoy.getFullYear();
-
   renderCalI();
   renderVistaDiaI();
 }
