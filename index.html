@@ -498,27 +498,27 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   <div style="padding:1rem 2rem 3rem;">
 
     <!-- FILA 1: Calendario mensual (50%) + Nueva Cita (50%) -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;" class="inicio-agenda-row">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:100px;margin-top:100px;align-items:stretch;" class="inicio-agenda-row">
 
       <!-- Calendario mensual + galletas debajo -->
       <div style="min-width:0;display:flex;flex-direction:column;gap:0.75rem;">
-        <div>
+        <div style="flex:1;display:flex;flex-direction:column;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
             <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
             <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
             <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
           </div>
-          <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;">
+          <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;flex:1;">
             <div class="calendario-grid" id="cal-grid-i"></div>
           </div>
         </div>
-        <!-- Galletas Caja y Clientes debajo del calendario -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-          <div onclick="showSection('caja')" style="background:#ffffff;border:2px solid var(--verde);border-radius:12px;padding:1.1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <!-- Galletas Caja y Clientes debajo del calendario: misma altura que Nueva Cita total -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;flex:1;">
+          <div onclick="showSection('caja')" style="background:#ffffff;border:2px solid var(--verde);border-radius:12px;padding:1.1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
             <div style="font-size:1.4rem;margin-bottom:0.3rem;"></div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--verde);letter-spacing:1px;">CAJA</div>
           </div>
-          <div onclick="showSection('clientes')" style="background:#ffffff;border:2px solid var(--verde);border-radius:12px;padding:1.1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div onclick="showSection('clientes')" style="background:#ffffff;border:2px solid var(--verde);border-radius:12px;padding:1.1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
             <div style="font-size:1.4rem;margin-bottom:0.3rem;"></div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--verde);letter-spacing:1px;">CLIENTES</div>
           </div>
@@ -526,7 +526,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       </div>
 
       <!-- Nueva Cita: 50% derecha -->
-      <div class="inicio-form-col" style="background:var(--card);border:1px solid var(--oro3);border-radius:10px;padding:1.2rem;box-sizing:border-box;min-width:0;">
+      <div class="inicio-form-col" style="background:var(--card);border:1px solid var(--oro3);border-radius:10px;padding:1.2rem;box-sizing:border-box;min-width:0;height:100%;">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--oro);font-weight:700;margin-bottom:0.9rem;letter-spacing:1px;display:flex;align-items:center;gap:0.5rem;">
           Nueva Cita
         </div>
