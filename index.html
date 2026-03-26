@@ -30,29 +30,29 @@ body { background:var(--fondo); color:var(--texto); font-family:'Barlow',sans-se
 nav {
   background:#1a2d27;
   border-bottom:1px solid var(--borde);
-  padding:0 2rem;
+  padding:0 1.8rem;
   display:flex; flex-direction:row; align-items:center;
   justify-content:space-between;
   position:sticky; top:0; z-index:200;
   box-shadow:0 2px 24px rgba(0,0,0,0.4);
-  min-height:52px;
+  min-height:42px;
 }
 .logo {
   font-family:'Cormorant Garamond',serif;
-  font-size:1.45rem; font-weight:700;
+  font-size:1.15rem; font-weight:700;
   color:var(--oro); letter-spacing:3px;
-  padding:0.4rem 0;
+  padding:0.28rem 0;
   text-transform:uppercase;
   text-align:left; width:auto; flex-shrink:0;
 }
-.logo span { color:var(--oro2); font-weight:400; font-size:0.78em; letter-spacing:5px; display:block; font-style:italic; margin-top:-4px; text-align:left; }
+.logo span { display:none; }
 
 nav button {
   background:none; border:none;
   color:var(--suave);
   font-family:'Barlow Condensed',sans-serif;
-  font-size:0.8rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
-  padding:0.55rem 1rem; cursor:pointer; transition:all 0.2s;
+  font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  padding:0.42rem 0.85rem; cursor:pointer; transition:all 0.2s;
   border-bottom:2px solid transparent;
 }
 nav button:hover { color:var(--oro); }
@@ -479,7 +479,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ NAV ════════════ -->
 <nav>
-  <div class="logo">RITUAL BARBER<span>Barbershop</span></div>
+  <div class="logo">RITUAL BARBER</div>
   <div class="nav-links" id="nav-links">
     <button onclick="showSection('inicio');cerrarMenu()" id="nav-inicio" class="active">Inicio</button>
     <button onclick="showSection('caja');cerrarMenu()" id="nav-caja">Caja</button>
@@ -495,7 +495,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ INICIO ════════════ -->
 <div class="section active" id="sec-inicio">
-  <div style="display:grid;grid-template-columns:35% 1fr;gap:1.2rem;padding:1.2rem 1.5rem 2rem;align-items:start;" class="inicio-agenda-row">
+  <div style="display:grid;grid-template-columns:35% 1fr;gap:1.2rem;padding:2rem 1.5rem 2rem;align-items:start;" class="inicio-agenda-row">
 
     <!-- ── COLUMNA IZQUIERDA 35% ── -->
     <div style="display:flex;flex-direction:column;gap:1rem;min-width:0;">
