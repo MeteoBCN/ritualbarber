@@ -486,19 +486,13 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <button onclick="showSection('caja');cerrarMenu()"         id="nav-caja">Caja</button>
     <button onclick="showSection('clientes');cerrarMenu()"     id="nav-clientes">Clientes</button>
     <div class="nav-sep"></div>
-    <button onclick="accederPrivado('servicios')" id="nav-servicios">Servicios</button>
-    <button onclick="accederPrivado('resumenes')" id="nav-resumenes">Resúmenes</button>
+    <button onclick="accederPrivado('area-privada')" id="nav-area-privada">Área Privada</button>
     <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
   </div>
 </nav>
 
 <!-- ════════════ INICIO ════════════ -->
 <div class="section active" id="sec-inicio">
-  <!-- Botones acceso rápido -->
-  <div style="display:flex;gap:1.2rem;justify-content:center;padding:1.5rem 2rem 0;">
-    <div class="inicio-card" style="width:180px;background:#ffffff;border-color:var(--verde);color:var(--verde);" onclick="showSection('caja')"><div class="ic-titulo" style="color:var(--verde);">CAJA</div></div>
-    <div class="inicio-card" style="width:180px;background:#ffffff;border-color:var(--verde);color:var(--verde);" onclick="showSection('clientes')"><div class="ic-titulo" style="color:var(--verde);">CLIENTES</div></div>
-  </div>
 
   <!-- AGENDA -->
   <div style="padding:1rem 2rem 3rem;">
@@ -506,15 +500,28 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <!-- FILA 1: Calendario mensual (50%) + Nueva Cita (50%) -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;" class="inicio-agenda-row">
 
-      <!-- Calendario mensual -->
-      <div style="min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
-          <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
-          <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
-          <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
+      <!-- Calendario mensual + galletas debajo -->
+      <div style="min-width:0;display:flex;flex-direction:column;gap:0.75rem;">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
+            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
+            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;">
+            <div class="calendario-grid" id="cal-grid-i"></div>
+          </div>
         </div>
-        <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;">
-          <div class="calendario-grid" id="cal-grid-i"></div>
+        <!-- Galletas Caja y Clientes debajo del calendario -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div onclick="showSection('caja')" style="background:#ffffff;border:2px solid var(--verde);border-radius:12px;padding:1.1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <div style="font-size:1.4rem;margin-bottom:0.3rem;">💰</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--verde);letter-spacing:1px;">CAJA</div>
+          </div>
+          <div onclick="showSection('clientes')" style="background:#ffffff;border:2px solid var(--verde);border-radius:12px;padding:1.1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <div style="font-size:1.4rem;margin-bottom:0.3rem;">👥</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--verde);letter-spacing:1px;">CLIENTES</div>
+          </div>
         </div>
       </div>
 
@@ -663,46 +670,65 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   </div>
 </div>
 
-<!-- ════════════ SERVICIOS ════════════ -->
-<div class="section" id="sec-servicios">
-  <h2>✂ Servicios</h2>
-  <div class="cat-tabs" id="cat-tabs-servicios"></div>
-  <div id="servicios-por-cat"></div>
-  <div class="card">
-    <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);margin-bottom:1rem;font-size:1rem;font-weight:600;">+ Nuevo Servicio</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Nombre</label>
-        <input id="s-nombre" placeholder="Ej: Degradado alto"/>
+<!-- ════════════ ÁREA PRIVADA ════════════ -->
+<div class="section" id="sec-area-privada">
+  <h2>🔒 Área Privada</h2>
+  <!-- Pestañas internas -->
+  <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--borde);padding-bottom:0.75rem;">
+    <button class="btn btn-oro" id="tab-btn-servicios" onclick="switchPrivTab('servicios')">✂ Servicios</button>
+    <button class="btn btn-ghost" id="tab-btn-resumenes" onclick="switchPrivTab('resumenes')">📊 Resúmenes</button>
+  </div>
+
+  <!-- Contenido: Servicios -->
+  <div id="tab-servicios" style="display:block;">
+    <div class="cat-tabs" id="cat-tabs-servicios"></div>
+    <div id="servicios-por-cat"></div>
+    <div class="card">
+      <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);margin-bottom:1rem;font-size:1rem;font-weight:600;">+ Nuevo Servicio</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input id="s-nombre" placeholder="Ej: Degradado alto"/>
+        </div>
+        <div class="form-group" style="flex:0 0 115px">
+          <label>Precio (€)</label>
+          <input id="s-precio" type="number" min="0" step="0.5" placeholder="12.00"/>
+        </div>
+        <div class="form-group" style="flex:0 0 120px">
+          <label>Duración (min)</label>
+          <input id="s-duracion" type="number" min="5" step="5" placeholder="30"/>
+        </div>
       </div>
-      <div class="form-group" style="flex:0 0 115px">
-        <label>Precio (€)</label>
-        <input id="s-precio" type="number" min="0" step="0.5" placeholder="12.00"/>
-      </div>
-      <div class="form-group" style="flex:0 0 120px">
-        <label>Duración (min)</label>
-        <input id="s-duracion" type="number" min="5" step="5" placeholder="30"/>
+      <div class="form-row">
+        <div class="form-group" style="flex:0 0 165px">
+          <label>Categoría</label>
+          <select id="s-cat">
+            <option value="corte">✂ Corte</option>
+            <option value="barberia">🪒 Barbería</option>
+            <option value="combos">⭐ Combos</option>
+            <option value="tratamientos">💆 Tratamientos</option>
+            <option value="otros">📦 Otros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <input id="s-desc" placeholder="Breve descripción opcional"/>
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn btn-oro" onclick="addServicio()">Agregar</button>
+        </div>
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group" style="flex:0 0 165px">
-        <label>Categoría</label>
-        <select id="s-cat">
-          <option value="corte">✂ Corte</option>
-          <option value="barberia">🪒 Barbería</option>
-          <option value="combos">⭐ Combos</option>
-          <option value="tratamientos">💆 Tratamientos</option>
-          <option value="otros">📦 Otros</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Descripción</label>
-        <input id="s-desc" placeholder="Breve descripción opcional"/>
-      </div>
-      <div style="display:flex;align-items:flex-end;">
-        <button class="btn btn-oro" onclick="addServicio()">Agregar</button>
-      </div>
+  </div>
+
+  <!-- Contenido: Resúmenes -->
+  <div id="tab-resumenes" style="display:none;">
+    <div class="toggle-periodo">
+      <button class="btn btn-oro"   id="btn-diario"  onclick="setPeriodo('diario')">Diario</button>
+      <button class="btn btn-ghost" id="btn-mensual" onclick="setPeriodo('mensual')">Mensual</button>
+      <button class="btn btn-ghost" id="btn-total"   onclick="setPeriodo('total')">Total</button>
     </div>
+    <div id="stats-area"></div>
   </div>
 </div>
 
@@ -757,17 +783,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       </div>
     </div>
   </div>
-</div>
-
-<!-- ════════════ RESÚMENES ════════════ -->
-<div class="section" id="sec-resumenes">
-  <h2>📊 Resúmenes</h2>
-  <div class="toggle-periodo">
-    <button class="btn btn-oro"   id="btn-diario"  onclick="setPeriodo('diario')">Diario</button>
-    <button class="btn btn-ghost" id="btn-mensual" onclick="setPeriodo('mensual')">Mensual</button>
-    <button class="btn btn-ghost" id="btn-total"   onclick="setPeriodo('total')">Total</button>
-  </div>
-  <div id="stats-area"></div>
 </div>
 
 <!-- MODAL COBRO -->
@@ -872,7 +887,7 @@ function save(c) {
 // ÁREA PRIVADA — AUTENTICACIÓN
 // ══════════════════════════════════════
 const PASS_HASH = 'ritual2024'; // ← cambia aquí la contraseña
-const SECCIONES_PRIVADAS = ['servicios', 'resumenes'];
+const SECCIONES_PRIVADAS = ['area-privada'];
 let sesionActiva = false;
 let seccionPendiente = null;
 
@@ -891,9 +906,6 @@ function verificarPass() {
     sesionActiva = true;
     document.getElementById('modal-login').classList.remove('open');
     document.getElementById('btn-cerrar-sesion').style.display = 'inline-flex';
-    // Actualizar iconos del nav
-    document.getElementById('nav-servicios').textContent = 'Servicios';
-    document.getElementById('nav-resumenes').textContent = 'Resúmenes';
     if (seccionPendiente) { showSection(seccionPendiente); seccionPendiente = null; }
   } else {
     const err = document.getElementById('login-error');
@@ -912,10 +924,17 @@ function cerrarLogin() {
 function cerrarSesion() {
   sesionActiva = false;
   document.getElementById('btn-cerrar-sesion').style.display = 'none';
-  document.getElementById('nav-servicios').textContent = 'Servicios';
-  document.getElementById('nav-resumenes').textContent = 'Resúmenes';
   showSection('inicio');
   toast('🔒 Sesión cerrada');
+}
+
+function switchPrivTab(tab) {
+  document.getElementById('tab-servicios').style.display  = tab === 'servicios'  ? 'block' : 'none';
+  document.getElementById('tab-resumenes').style.display  = tab === 'resumenes'  ? 'block' : 'none';
+  document.getElementById('tab-btn-servicios').className  = tab === 'servicios'  ? 'btn btn-oro' : 'btn btn-ghost';
+  document.getElementById('tab-btn-resumenes').className  = tab === 'resumenes'  ? 'btn btn-oro' : 'btn btn-ghost';
+  if (tab === 'servicios') renderServicios();
+  if (tab === 'resumenes') renderResumenes();
 }
 
 // ══════════════════════════════════════
@@ -926,12 +945,11 @@ function showSection(id) {
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
   document.getElementById('nav-' + id).classList.add('active');
-  if (id === 'inicio')     renderInicio();
-  if (id === 'caja')       renderCaja();
-  if (id === 'agenda')     { renderCalendario(); renderCitas(); actualizarSelectServicios(); }
-  if (id === 'servicios')  renderServicios();
-  if (id === 'clientes')   renderClientes();
-  if (id === 'resumenes')  renderResumenes();
+  if (id === 'inicio')        renderInicio();
+  if (id === 'caja')          renderCaja();
+  if (id === 'agenda')        { renderCalendario(); renderCitas(); actualizarSelectServicios(); }
+  if (id === 'clientes')      renderClientes();
+  if (id === 'area-privada')  { renderServicios(); switchPrivTab('servicios'); }
 }
 
 // ══════════════════════════════════════
