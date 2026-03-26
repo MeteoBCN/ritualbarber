@@ -440,9 +440,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   #toast { right:1rem; left:1rem; text-align:center; bottom:1rem; }
 
   /* Inicio agenda en móvil: apilar vertical */
-  .inicio-agenda-row { flex-direction:column !important; }
+  .inicio-agenda-row { grid-template-columns:1fr !important; }
   .inicio-form-col { width:100% !important; }
-  .inicio-agenda-row > div:first-child { width:100% !important; min-width:0; }
 
   /* Inputs más grandes para touch */
   input, select, textarea { padding:0.75rem 0.85rem; font-size:1rem; }
@@ -497,30 +496,30 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 <div class="section active" id="sec-inicio">
   <!-- Botones acceso rápido -->
   <div style="display:flex;gap:1.2rem;justify-content:center;padding:1.5rem 2rem 0;">
-    <div class="inicio-card" style="width:180px;" onclick="showSection('caja')"><div class="ic-titulo">CAJA</div></div>
-    <div class="inicio-card" style="width:180px;" onclick="showSection('clientes')"><div class="ic-titulo">CLIENTES</div></div>
+    <div class="inicio-card" style="width:180px;background:#ffffff;border-color:var(--verde);color:var(--verde);" onclick="showSection('caja')"><div class="ic-titulo" style="color:var(--verde);">CAJA</div></div>
+    <div class="inicio-card" style="width:180px;background:#ffffff;border-color:var(--verde);color:var(--verde);" onclick="showSection('clientes')"><div class="ic-titulo" style="color:var(--verde);">CLIENTES</div></div>
   </div>
 
   <!-- AGENDA -->
   <div style="padding:1rem 2rem 3rem;">
 
-    <!-- FILA 1: Calendario mensual (izq) + Nueva Cita (der) -->
-    <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;" class="inicio-agenda-row">
+    <!-- FILA 1: Calendario mensual (50%) + Nueva Cita (50%) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;" class="inicio-agenda-row">
 
       <!-- Calendario mensual -->
-      <div style="flex:1;min-width:0;">
+      <div style="min-width:0;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
           <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
           <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
           <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
         </div>
-        <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;height:calc(100% - 2.1rem);">
+        <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;">
           <div class="calendario-grid" id="cal-grid-i"></div>
         </div>
       </div>
 
-      <!-- Nueva Cita: columna fija derecha, más grande -->
-      <div class="inicio-form-col" style="width:290px;flex-shrink:0;background:var(--card);border:1px solid var(--oro3);border-radius:10px;padding:1.2rem;box-sizing:border-box;">
+      <!-- Nueva Cita: 50% derecha -->
+      <div class="inicio-form-col" style="background:var(--card);border:1px solid var(--oro3);border-radius:10px;padding:1.2rem;box-sizing:border-box;min-width:0;">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--oro);font-weight:700;margin-bottom:0.9rem;letter-spacing:1px;display:flex;align-items:center;gap:0.5rem;">
           📅 Nueva Cita
         </div>
@@ -534,18 +533,19 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
           <label style="font-size:0.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--suave);display:block;margin-bottom:0.35rem;">Servicios</label>
           <div id="i-servicios-lista" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.35rem;"></div>
           <div style="display:flex;gap:0.35rem;">
-            <select id="i-cita-serv" style="flex:1;font-size:0.82rem;padding:0.48rem 0.6rem;"></select>
-            <button type="button" class="btn btn-ghost btn-sm" onclick="addServicioI()" style="padding:0.4rem 0.8rem;font-size:1.1rem;line-height:1;">+</button>
+            <select id="i-cita-serv" style="flex:1;font-size:0.82rem;padding:0.48rem 0.6rem;min-width:0;"></select>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="addServicioI()" style="padding:0.4rem 0.8rem;font-size:1.1rem;line-height:1;flex-shrink:0;">+</button>
           </div>
         </div>
-        <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
-          <div class="form-group" style="flex:1;">
-            <label>Inicio</label>
-            <input id="i-cita-hora" type="time" value="09:00" oninput="autoHoraFin()"/>
+        <!-- Hora inicio y fin: apiladas para evitar overflow -->
+        <div style="margin-bottom:0.6rem;">
+          <div class="form-group" style="margin-bottom:0.4rem;">
+            <label>Hora inicio</label>
+            <input id="i-cita-hora" type="time" value="09:00" oninput="autoHoraFin()" style="width:100%;"/>
           </div>
-          <div class="form-group" style="flex:1;">
-            <label>Fin</label>
-            <input id="i-cita-hora-fin" type="time" value="09:30"/>
+          <div class="form-group">
+            <label>Hora fin</label>
+            <input id="i-cita-hora-fin" type="time" value="09:30" style="width:100%;"/>
           </div>
         </div>
         <div class="form-group" style="margin-bottom:0.6rem;">
@@ -938,7 +938,7 @@ function showSection(id) {
 // AGENDA INLINE INICIO (vista por empleados)
 // ══════════════════════════════════════
 const EMPLEADOS = ['Empleado 1', 'Empleado 2', 'Empleado 3'];
-const HORA_INI  = 9;   // 09:00
+const HORA_INI  = 10;  // 10:00
 const HORA_FIN  = 21;  // 21:00
 const SLOT_MIN  = 20;  // minutos por slot
 
