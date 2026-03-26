@@ -513,10 +513,18 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <!-- Nueva Cita -->
       <div style="background:var(--card);border:1px solid var(--oro3);border-radius:10px;padding:1rem;">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--oro);font-weight:700;margin-bottom:0.8rem;letter-spacing:1px;padding-bottom:0.5rem;border-bottom:1px solid var(--borde);">+ Nueva Cita</div>
-        <div class="form-group" style="margin-bottom:0.5rem;">
-          <label>Cliente</label>
-          <input id="i-cita-cliente" placeholder="Nombre del cliente" list="dl-cli-i"/>
+        <div class="form-group" style="margin-bottom:0.4rem;">
+          <label>Nombre <span style="color:var(--rojo);">*</span></label>
+          <input id="i-cita-nombre" placeholder="Nombre" list="dl-cli-i" oninput="checkClienteExisteI()"/>
           <datalist id="dl-cli-i"></datalist>
+        </div>
+        <div class="form-group" style="margin-bottom:0.4rem;">
+          <label>Apellidos <span style="color:var(--rojo);">*</span></label>
+          <input id="i-cita-apellidos" placeholder="Al menos un apellido"/>
+        </div>
+        <div class="form-group" id="i-tel-wrap" style="margin-bottom:0.5rem;">
+          <label>Teléfono <span style="color:var(--suave);font-weight:400;font-size:0.65rem;">(nuevo cliente)</span></label>
+          <input id="i-cita-tel" placeholder="Opcional para nuevo cliente" type="tel"/>
         </div>
         <div style="margin-bottom:0.5rem;">
           <label style="font-size:0.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--suave);display:block;margin-bottom:0.35rem;">Servicios</label>
@@ -1075,7 +1083,10 @@ function renderVistaDiaI() {
   const sel = document.getElementById('i-cita-serv');
   if (sel) sel.innerHTML = servicios.map(s=>`<option value="${s.nombre}">${s.nombre}${s.precio?' — €'+s.precio:''}</option>`).join('');
   const dl = document.getElementById('dl-cli-i');
-  if (dl) dl.innerHTML = clientes.filter(c=>!c.archivado).map(c=>`<option value="${c.nombre}"></option>`).join('');
+  if (dl) dl.innerHTML = clientes.filter(c=>!c.archivado).map(c=>{
+    const partes = c.nombre.split(' ');
+    return `<option value="${partes[0]}" data-fullname="${c.nombre}"></option>`;
+  }).join('');
 }
 
 // Lista temporal de servicios añadidos al formulario
@@ -1153,28 +1164,73 @@ function clickSlotI(hora, emp) {
   _setHoraSelectores('inicio', hora);
   document.getElementById('i-cita-emp').value = emp;
   autoHoraFin();
-  document.getElementById('i-cita-cliente').focus();
+  document.getElementById('i-cita-nombre').focus();
+}
+
+function checkClienteExisteI() {
+  const nombre = document.getElementById('i-cita-nombre').value.trim();
+  const telWrap = document.getElementById('i-tel-wrap');
+  const apellidosInput = document.getElementById('i-cita-apellidos');
+  // Buscar si existe cliente cuyo nombre empieza igual (nombre completo)
+  const existe = clientes.find(c => c.nombre.toLowerCase().startsWith(nombre.toLowerCase()) && nombre.length > 1);
+  if (existe && nombre.length > 1) {
+    // Si existe, rellenar apellidos automáticamente y ocultar tel
+    const partes = existe.nombre.split(' ');
+    const apellidos = partes.slice(1).join(' ');
+    if (apellidos) apellidosInput.value = apellidos;
+    if (telWrap) telWrap.style.display = 'none';
+  } else {
+    if (telWrap) telWrap.style.display = '';
+  }
 }
 
 function addCitaI() {
-  const cliente  = document.getElementById('i-cita-cliente').value.trim();
-  const hora     = document.getElementById('i-cita-hora').value;
-  const horaFin  = document.getElementById('i-cita-hora-fin').value;
-  const emp      = document.getElementById('i-cita-emp').value;
-  const notas    = document.getElementById('i-cita-notas').value.trim();
+  const nombre    = document.getElementById('i-cita-nombre').value.trim();
+  const apellidos = document.getElementById('i-cita-apellidos').value.trim();
+  const tel       = document.getElementById('i-cita-tel') ? document.getElementById('i-cita-tel').value.trim() : '';
+  const hora      = document.getElementById('i-cita-hora').value;
+  const horaFin   = document.getElementById('i-cita-hora-fin').value;
+  const emp       = document.getElementById('i-cita-emp').value;
+  const notas     = document.getElementById('i-cita-notas').value.trim();
+
+  if (!nombre) return toast('⚠ El nombre es obligatorio','#c0392b');
+  if (!apellidos) return toast('⚠ Introduce al menos un apellido','#c0392b');
+  if (!hora) return toast('⚠ La hora es obligatoria','#c0392b');
+
+  const nombreCompleto = (nombre + ' ' + apellidos).trim();
+
   // Si no hay servicios en la lista, usar el del select
   let servs = [..._serviciosNuevaCita];
   if (servs.length === 0) {
     const sel = document.getElementById('i-cita-serv').value;
     if (sel) servs.push(sel);
   }
-  if (!cliente || !hora) return toast('⚠ Cliente y hora son obligatorios','#c0392b');
+
+  // Auto-crear cliente si no existe
+  const clienteExistente = clientes.find(c => c.nombre.toLowerCase() === nombreCompleto.toLowerCase());
+  if (!clienteExistente) {
+    clientes.push({
+      id: Date.now(),
+      nombre: nombreCompleto,
+      tel: tel,
+      email: '',
+      notas: '',
+      visitas: 0,
+      archivado: false,
+      creado: new Date().toISOString()
+    });
+    save('clientes');
+    actualizarDatalistClientes();
+    actualizarDatalistClientes2();
+    toast('✓ Cliente nuevo creado: ' + nombreCompleto);
+  }
+
   citas.push({
-    id: Date.now(),
+    id: Date.now() + 1,
     fecha: fechaKey(diaSel_I),
     hora,
     horaFin,
-    cliente,
+    cliente: nombreCompleto,
     empleado: emp,
     servicio: servs[0] || '',
     servicios: servs,
@@ -1183,11 +1239,15 @@ function addCitaI() {
   save('citas');
   _serviciosNuevaCita = [];
   renderServiciosNuevaCita();
-  document.getElementById('i-cita-cliente').value = '';
-  document.getElementById('i-cita-notas').value   = '';
+  document.getElementById('i-cita-nombre').value    = '';
+  document.getElementById('i-cita-apellidos').value = '';
+  if (document.getElementById('i-cita-tel')) document.getElementById('i-cita-tel').value = '';
+  document.getElementById('i-cita-notas').value     = '';
+  const telWrap = document.getElementById('i-tel-wrap');
+  if (telWrap) telWrap.style.display = '';
   renderVistaDiaI();
   renderCalI();
-  toast('✓ Cita agendada');
+  if (clienteExistente) toast('✓ Cita agendada');
 }
 
 function delCitaI(id) {
@@ -1380,9 +1440,15 @@ function confirmarCobro() {
   const total   = carrito.reduce((a,b) => a+b.precio, 0);
   ventas.push({ id:Date.now(), fecha:new Date().toISOString(), cliente, servicios:carrito.map(c=>c.nombre), cats:[...new Set(carrito.map(c=>c.cat))], total, metodo:metodoPago });
   save('ventas');
-  // Actualizar visitas del cliente
-  const cli = clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase());
-  if (cli) { cli.visitas = (cli.visitas||0)+1; cli.ultimaVisita = new Date().toISOString(); save('clientes'); }
+  // Actualizar visitas del cliente (matching flexible)
+  const cli = clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase()
+    || c.nombre.toLowerCase().replace(/\s+/g,' ').trim() === cliente.toLowerCase().replace(/\s+/g,' ').trim());
+  if (cli) {
+    cli.visitas = (cli.visitas||0)+1;
+    cli.ultimaVisita = new Date().toISOString();
+    save('clientes');
+    renderClientes && renderClientes();
+  }
   cerrarModal(); limpiarCarrito();
   toast('✓ Cobro registrado: €'+total.toFixed(2));
 }
