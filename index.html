@@ -30,27 +30,29 @@ body { background:var(--fondo); color:var(--texto); font-family:'Barlow',sans-se
 nav {
   background:#1a2d27;
   border-bottom:1px solid var(--borde);
-  padding:0.2rem 1.5rem 0;
-  display:flex; flex-direction:column; align-items:center;
+  padding:0 2rem;
+  display:flex; flex-direction:row; align-items:center;
+  justify-content:space-between;
   position:sticky; top:0; z-index:200;
   box-shadow:0 2px 24px rgba(0,0,0,0.4);
+  min-height:52px;
 }
 .logo {
   font-family:'Cormorant Garamond',serif;
-  font-size:1.05rem; font-weight:700;
+  font-size:1.45rem; font-weight:700;
   color:var(--oro); letter-spacing:3px;
-  padding:0.2rem 0 0.1rem;
+  padding:0.4rem 0;
   text-transform:uppercase;
-  text-align:center; width:100%;
+  text-align:left; width:auto; flex-shrink:0;
 }
-.logo span { color:var(--oro2); font-weight:400; font-size:0.8em; letter-spacing:5px; display:block; font-style:italic; margin-top:-3px; text-align:center; }
+.logo span { color:var(--oro2); font-weight:400; font-size:0.78em; letter-spacing:5px; display:block; font-style:italic; margin-top:-4px; text-align:left; }
 
 nav button {
   background:none; border:none;
   color:var(--suave);
   font-family:'Barlow Condensed',sans-serif;
-  font-size:0.68rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
-  padding:0.4rem 0.85rem; cursor:pointer; transition:all 0.2s;
+  font-size:0.8rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  padding:0.55rem 1rem; cursor:pointer; transition:all 0.2s;
   border-bottom:2px solid transparent;
 }
 nav button:hover { color:var(--oro); }
@@ -379,12 +381,12 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .hamburger.open span:nth-child(2) { opacity:0; }
 .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
-.nav-links { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; width:100%; }
+.nav-links { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:0; }
 .nav-sep { width:1px; background:var(--borde); height:1.4rem; margin:0 0.4rem; align-self:center; }
 
 @media(max-width:700px) {
   /* Nav */
-  nav { padding:0.4rem 1rem 0; flex-direction:column; }
+  nav { padding:0.3rem 1rem; min-height:48px; }
   .logo { font-size:1.1rem; letter-spacing:2px; }
   .hamburger { display:flex; }
   .nav-links {
@@ -477,20 +479,18 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ NAV ════════════ -->
 <nav>
-  <div class="logo">RITUAL BARBER</div>
-  <div style="display:flex;align-items:center;justify-content:center;width:100%;position:relative;">
-    <div class="nav-links" id="nav-links">
-      <button onclick="showSection('inicio');cerrarMenu()"       id="nav-inicio"    class="active">Inicio</button>
-      <button onclick="showSection('caja');cerrarMenu()"         id="nav-caja">Caja</button>
-      <button onclick="showSection('clientes');cerrarMenu()"     id="nav-clientes">Clientes</button>
-      <div class="nav-sep"></div>
-      <button onclick="accederPrivado('area-privada')" id="nav-area-privada">Área Privada</button>
-      <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
-    </div>
-    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú" style="position:absolute;right:0;">
-      <span></span><span></span><span></span>
-    </button>
+  <div class="logo">RITUAL BARBER<span>Barbershop</span></div>
+  <div class="nav-links" id="nav-links">
+    <button onclick="showSection('inicio');cerrarMenu()" id="nav-inicio" class="active">Inicio</button>
+    <button onclick="showSection('caja');cerrarMenu()" id="nav-caja">Caja</button>
+    <button onclick="showSection('clientes');cerrarMenu()" id="nav-clientes">Clientes</button>
+    <div class="nav-sep"></div>
+    <button onclick="accederPrivado('area-privada')" id="nav-area-privada">Área Privada</button>
+    <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
   </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- ════════════ INICIO ════════════ -->
