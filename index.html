@@ -30,8 +30,8 @@ body { background:var(--fondo); color:var(--texto); font-family:'Barlow',sans-se
 nav {
   background:#1a2d27;
   border-bottom:1px solid var(--borde);
-  padding:0 1.5rem;
-  display:flex; align-items:center; flex-wrap:wrap;
+  padding:0.6rem 1.5rem 0;
+  display:flex; flex-direction:column; align-items:center;
   position:sticky; top:0; z-index:200;
   box-shadow:0 2px 24px rgba(0,0,0,0.4);
 }
@@ -39,17 +39,18 @@ nav {
   font-family:'Cormorant Garamond',serif;
   font-size:1.45rem; font-weight:700;
   color:var(--oro); letter-spacing:3px;
-  padding:0.9rem 0; margin-right:auto;
+  padding:0.5rem 0 0.3rem;
   text-transform:uppercase;
+  text-align:center; width:100%;
 }
-.logo span { color:var(--oro2); font-weight:400; font-size:0.85em; letter-spacing:5px; display:block; font-style:italic; margin-top:-4px; }
+.logo span { color:var(--oro2); font-weight:400; font-size:0.85em; letter-spacing:5px; display:block; font-style:italic; margin-top:-4px; text-align:center; }
 
 nav button {
   background:none; border:none;
   color:var(--suave);
   font-family:'Barlow Condensed',sans-serif;
   font-size:0.75rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
-  padding:1.1rem 1rem; cursor:pointer; transition:all 0.2s;
+  padding:0.7rem 1rem; cursor:pointer; transition:all 0.2s;
   border-bottom:2px solid transparent;
 }
 nav button:hover { color:var(--oro); }
@@ -350,8 +351,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 /* ── VISTA DÍA EMPLEADOS ── */
 .vd-grid { display:grid; grid-template-columns:40px repeat(3,1fr); gap:0; border:1px solid var(--borde); border-radius:10px; overflow:hidden; }
 .vd-head { background:#1a2d27; padding:0.3rem 0.2rem; text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--oro); border-bottom:2px solid var(--borde); }
-.vd-hora { background:#1a2d27; padding:0 0.3rem; display:flex; align-items:flex-start; justify-content:flex-end; font-size:0.56rem; color:var(--suave); font-weight:600; letter-spacing:0.5px; padding-top:2px; border-right:1px solid var(--borde); }
-.vd-cell { background:var(--card); border-left:1px solid var(--borde); border-bottom:1px solid rgba(61,96,87,0.4); min-height:16px; position:relative; cursor:pointer; transition:background 0.15s; }
+.vd-hora { background:#1a2d27; padding:0 0.3rem; display:flex; align-items:flex-start; justify-content:flex-end; font-size:0.56rem; color:var(--suave); font-weight:600; letter-spacing:0.5px; padding-top:4px; border-right:1px solid var(--borde); min-height:28px; }
+.vd-cell { background:var(--card); border-left:1px solid var(--borde); border-bottom:1px solid rgba(61,96,87,0.4); min-height:28px; position:relative; cursor:pointer; transition:background 0.15s; }
 .vd-cell:hover { background:var(--card2); }
 .vd-cell.hora-par { background:rgba(26,45,39,0.5); }
 .vd-cell.hora-par:hover { background:var(--card2); }
@@ -378,12 +379,12 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .hamburger.open span:nth-child(2) { opacity:0; }
 .hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
-.nav-links { display:flex; align-items:center; flex-wrap:wrap; flex:1; }
+.nav-links { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; width:100%; }
 .nav-sep { width:1px; background:var(--borde); height:1.4rem; margin:0 0.4rem; align-self:center; }
 
 @media(max-width:700px) {
   /* Nav */
-  nav { flex-wrap:nowrap; padding:0 1rem; position:relative; }
+  nav { padding:0.4rem 1rem 0; flex-direction:column; }
   .logo { font-size:1.1rem; letter-spacing:2px; }
   .hamburger { display:flex; }
   .nav-links {
@@ -478,16 +479,18 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 <!-- ════════════ NAV ════════════ -->
 <nav>
   <div class="logo">RITUAL BARBER</div>
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="nav-links" id="nav-links">
-    <button onclick="showSection('inicio');cerrarMenu()"       id="nav-inicio"    class="active">Inicio</button>
-    <button onclick="showSection('caja');cerrarMenu()"         id="nav-caja">Caja</button>
-    <button onclick="showSection('clientes');cerrarMenu()"     id="nav-clientes">Clientes</button>
-    <div class="nav-sep"></div>
-    <button onclick="accederPrivado('area-privada')" id="nav-area-privada">Área Privada</button>
-    <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
+  <div style="display:flex;align-items:center;justify-content:center;width:100%;position:relative;">
+    <div class="nav-links" id="nav-links">
+      <button onclick="showSection('inicio');cerrarMenu()"       id="nav-inicio"    class="active">Inicio</button>
+      <button onclick="showSection('caja');cerrarMenu()"         id="nav-caja">Caja</button>
+      <button onclick="showSection('clientes');cerrarMenu()"     id="nav-clientes">Clientes</button>
+      <div class="nav-sep"></div>
+      <button onclick="accederPrivado('area-privada')" id="nav-area-privada">Área Privada</button>
+      <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú" style="position:absolute;right:0;">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -504,11 +507,11 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div style="min-width:0;display:flex;flex-direction:column;gap:0.75rem;">
         <div style="flex:1;display:flex;flex-direction:column;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
-            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">← Ant.</button>
-            <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--oro);font-weight:600;" id="mes-label-i"></span>
-            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">Sig. →</button>
+            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)" style="border-color:var(--verde);color:var(--verde);">← Ant.</button>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--verde);font-weight:700;letter-spacing:2px;text-transform:uppercase;" id="mes-label-i"></span>
+            <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)" style="border-color:var(--verde);color:var(--verde);">Sig. →</button>
           </div>
-          <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.75rem;flex:1;">
+          <div style="background:var(--card);border:1px solid var(--verde);border-radius:10px;padding:0.75rem;flex:1;">
             <div class="calendario-grid" id="cal-grid-i"></div>
           </div>
         </div>
@@ -600,7 +603,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- FILA 2: Agenda de empleados -->
     <div>
-      <div style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:0.92rem;font-weight:700;margin-bottom:0.5rem;" id="dia-label-i">Hoy</div>
+      <div style="font-family:'Cormorant Garamond',serif;color:var(--verde);font-size:1rem;font-weight:700;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:2px;" id="dia-label-i">Hoy</div>
       <div id="vista-dia-i" style="overflow-x:auto;"></div>
     </div>
 
