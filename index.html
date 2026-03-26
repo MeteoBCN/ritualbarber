@@ -544,15 +544,25 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
             <button type="button" class="btn btn-ghost btn-sm" onclick="addServicioI()" style="padding:0.4rem 0.8rem;font-size:1.1rem;line-height:1;flex-shrink:0;">+</button>
           </div>
         </div>
-        <!-- Hora inicio y fin: apiladas para evitar overflow -->
+        <!-- Hora inicio y fin: selectores visuales por intervalos de 20 min -->
         <div style="margin-bottom:0.6rem;">
-          <div class="form-group" style="margin-bottom:0.4rem;">
+          <div class="form-group" style="margin-bottom:0.55rem;">
             <label>Hora inicio</label>
-            <input id="i-cita-hora" type="time" value="09:00" oninput="autoHoraFin()" style="width:100%;"/>
+            <div style="display:flex;align-items:center;gap:0.4rem;">
+              <button type="button" onclick="cambiarHoraI('inicio',-1)" style="background:var(--card2);border:1px solid var(--borde);color:var(--oro);border-radius:6px;width:32px;height:36px;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--oro)'" onmouseout="this.style.borderColor='var(--borde)'">‹</button>
+              <div id="i-cita-hora-display" style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;color:var(--oro);background:var(--card2);border:1px solid var(--borde);border-radius:6px;padding:0.28rem 0.5rem;letter-spacing:2px;">10:00</div>
+              <button type="button" onclick="cambiarHoraI('inicio',1)" style="background:var(--card2);border:1px solid var(--borde);color:var(--oro);border-radius:6px;width:32px;height:36px;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--oro)'" onmouseout="this.style.borderColor='var(--borde)'">›</button>
+            </div>
+            <input id="i-cita-hora" type="hidden" value="10:00"/>
           </div>
           <div class="form-group">
             <label>Hora fin</label>
-            <input id="i-cita-hora-fin" type="time" value="09:30" style="width:100%;"/>
+            <div style="display:flex;align-items:center;gap:0.4rem;">
+              <button type="button" onclick="cambiarHoraI('fin',-1)" style="background:var(--card2);border:1px solid var(--borde);color:var(--oro);border-radius:6px;width:32px;height:36px;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--oro)'" onmouseout="this.style.borderColor='var(--borde)'">‹</button>
+              <div id="i-cita-hora-fin-display" style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;color:var(--oro);background:var(--card2);border:1px solid var(--borde);border-radius:6px;padding:0.28rem 0.5rem;letter-spacing:2px;">10:20</div>
+              <button type="button" onclick="cambiarHoraI('fin',1)" style="background:var(--card2);border:1px solid var(--borde);color:var(--oro);border-radius:6px;width:32px;height:36px;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--oro)'" onmouseout="this.style.borderColor='var(--borde)'">›</button>
+            </div>
+            <input id="i-cita-hora-fin" type="hidden" value="10:20"/>
           </div>
         </div>
         <div class="form-group" style="margin-bottom:0.6rem;">
@@ -1087,6 +1097,41 @@ function renderServiciosNuevaCita() {
   ).join('');
 }
 
+// ── SELECTORES DE HORA (intervalos 20 min, 07:00–22:00) ──
+const _SLOTS_HORA = (function(){
+  const s=[];
+  for(let h=10;h<=21;h++) for(let m=0;m<60;m+=20){
+    if(h===21&&m>0) break;
+    s.push(String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'));
+  }
+  return s;
+})();
+
+function _horaToIdx(val){
+  const idx=_SLOTS_HORA.indexOf(val);
+  if(idx>=0) return idx;
+  // snap al más cercano
+  const [h,m]=val.split(':').map(Number);
+  const tot=h*60+m;
+  let best=0,bestD=9999;
+  _SLOTS_HORA.forEach((s,i)=>{const[sh,sm]=s.split(':').map(Number);const d=Math.abs(sh*60+sm-tot);if(d<bestD){bestD=d;best=i;}});
+  return best;
+}
+
+function _setHoraI(campo,val){
+  document.getElementById('i-cita-hora'+(campo==='fin'?'-fin':'')).value=val;
+  document.getElementById('i-cita-hora'+(campo==='fin'?'-fin':'')+'-display').textContent=val;
+}
+
+function cambiarHoraI(campo,dir){
+  const id='i-cita-hora'+(campo==='fin'?'-fin':'');
+  const cur=document.getElementById(id).value||'09:00';
+  let idx=_horaToIdx(cur)+dir;
+  idx=Math.max(0,Math.min(_SLOTS_HORA.length-1,idx));
+  _setHoraI(campo,_SLOTS_HORA[idx]);
+  if(campo==='inicio') autoHoraFin();
+}
+
 function autoHoraFin() {
   const horaInicio = document.getElementById('i-cita-hora').value;
   if (!horaInicio) return;
@@ -1098,15 +1143,20 @@ function autoHoraFin() {
     const s = servicios.find(x => x.nombre === nombre);
     if (s && s.duracion) dur += s.duracion;
   });
-  if (dur === 0) dur = 30; // default 30 min
+  if (dur === 0) dur = 20; // default 20 min
   totalMin += dur;
+  // snap a intervalo de 20
+  totalMin = Math.round(totalMin/20)*20;
+  totalMin = Math.min(totalMin, 21*60);
   const finH = String(Math.floor(totalMin / 60) % 24).padStart(2,'0');
   const finM = String(totalMin % 60).padStart(2,'0');
-  document.getElementById('i-cita-hora-fin').value = finH + ':' + finM;
+  const val = finH+':'+finM;
+  _setHoraI('fin', val);
 }
 
 function clickSlotI(hora, emp) {
-  document.getElementById('i-cita-hora').value = hora;
+  const idx=_horaToIdx(hora);
+  _setHoraI('inicio',_SLOTS_HORA[idx]);
   document.getElementById('i-cita-emp').value = emp;
   autoHoraFin();
   document.getElementById('i-cita-cliente').focus();
