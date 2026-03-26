@@ -581,24 +581,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         <button class="btn btn-oro" style="width:100%;padding:0.6rem 0;font-size:0.85rem;" onclick="addCitaI()">✓ Agendar Cita</button>
       </div>
 
-      <!-- Accesos rápidos: Caja y Clientes -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-        <div onclick="showSection('caja')"
-          style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.35rem;"
-          onmouseover="this.style.borderColor='var(--oro)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.borderColor='var(--borde)';this.style.transform=''">
-          <div style="font-size:1.4rem;">💰</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-weight:700;color:var(--oro);letter-spacing:1px;">CAJA</div>
-        </div>
-        <div onclick="showSection('clientes')"
-          style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.35rem;"
-          onmouseover="this.style.borderColor='var(--oro)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.borderColor='var(--borde)';this.style.transform=''">
-          <div style="font-size:1.4rem;">👤</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-weight:700;color:var(--oro);letter-spacing:1px;">CLIENTES</div>
-        </div>
-      </div>
-
     </div>
 
     <!-- ── COLUMNA DERECHA 65% ── -->
@@ -1440,12 +1422,19 @@ function confirmarCobro() {
   const total   = carrito.reduce((a,b) => a+b.precio, 0);
   ventas.push({ id:Date.now(), fecha:new Date().toISOString(), cliente, servicios:carrito.map(c=>c.nombre), cats:[...new Set(carrito.map(c=>c.cat))], total, metodo:metodoPago });
   save('ventas');
-  // Actualizar visitas del cliente (matching flexible)
+  // Actualizar visitas e historial del cliente (matching flexible)
   const cli = clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase()
     || c.nombre.toLowerCase().replace(/\s+/g,' ').trim() === cliente.toLowerCase().replace(/\s+/g,' ').trim());
   if (cli) {
     cli.visitas = (cli.visitas||0)+1;
     cli.ultimaVisita = new Date().toISOString();
+    if (!cli.historial) cli.historial = [];
+    cli.historial.unshift({
+      fecha: new Date().toISOString(),
+      servicios: carrito.map(c=>c.nombre),
+      total: total,
+      metodo: metodoPago
+    });
     save('clientes');
     renderClientes && renderClientes();
   }
@@ -1557,18 +1546,44 @@ function renderClientes() {
     const iniciales = c.nombre.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
     const visitas   = c.visitas || 0;
     const ultima    = c.ultimaVisita ? new Date(c.ultimaVisita).toLocaleDateString('es-ES') : '—';
+    const historial = c.historial || [];
+    const histHtml = historial.length === 0
+      ? '<div style="color:var(--suave);font-size:0.75rem;padding:0.4rem 0;">Sin historial de visitas aún</div>'
+      : historial.slice(0,20).map(h => {
+          const d = new Date(h.fecha).toLocaleDateString('es-ES');
+          const t = new Date(h.fecha).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+          const servs = (h.servicios||[]).join(', ') || '—';
+          const metIcon = h.metodo==='Efectivo'?'💵':h.metodo==='Tarjeta'?'💳':h.metodo==='Bizum'?'📱':'💰';
+          return `<div style="display:flex;align-items:flex-start;gap:0.6rem;padding:0.42rem 0;border-bottom:1px solid rgba(61,96,87,0.3);">
+            <div style="flex-shrink:0;font-size:0.65rem;color:var(--suave);min-width:72px;padding-top:1px;">${d}<br><span style="opacity:0.7;">${t}</span></div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:0.78rem;color:var(--oro);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${servs}">${servs}</div>
+              <div style="font-size:0.68rem;color:var(--suave);margin-top:1px;">${metIcon} ${h.metodo||'—'} · <span style="color:var(--verde2);font-weight:600;">€${(h.total||0).toFixed(2)}</span></div>
+            </div>
+          </div>`;
+        }).join('');
+    const hasHist = historial.length > 0;
     return `
-      <div class="cliente-card ${c.archivado?'archivado':''}">
-        <div class="cliente-avatar">${iniciales}</div>
-        <div class="cliente-info">
-          <div class="cliente-nombre">${c.nombre} ${c.archivado?'<span style="font-size:0.68rem;color:var(--suave)">(archivado)</span>':''}</div>
-          <div class="cliente-tel">📞 ${c.tel||'—'} ${c.email?'  ✉ '+c.email:''}</div>
-          <div class="cliente-meta">Visitas: ${visitas} · Última: ${ultima}</div>
+      <div class="cliente-card ${c.archivado?'archivado':''}" style="flex-direction:column;align-items:stretch;gap:0;">
+        <div style="display:flex;align-items:center;gap:0;">
+          <div class="cliente-avatar" style="flex-shrink:0;margin-right:1rem;">${iniciales}</div>
+          <div class="cliente-info" style="flex:1;min-width:0;">
+            <div class="cliente-nombre">${c.nombre} ${c.archivado?'<span style="font-size:0.68rem;color:var(--suave)">(archivado)</span>':''}</div>
+            <div class="cliente-tel">📞 ${c.tel||'—'} ${c.email?'  ✉ '+c.email:''}</div>
+            <div class="cliente-meta">Visitas: ${visitas} · Última: ${ultima}</div>
+          </div>
+          <div class="cliente-acciones" style="flex-shrink:0;">
+            <button class="btn btn-ghost btn-sm" onclick="editarCliente(${c.id})" title="Editar">✏</button>
+            <button class="btn btn-suave btn-sm" onclick="toggleArchivar(${c.id})" title="${c.archivado?'Restaurar':'Archivar'}">${c.archivado?'↩':'📁'}</button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarCliente(${c.id})" title="Eliminar">✕</button>
+            <button class="btn btn-suave btn-sm" onclick="toggleHistorial(${c.id})" title="Ver historial" style="${hasHist?'':'opacity:0.4;cursor:default;'}" ${hasHist?'':'disabled'}>
+              📋<span style="font-size:0.6rem;margin-left:2px;">${historial.length}</span>
+            </button>
+          </div>
         </div>
-        <div class="cliente-acciones">
-          <button class="btn btn-ghost btn-sm" onclick="editarCliente(${c.id})" title="Editar">✏</button>
-          <button class="btn btn-suave btn-sm" onclick="toggleArchivar(${c.id})" title="${c.archivado?'Restaurar':'Archivar'}">${c.archivado?'↩':'📁'}</button>
-          <button class="btn btn-danger btn-sm" onclick="eliminarCliente(${c.id})" title="Eliminar">✕</button>
+        <div id="hist-${c.id}" style="display:none;margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--borde);">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--suave);margin-bottom:0.35rem;">Historial de servicios</div>
+          ${histHtml}
         </div>
       </div>`;
   }).join('');
@@ -1610,6 +1625,12 @@ function limpiarFormCliente() {
   editandoClienteId = null;
   ['cli-nombre','cli-tel','cli-email','cli-notas'].forEach(id => document.getElementById(id).value='');
   document.getElementById('form-cli-titulo').textContent = '+ Nuevo Cliente';
+}
+
+function toggleHistorial(id) {
+  const el = document.getElementById('hist-' + id);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 function toggleArchivar(id) {
