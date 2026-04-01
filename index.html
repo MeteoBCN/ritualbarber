@@ -100,14 +100,19 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 #sec-inicio-publica {
   padding:0;
   max-width:none;
+  background:#1a2d27;
 }
 
 .inicio-hero {
   background:linear-gradient(160deg, #1a2d27 0%, #26413a 60%);
   padding:6rem 2rem 4rem;
   text-align:center;
-  border-bottom:1px solid var(--borde);
   position:relative; overflow:hidden;
+  min-height: calc(100vh - 42px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .inicio-hero::before {
   content:'✂';
@@ -506,7 +511,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--suave);
+  color: #ffffff;
   margin-top: 0.3rem;
 }
 
@@ -591,6 +596,12 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       </div>
     </div>
 
+    <!-- Logo RB -->
+    <div style="margin:2rem auto 0;display:flex;justify-content:center;">
+      <img src="logo__1_.png" alt="Ritual Barber Logo"
+           style="width:120px;height:120px;border-radius:18px;border:2px solid #ccb57f;box-shadow:0 0 18px rgba(204,181,127,0.25);display:block;">
+    </div>
+
     <!-- Tarjeta Reserva tu Cita -->
     <div class="hero-reserva-wrap">
       <div class="hero-reserva-card" onclick="showSection('reservar');cerrarMenu()">
@@ -600,6 +611,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     </div>
 
   </div>
+</div>
 
 <!-- ════════════ RESERVAR CITA ════════════ -->
 <div class="section" id="sec-reservar">
