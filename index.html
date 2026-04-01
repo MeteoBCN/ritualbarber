@@ -455,7 +455,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 .hero-drop-item .drop-desc {
   font-family: 'Barlow', sans-serif;
   font-size: 0.8rem;
-  color: var(--suave);
+  color: var(--oro);
   letter-spacing: 0.3px;
   line-height: 1.6;
   max-height: 0;
@@ -470,6 +470,44 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   height: 1px;
   background: var(--borde);
   opacity: 0.4;
+}
+
+/* ── RESERVA CARD EN HERO ── */
+.hero-reserva-wrap {
+  margin: 2rem auto 0;
+  display: flex;
+  justify-content: center;
+}
+.hero-reserva-card {
+  border: 1px solid var(--oro);
+  border-radius: 12px;
+  padding: 1.1rem 2.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s;
+  background: transparent;
+}
+.hero-reserva-card:hover {
+  background: rgba(204,181,127,0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(204,181,127,0.15);
+}
+.hero-reserva-titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--oro);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.hero-reserva-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--suave);
+  margin-top: 0.3rem;
 }
 
 /* ── INPUT/SELECT/TEXTAREA ── */
@@ -499,6 +537,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   <div class="logo" onclick="showSection('inicio-publica');cerrarMenu()">RITUAL BARBER</div>
   <div class="nav-links" id="nav-links">
     <button onclick="showSection('inicio-publica');cerrarMenu()" id="nav-inicio-publica" class="active">Inicio</button>
+    <button onclick="showSection('reservar');cerrarMenu()" id="nav-reservar">Reservar Cita</button>
     <button onclick="showSection('contacto');cerrarMenu()" id="nav-contacto">Contacto</button>
     <button onclick="showSection('otros');cerrarMenu()" id="nav-otros">Otros</button>
     <div class="nav-sep"></div>
@@ -551,25 +590,101 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         <div class="drop-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
       </div>
     </div>
+
+    <!-- Tarjeta Reserva tu Cita -->
+    <div class="hero-reserva-wrap">
+      <div class="hero-reserva-card" onclick="showSection('reservar');cerrarMenu()">
+        <div class="hero-reserva-titulo">Reserva tu Cita</div>
+        <div class="hero-reserva-sub">Consulta horas disponibles</div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="inicio-cards">
-    <div class="inicio-card" onclick="showSection('contacto');cerrarMenu()">
-      <div class="ic-titulo">Servicios</div>
-      <div class="ic-desc">Cortes / Barbería / Tratamientos</div>
+<!-- ════════════ RESERVAR CITA ════════════ -->
+<div class="section" id="sec-reservar">
+  <h2>✂ Reservar Cita</h2>
+
+  <div style="max-width:680px;margin:0 auto;">
+
+    <!-- Info rápida -->
+    <div class="info-grid" style="margin-bottom:2rem;">
+      <div class="info-card">
+        <h3>📍 Ubicación</h3>
+        <p>Mossèn Jacint Verdaguer 205</p>
+        <p style="font-size:0.8rem;margin-top:0.4rem;">Sant Vicenç dels Horts · Barcelona</p>
+      </div>
+      <div class="info-card">
+        <h3>🕐 Horario</h3>
+        <p>Lunes a Sábado</p>
+        <p style="font-size:0.8rem;margin-top:0.4rem;">10:00 – 21:00 h</p>
+      </div>
+      <div class="info-card">
+        <h3>📞 Contacto</h3>
+        <p><a href="tel:+34600000000" style="color:var(--oro);text-decoration:none;">+34 600 000 000</a></p>
+        <p style="font-size:0.8rem;margin-top:0.4rem;">Llamadas y WhatsApp</p>
+      </div>
     </div>
-    <div class="inicio-card">
-      <div class="ic-titulo">Profesionales expertos</div>
-      <div class="ic-desc">Nuestro equipo está aquí para ti</div>
+
+    <!-- Formulario de reserva -->
+    <div class="contacto-form" style="max-width:100%;">
+      <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1.3rem;margin-bottom:1.5rem;text-align:center;">Solicita tu cita</h3>
+
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input id="res-nombre" placeholder="Tu nombre" />
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input id="res-tel" placeholder="+34 600 000 000" type="tel" />
+      </div>
+      <div class="form-group">
+        <label>Servicio</label>
+        <select id="res-servicio">
+          <option value="">— Selecciona un servicio —</option>
+          <option>Corte de cabello</option>
+          <option>Corte + Barba</option>
+          <option>Afeitado clásico</option>
+          <option>Arreglo de barba</option>
+          <option>Tratamiento capilar</option>
+          <option>Combo completo</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label>Fecha preferida</label>
+          <input id="res-fecha" type="date" />
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>Hora preferida</label>
+          <select id="res-hora">
+            <option value="">— Hora —</option>
+            <option>10:00</option><option>10:30</option>
+            <option>11:00</option><option>11:30</option>
+            <option>12:00</option><option>12:30</option>
+            <option>13:00</option><option>13:30</option>
+            <option>16:00</option><option>16:30</option>
+            <option>17:00</option><option>17:30</option>
+            <option>18:00</option><option>18:30</option>
+            <option>19:00</option><option>19:30</option>
+            <option>20:00</option><option>20:30</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notas adicionales (opcional)</label>
+        <textarea id="res-notas" placeholder="Alguna preferencia o indicación especial..." style="min-height:80px;"></textarea>
+      </div>
+
+      <button class="btn btn-oro" style="width:100%;padding:0.85rem;font-size:0.9rem;" onclick="enviarReserva()">
+        ✂ Confirmar Solicitud
+      </button>
+
+      <p style="text-align:center;color:var(--suave);font-size:0.72rem;margin-top:1rem;letter-spacing:0.5px;">
+        Recibirás confirmación por teléfono en menos de 24 h
+      </p>
     </div>
-    <div class="inicio-card">
-      <div class="ic-titulo">Horario</div>
-      <div class="ic-desc">Lunes a Sábado // 10:00 a 21:00</div>
-    </div>
-    <div class="inicio-card" onclick="showSection('otros');cerrarMenu()">
-      <div class="ic-titulo">Nos encontrará en</div>
-      <div class="ic-desc">Mossèn jacint verdaguer 205 - Sant vicenç dels horts</div>
-    </div>
+
   </div>
 </div>
 
@@ -787,6 +902,35 @@ function cerrarSesion() {
   document.getElementById('btn-cerrar-sesion').style.display = 'none';
   showSection('inicio-publica');
   toast('🔒 Sesión cerrada');
+}
+
+// ════════════════════════════════════════
+// RESERVAR CITA
+// ════════════════════════════════════════
+function enviarReserva() {
+  const nombre   = document.getElementById('res-nombre').value;
+  const tel      = document.getElementById('res-tel').value;
+  const servicio = document.getElementById('res-servicio').value;
+  const fecha    = document.getElementById('res-fecha').value;
+  const hora     = document.getElementById('res-hora').value;
+
+  if (!nombre || !tel || !servicio || !fecha || !hora) {
+    toast('✕ Por favor completa todos los campos obligatorios');
+    return;
+  }
+
+  const reservas = JSON.parse(localStorage.getItem('rb_reservas') || '[]');
+  reservas.push({ nombre, tel, servicio, fecha, hora, notas: document.getElementById('res-notas').value, fecha_solicitud: new Date().toLocaleString() });
+  localStorage.setItem('rb_reservas', JSON.stringify(reservas));
+
+  document.getElementById('res-nombre').value = '';
+  document.getElementById('res-tel').value = '';
+  document.getElementById('res-servicio').value = '';
+  document.getElementById('res-fecha').value = '';
+  document.getElementById('res-hora').value = '';
+  document.getElementById('res-notas').value = '';
+
+  toast('✓ Solicitud enviada — te confirmaremos en menos de 24 h');
 }
 
 // ════════════════════════════════════════
