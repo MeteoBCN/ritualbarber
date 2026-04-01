@@ -559,22 +559,14 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 <div class="section active" id="sec-inicio-publica">
   <div class="inicio-hero">
 
-    <!-- Logo encima del título -->
-    <div style="margin-bottom:1.5rem;">
-      <img src="logo__1_.png" alt="Ritual Barber Logo"
-           style="width:110px;height:110px;border-radius:16px;border:2px solid #ccb57f;box-shadow:0 0 22px rgba(204,181,127,0.3);display:block;margin:0 auto;">
-    </div>
-
     <div class="hero-titulo">RITUAL BARBER</div>
     <div class="hero-subtitulo">Experiencia Premium</div>
-    <div class="hero-linea"></div>
 
     <!-- Acordeón centrado -->
     <div class="hero-acordeon">
       <div class="hero-drop-item" onclick="toggleDropItem(this)">
         <div class="hero-drop-header">
           <span class="drop-titulo">Servicios y Tratamientos</span>
-          <span class="drop-arrow">▼</span>
         </div>
         <div class="drop-desc">Cortes clásicos y modernos, barbería profesional y tratamientos capilares a medida.</div>
       </div>
@@ -582,7 +574,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="hero-drop-item" onclick="toggleDropItem(this)">
         <div class="hero-drop-header">
           <span class="drop-titulo">Profesionales Expertos</span>
-          <span class="drop-arrow">▼</span>
         </div>
         <div class="drop-desc">Nuestro equipo está aquí para ti. Especialistas formados en las últimas técnicas de barbería y cuidado del cabello.</div>
       </div>
@@ -590,7 +581,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="hero-drop-item" onclick="toggleDropItem(this)">
         <div class="hero-drop-header">
           <span class="drop-titulo">Horario</span>
-          <span class="drop-arrow">▼</span>
         </div>
         <div class="drop-desc">Lunes a Sábado de 10:00 a 21:00 h.</div>
       </div>
@@ -598,17 +588,23 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="hero-drop-item" onclick="toggleDropItem(this)">
         <div class="hero-drop-header">
           <span class="drop-titulo">Nos encontrará en...</span>
-          <span class="drop-arrow">▼</span>
         </div>
         <div class="drop-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
       </div>
+    </div>
+
+    <div class="hero-linea"></div>
+
+    <!-- Logo entre línea dorada y reserva -->
+    <div style="margin:1.5rem auto;">
+      <img src="logo__1_.png" alt="Ritual Barber Logo"
+           style="width:110px;height:110px;border-radius:16px;border:2px solid #ccb57f;box-shadow:0 0 22px rgba(204,181,127,0.3);display:block;margin:0 auto;">
     </div>
 
     <!-- Tarjeta Reserva tu Cita -->
     <div class="hero-reserva-wrap">
       <div class="hero-reserva-card" onclick="showSection('reservar');cerrarMenu()">
         <div class="hero-reserva-titulo">Reserva tu Cita</div>
-        <div class="hero-reserva-sub">Consulta horas disponibles</div>
       </div>
     </div>
 
