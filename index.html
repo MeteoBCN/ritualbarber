@@ -413,6 +413,65 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 .sep { height:1px; background:linear-gradient(to right,transparent,var(--borde),transparent); margin:1.1rem 0; }
 .empty-state { text-align:center; color:var(--suave); padding:2.5rem 0; }
 
+/* ── HERO ACORDEÓN ── */
+.hero-acordeon {
+  margin: 1.6rem auto 0;
+  width: min(420px, 90vw);
+  text-align: left;
+}
+.hero-drop-item {
+  padding: 0.75rem 0.2rem;
+  cursor: pointer;
+}
+.hero-drop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.hero-drop-item .drop-titulo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--suave);
+  transition: color 0.2s;
+}
+.hero-drop-item:hover .drop-titulo,
+.hero-drop-item.open .drop-titulo {
+  color: var(--oro);
+}
+.hero-drop-item .drop-arrow {
+  font-size: 0.55rem;
+  color: var(--suave);
+  transition: transform 0.25s, color 0.2s;
+  flex-shrink: 0;
+}
+.hero-drop-item.open .drop-arrow {
+  transform: rotate(180deg);
+  color: var(--oro);
+}
+.hero-drop-item .drop-desc {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  color: var(--suave);
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.hero-drop-item.open .drop-desc {
+  max-height: 80px;
+  padding-top: 0.4rem;
+}
+.hero-drop-divider {
+  height: 1px;
+  background: var(--borde);
+  opacity: 0.4;
+}
+
 /* ── INPUT/SELECT/TEXTAREA ── */
 input, select, textarea {
   background:#26413a;
@@ -457,6 +516,41 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <div class="hero-titulo">RITUAL BARBER</div>
     <div class="hero-subtitulo">Experiencia Premium</div>
     <div class="hero-linea"></div>
+
+    <!-- Acordeón hero -->
+    <div class="hero-acordeon">
+      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+        <div class="hero-drop-header">
+          <span class="drop-titulo">Servicios y Tratamientos</span>
+          <span class="drop-arrow">▼</span>
+        </div>
+        <div class="drop-desc">Cortes clásicos y modernos, barbería profesional y tratamientos capilares a medida.</div>
+      </div>
+      <div class="hero-drop-divider"></div>
+      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+        <div class="hero-drop-header">
+          <span class="drop-titulo">Profesionales Expertos</span>
+          <span class="drop-arrow">▼</span>
+        </div>
+        <div class="drop-desc">Nuestro equipo está aquí para ti. Especialistas formados en las últimas técnicas de barbería y cuidado del cabello.</div>
+      </div>
+      <div class="hero-drop-divider"></div>
+      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+        <div class="hero-drop-header">
+          <span class="drop-titulo">Horario</span>
+          <span class="drop-arrow">▼</span>
+        </div>
+        <div class="drop-desc">Lunes a Sábado de 10:00 a 21:00 h.</div>
+      </div>
+      <div class="hero-drop-divider"></div>
+      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+        <div class="hero-drop-header">
+          <span class="drop-titulo">Nos encontrará en...</span>
+          <span class="drop-arrow">▼</span>
+        </div>
+        <div class="drop-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
+      </div>
+    </div>
   </div>
 
   <div class="inicio-cards">
@@ -621,6 +715,37 @@ function cerrarMenu() {
   hamburger.classList.remove('open');
   navLinks.classList.remove('open');
 }
+
+function toggleHeroMenu() {
+  const btn = document.getElementById('hero-menu-btn');
+  const drop = document.getElementById('hero-dropdown');
+  btn.classList.toggle('open');
+  drop.classList.toggle('open');
+}
+
+function toggleDropItem(el) {
+  const isOpen = el.classList.contains('open');
+  // Cerrar todos
+  document.querySelectorAll('.hero-drop-item').forEach(i => i.classList.remove('open'));
+  // Abrir el pulsado si estaba cerrado
+  if (!isOpen) el.classList.add('open');
+}
+
+function cerrarHeroMenu() {
+  const btn = document.getElementById('hero-menu-btn');
+  const drop = document.getElementById('hero-dropdown');
+  btn.classList.remove('open');
+  drop.classList.remove('open');
+}
+
+// Cerrar el dropdown hero al hacer click fuera
+document.addEventListener('click', function(e) {
+  const btn = document.getElementById('hero-menu-btn');
+  const drop = document.getElementById('hero-dropdown');
+  if (btn && drop && !btn.contains(e.target) && !drop.contains(e.target)) {
+    cerrarHeroMenu();
+  }
+});
 
 // ════════════════════════════════════════
 // AUTENTICACIÓN
