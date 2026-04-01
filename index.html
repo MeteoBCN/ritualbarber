@@ -44,8 +44,10 @@ nav {
   padding:0.28rem 0;
   text-transform:uppercase;
   text-align:left; width:auto; flex-shrink:0;
+  cursor:pointer;
+  transition:all 0.2s;
 }
-.logo span { display:none; }
+.logo:hover { color:var(--oro2); }
 
 nav button {
   background:none; border:none;
@@ -81,23 +83,6 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 }
 .card:hover { border-color:var(--oro3); }
 
-/* ── FORMULARIOS ── */
-.form-row { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:0.9rem; }
-.form-group { display:flex; flex-direction:column; gap:0.35rem; flex:1; min-width:145px; }
-.form-group label { font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--suave); }
-
-input, select, textarea {
-  background:#26413a;
-  border:1px solid var(--borde);
-  border-radius:7px; color:var(--oro);
-  padding:0.58rem 0.85rem;
-  font-family:'Barlow',sans-serif; font-size:0.9rem;
-  transition:border-color 0.2s; width:100%;
-}
-input:focus, select:focus, textarea:focus { outline:none; border-color:var(--oro); }
-input::placeholder { color:var(--suave); opacity:0.6; }
-select option, optgroup { background:var(--fondo2); color:var(--oro); }
-
 /* ── BOTONES ── */
 .btn {
   padding:0.58rem 1.25rem; border:none; border-radius:7px;
@@ -109,13 +94,173 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .btn-oro:hover { background:var(--oro2); transform:translateY(-1px); }
 .btn-ghost { background:transparent; border:1px solid var(--oro); color:var(--oro); }
 .btn-ghost:hover { background:var(--oro); color:var(--fondo3); }
-.btn-danger { background:var(--rojo); color:white; }
-.btn-danger:hover { background:#e74c3c; }
-.btn-success { background:var(--verde); color:white; }
-.btn-success:hover { background:var(--verde2); }
-.btn-suave { background:var(--card2); border:1px solid var(--borde); color:var(--suave); }
-.btn-suave:hover { border-color:var(--oro); color:var(--oro); }
 .btn-sm { padding:0.3rem 0.72rem; font-size:0.7rem; }
+
+/* ── PÚBLICO (HOME) ── */
+#sec-inicio-publica {
+  padding:0;
+  max-width:none;
+}
+
+.inicio-hero {
+  background:linear-gradient(160deg, #1a2d27 0%, #26413a 60%);
+  padding:6rem 2rem 4rem;
+  text-align:center;
+  border-bottom:1px solid var(--borde);
+  position:relative; overflow:hidden;
+}
+.inicio-hero::before {
+  content:'✂';
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-size:28rem; opacity:0.025; pointer-events:none;
+  color:var(--oro); line-height:1;
+}
+.hero-titulo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.5rem,7vw,5.5rem);
+  font-weight:700; color:var(--oro);
+  letter-spacing:8px; text-transform:uppercase;
+  text-shadow:0 4px 30px rgba(204,181,127,0.2);
+  line-height:1;
+}
+.hero-subtitulo {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.82rem; font-weight:600;
+  letter-spacing:6px; text-transform:uppercase;
+  color:var(--suave); margin-top:0.6rem;
+}
+.hero-linea { width:80px; height:1px; background:var(--oro3); margin:1.5rem auto; }
+
+.inicio-cards {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1.5rem;
+  padding:3rem 2rem;
+  max-width:1100px; margin:0 auto;
+}
+.inicio-card {
+  background:var(--card);
+  border:1px solid var(--borde);
+  border-radius:14px;
+  padding:2rem 1.5rem;
+  text-align:center; cursor:pointer;
+  transition:all 0.25s;
+  position:relative; overflow:hidden;
+}
+.inicio-card::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,var(--oro3),transparent);
+  opacity:0; transition:opacity 0.25s;
+  border-radius:14px;
+}
+.inicio-card:hover { border-color:var(--oro); transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.4); }
+.inicio-card:hover::before { opacity:0.06; }
+.inicio-card .ic-emoji { font-size:2.5rem; margin-bottom:0.9rem; display:block; }
+.inicio-card .ic-titulo { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:700; color:var(--oro); letter-spacing:1px; margin-bottom:0.3rem; }
+.inicio-card .ic-desc { font-size:0.76rem; color:var(--suave); letter-spacing:0.5px; }
+
+/* ── INFO SECTIONS ── */
+.info-section {
+  padding:3rem 2rem;
+  max-width:1100px;
+  margin:0 auto;
+}
+.info-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:2rem;
+  margin-top:1.5rem;
+}
+.info-card {
+  background:var(--card);
+  border:1px solid var(--borde);
+  border-radius:10px;
+  padding:1.8rem;
+  text-align:center;
+}
+.info-card h3 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;
+  color:var(--oro);
+  margin-bottom:0.8rem;
+}
+.info-card p {
+  color:var(--suave);
+  font-size:0.88rem;
+  line-height:1.6;
+}
+
+.contacto-form {
+  max-width:500px;
+  margin:2rem auto;
+  background:var(--card);
+  border:1px solid var(--borde);
+  border-radius:10px;
+  padding:2rem;
+}
+.form-group {
+  display:flex;
+  flex-direction:column;
+  gap:0.35rem;
+  margin-bottom:1rem;
+}
+.form-group label {
+  font-size:0.68rem;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--suave);
+}
+.form-group input,
+.form-group textarea {
+  background:#26413a;
+  border:1px solid var(--borde);
+  border-radius:7px;
+  color:var(--oro);
+  padding:0.58rem 0.85rem;
+  font-family:'Barlow',sans-serif;
+  font-size:0.9rem;
+  transition:border-color 0.2s;
+  width:100%;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline:none;
+  border-color:var(--oro);
+}
+.form-group textarea {
+  resize:vertical;
+  min-height:100px;
+}
+
+/* ── MODAL ── */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:300; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--card); border:1px solid var(--oro); border-radius:14px; padding:1.8rem; width:min(440px,90vw); text-align:center; animation:modalIn 0.3s ease; }
+@keyframes modalIn { from{transform:scale(0.85);opacity:0;}to{transform:scale(1);opacity:1;} }
+
+/* ── TOAST ── */
+#toast { position:fixed; bottom:2rem; right:2rem; background:var(--verde); color:white; padding:0.8rem 1.3rem; border-radius:8px; font-weight:600; transform:translateY(100px); opacity:0; transition:all 0.3s; }
+#toast.show { transform:translateY(0); opacity:1; }
+
+/* ── LOGIN MODAL ── */
+#modal-login { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:500; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+#modal-login.open { display:flex; }
+.login-box { background:#1a2d27; border:1px solid var(--oro); border-radius:16px; padding:2.4rem 2rem; width:min(380px,90vw); text-align:center; animation:modalIn 0.3s ease; box-shadow:0 24px 60px rgba(0,0,0,0.5); }
+.login-box .lock-grande { font-size:2.8rem; margin-bottom:0.7rem; display:block; }
+.login-box h3 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--oro); font-weight:700; margin-bottom:0.25rem; }
+.login-box p { color:var(--suave); font-size:0.82rem; margin-bottom:1.4rem; letter-spacing:0.5px; }
+.login-box input[type=password] { background:#26413a; border:1px solid var(--borde); border-radius:8px; color:var(--oro); padding:0.75rem 1rem; font-size:1rem; width:100%; margin-bottom:0.9rem; text-align:center; }
+.login-box input[type=password]:focus { outline:none; border-color:var(--oro); }
+.login-error { color:#e74c3c; font-size:0.8rem; margin-bottom:0.7rem; min-height:1.1rem; }
+.login-btns { display:flex; gap:0.8rem; justify-content:center; margin-top:0.3rem; }
+.btn-cerrar-sesion { background:transparent; border:1px solid rgba(204,181,127,0.25); color:var(--suave); font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:0.4rem 0.8rem; cursor:pointer; transition:all 0.2s; }
+.btn-cerrar-sesion:hover { border-color:#c0392b; color:#c0392b; }
+
+/* ── FORMULARIOS (heredado) ── */
+.form-row { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:0.9rem; }
 
 /* ── CAT TABS ── */
 .cat-tabs { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.4rem; }
@@ -128,7 +273,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 }
 .cat-tab:hover { border-color:var(--oro); color:var(--oro); }
 .cat-tab.active { background:var(--oro); color:var(--fondo3); border-color:var(--oro); }
-.cat-count { background:rgba(0,0,0,0.15); border-radius:99px; padding:0px 5px; font-size:0.65rem; }
 
 /* ── CAT SECTION ── */
 .cat-section { margin-bottom:1.8rem; }
@@ -159,20 +303,10 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .servicio-info p { font-size:0.74rem; color:var(--suave); margin-top:2px; }
 .servicio-precio { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--oro); font-weight:700; white-space:nowrap; }
 
-.badge-cat { display:inline-block; padding:1px 7px; border-radius:99px; font-size:0.6rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-top:3px; }
-.bc-corte        { background:rgba(204,181,127,0.12); color:#ccb57f; }
-.bc-barberia     { background:rgba(91,141,217,0.12);  color:#5B8DD9; }
-.bc-combos       { background:rgba(155,89,182,0.12);  color:#9B59B6; }
-.bc-tratamientos { background:rgba(56,161,110,0.12);  color:#38a16e; }
-.bc-otros        { background:rgba(230,126,34,0.12);  color:#e67e22; }
-
-/* ── CAJA ── */
+/* ── HEREDADO CAJA/AGENDA/CLIENTES ── */
 .caja-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; }
-@media(max-width:900px){.caja-layout{grid-template-columns:1fr;}}
-.carrito {
-  background:var(--card); border:1px solid var(--borde); border-radius:10px; padding:1.2rem;
-  position:sticky; top:72px; max-height:calc(100vh - 92px); overflow-y:auto;
-}
+@media(max-width:900px){ .caja-layout{ grid-template-columns:1fr; } }
+.carrito { background:var(--card); border:1px solid var(--borde); border-radius:10px; padding:1.2rem; position:sticky; top:72px; max-height:calc(100vh - 92px); overflow-y:auto; }
 .carrito h3 { font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--oro); margin-bottom:0.9rem; padding-bottom:0.6rem; border-bottom:1px solid var(--borde); }
 .carrito-items { display:flex; flex-direction:column; gap:0.45rem; min-height:55px; }
 .carrito-item { display:flex; justify-content:space-between; align-items:center; background:#26413a; border-radius:6px; padding:0.5rem 0.7rem; border:1px solid var(--borde); }
@@ -182,199 +316,54 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .carrito-item-del:hover { color:var(--rojo); }
 .carrito-vacio { text-align:center; color:var(--suave); padding:1.5rem 0; font-size:0.84rem; }
 .carrito-total { margin-top:0.8rem; padding-top:0.6rem; border-top:1px solid var(--borde); display:flex; justify-content:space-between; font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--oro); font-weight:700; }
-.cobrar-btn { width:100%; padding:0.88rem; background:linear-gradient(135deg,var(--oro),var(--oro3)); border:none; border-radius:8px; color:var(--fondo3); font-family:'Barlow Condensed',sans-serif; font-size:0.92rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; margin-top:0.65rem; }
+.cobrar-btn { width:100%; padding:0.88rem; background:linear-gradient(135deg,var(--oro),var(--oro3)); border:none; border-radius:8px; color:var(--fondo3); font-family:'Barlow Condensed',sans-serif; font-size:0.84rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
 .cobrar-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.35); }
 .cobrar-btn:disabled { opacity:0.35; cursor:not-allowed; transform:none; }
 
-/* ── AGENDA ── */
 .agenda-layout { display:grid; grid-template-columns:1fr 310px; gap:1.5rem; }
-@media(max-width:900px){.agenda-layout{grid-template-columns:1fr;}}
+@media(max-width:900px){ .agenda-layout{ grid-template-columns:1fr; } }
 .calendario-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
 .mes-label { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--oro); font-weight:600; }
 .calendario-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
 .cal-header { text-align:center; font-size:0.6rem; font-weight:700; letter-spacing:0; text-transform:uppercase; color:var(--suave); padding:0.25rem 0; }
-.cal-dia { display:flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer; font-size:0.78rem; transition:all 0.2s; background:#26413a; border:1px solid transparent; position:relative; color:#ccb57f; padding:0.28rem 0; }
+.cal-dia { display:flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer; font-size:0.78rem; transition:all 0.2s; background:#26413a; border:1px solid transparent; position:relative; min-height:30px; }
 .cal-dia:hover { border-color:var(--oro); color:var(--oro); }
 .cal-dia.otro-mes { opacity:0.2; cursor:default; }
 .cal-dia.otro-mes:hover { border-color:transparent; color:var(--texto); }
 .cal-dia.hoy { background:var(--card2); border-color:var(--oro); color:var(--oro); font-weight:700; }
 .cal-dia.seleccionado { background:var(--oro); color:var(--fondo3); font-weight:700; }
-.cal-dia.con-citas::after { content:''; position:absolute; bottom:3px; width:4px; height:4px; border-radius:50%; background:var(--oro); }
-.cal-dia.seleccionado::after { background:var(--fondo3); }
 .citas-panel h3 { font-family:'Cormorant Garamond',serif; color:var(--oro); font-size:1rem; margin-bottom:0.85rem; font-weight:600; }
 .cita-item { background:#26413a; border:1px solid var(--borde); border-radius:8px; padding:0.78rem; margin-bottom:0.5rem; border-left:3px solid var(--oro); position:relative; }
 .cita-hora { font-size:0.7rem; color:var(--suave); font-weight:600; letter-spacing:1px; text-transform:uppercase; }
 .cita-nombre { font-size:0.9rem; font-weight:600; color:var(--oro); margin:2px 0; }
 .cita-servicio { font-size:0.76rem; color:var(--oro2); }
-.cita-del { position:absolute; top:0.6rem; right:0.6rem; background:none; border:none; color:var(--suave); cursor:pointer; font-size:0.88rem; }
-.cita-del:hover { color:var(--rojo); }
 .nueva-cita-form { background:var(--card); border:1px solid var(--borde); border-radius:10px; padding:1.15rem; }
 .nueva-cita-form h3 { font-family:'Cormorant Garamond',serif; font-size:0.95rem; color:var(--oro); margin-bottom:0.85rem; font-weight:600; }
 
-/* ── RESÚMENES ── */
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:1rem; margin-bottom:1.4rem; }
-.stat-card { background:var(--card); border:1px solid var(--borde); border-radius:10px; padding:1.2rem; text-align:center; }
-.stat-card .icono { font-size:1.65rem; margin-bottom:0.3rem; }
-.stat-card .valor { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--oro); font-weight:700; }
-.stat-card .etiqueta { font-size:0.67rem; text-transform:uppercase; letter-spacing:1px; color:var(--suave); margin-top:0.15rem; }
-.toggle-periodo { display:flex; gap:0.5rem; margin-bottom:1.4rem; }
-.tabla-ventas { width:100%; border-collapse:collapse; }
-.tabla-ventas th { text-align:left; padding:0.62rem 0.88rem; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--suave); border-bottom:1px solid var(--borde); }
-.tabla-ventas td { padding:0.62rem 0.88rem; border-bottom:1px solid var(--fondo2); font-size:0.84rem; color:var(--oro); }
-.tabla-ventas tr:last-child td { border-bottom:none; }
-.tabla-ventas tr:hover td { background:var(--card2); }
-.monto-verde { color:var(--verde2); font-weight:600; }
-.chart-bar-container { display:flex; align-items:flex-end; gap:4px; height:100px; margin:0.85rem 0; }
-.chart-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; height:100%; justify-content:flex-end; }
-.chart-bar { width:100%; background:linear-gradient(to top,var(--oro3),var(--oro)); border-radius:3px 3px 0 0; transition:height 0.5s ease; min-height:2px; }
-.chart-label { font-size:0.57rem; color:var(--suave); text-align:center; }
-
-/* ── CLIENTES ── */
 .clientes-layout { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; }
-@media(max-width:900px){.clientes-layout{grid-template-columns:1fr;}}
-.cliente-card {
-  background:var(--card); border:1px solid var(--borde); border-radius:9px;
-  padding:1rem 1.2rem; display:flex; justify-content:space-between; align-items:center;
-  transition:all 0.2s; margin-bottom:0.6rem;
-}
+@media(max-width:900px){ .clientes-layout{ grid-template-columns:1fr; } }
+.cliente-card { background:var(--card); border:1px solid var(--borde); border-radius:9px; padding:1rem 1.2rem; display:flex; justify-content:space-between; align-items:center; transition:all 0.2s; margin-bottom:0.6rem; }
 .cliente-card:hover { border-color:var(--oro3); }
-.cliente-card.archivado { opacity:0.45; }
-.cliente-avatar {
-  width:40px; height:40px; border-radius:50%;
-  background:linear-gradient(135deg,var(--oro3),var(--oro));
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:700;
-  color:var(--fondo3); flex-shrink:0; margin-right:1rem;
-}
+.cliente-avatar { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--oro3),var(--oro)); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:700; color:var(--fondo3); flex-shrink:0; margin-right:1rem; }
 .cliente-info { flex:1; }
 .cliente-nombre { font-size:0.97rem; font-weight:600; color:var(--oro); }
 .cliente-tel { font-size:0.78rem; color:var(--suave); margin-top:2px; }
-.cliente-meta { font-size:0.72rem; color:var(--suave); margin-top:3px; }
 .cliente-acciones { display:flex; gap:0.5rem; }
 
 .buscador-wrap { position:relative; margin-bottom:1rem; }
 .buscador-wrap input { padding-left:2.2rem; }
 .buscador-icon { position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--suave); font-size:0.9rem; pointer-events:none; }
 
-/* ── INICIO ── */
-#sec-inicio { padding:0; max-width:none; }
-.inicio-hero {
-  background:linear-gradient(160deg, #1a2d27 0%, #26413a 60%);
-  padding:4rem 2rem 3rem;
-  text-align:center;
-  border-bottom:1px solid var(--borde);
-  position:relative; overflow:hidden;
-}
-.inicio-hero::before {
-  content:'✂';
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  font-size:28rem; opacity:0.025; pointer-events:none;
-  color:var(--oro); line-height:1;
-}
-.hero-titulo {
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.5rem,7vw,5.5rem);
-  font-weight:700; color:var(--oro);
-  letter-spacing:8px; text-transform:uppercase;
-  text-shadow:0 4px 30px rgba(204,181,127,0.2);
-  line-height:1;
-}
-.hero-subtitulo {
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:0.82rem; font-weight:600;
-  letter-spacing:6px; text-transform:uppercase;
-  color:var(--suave); margin-top:0.6rem;
-}
-.hero-linea { width:80px; height:1px; background:var(--oro3); margin:1.5rem auto; }
+/* ── STATS ── */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:1rem; margin-bottom:1.4rem; }
+.stat-card { background:var(--card); border:1px solid var(--borde); border-radius:10px; padding:1.2rem; text-align:center; }
+.stat-card .valor { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--oro); font-weight:700; }
+.stat-card .etiqueta { font-size:0.67rem; text-transform:uppercase; letter-spacing:1px; color:var(--suave); margin-top:0.15rem; }
+.tabla-ventas { width:100%; border-collapse:collapse; }
+.tabla-ventas th { text-align:left; padding:0.62rem 0.88rem; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--suave); border-bottom:1px solid var(--borde); }
+.tabla-ventas td { padding:0.62rem 0.88rem; border-bottom:1px solid var(--fondo2); font-size:0.84rem; color:var(--oro); }
 
-.inicio-cards {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:1.2rem;
-  padding:2.5rem 2rem;
-  max-width:1000px; margin:0 auto;
-}
-.inicio-card {
-  background:var(--card);
-  border:1px solid var(--borde);
-  border-radius:14px;
-  padding:2rem 1.5rem;
-  text-align:center; cursor:pointer;
-  transition:all 0.25s;
-  position:relative; overflow:hidden;
-}
-.inicio-card::before {
-  content:'';
-  position:absolute; inset:0;
-  background:linear-gradient(135deg,var(--oro3),transparent);
-  opacity:0; transition:opacity 0.25s;
-  border-radius:14px;
-}
-.inicio-card:hover { border-color:var(--oro); transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.4); }
-.inicio-card:hover::before { opacity:0.06; }
-.inicio-card .ic-emoji { font-size:2.5rem; margin-bottom:0.9rem; display:block; }
-.inicio-card .ic-titulo { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:700; color:var(--oro); letter-spacing:1px; margin-bottom:0.3rem; }
-.inicio-card .ic-desc { font-size:0.76rem; color:var(--suave); letter-spacing:0.5px; }
-
-.inicio-stats {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:1rem;
-  padding:0 2rem 2.5rem;
-  max-width:1000px; margin:0 auto;
-}
-.inicio-stat { background:var(--fondo2); border:1px solid var(--borde); border-radius:10px; padding:1.1rem; text-align:center; }
-.inicio-stat .v { font-family:'Cormorant Garamond',serif; font-size:1.9rem; color:var(--oro); font-weight:700; }
-.inicio-stat .l { font-size:0.65rem; text-transform:uppercase; letter-spacing:1px; color:var(--suave); margin-top:2px; }
-.inicio-fecha { text-align:center; padding-bottom:2rem; font-size:0.78rem; color:var(--suave); letter-spacing:1px; }
-
-/* ── MODAL ── */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:300; align-items:center; justify-content:center; }
-.modal-overlay.open { display:flex; }
-.modal { background:var(--card); border:1px solid var(--oro); border-radius:14px; padding:1.8rem; width:min(440px,90vw); text-align:center; animation:modalIn 0.3s ease; }
-@keyframes modalIn { from{transform:scale(0.85);opacity:0;}to{transform:scale(1);opacity:1;} }
-.modal h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--oro); margin-bottom:0.35rem; font-weight:700; }
-.modal p { color:var(--suave); margin-bottom:0.85rem; font-size:0.88rem; }
-.modal .total-modal { font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:var(--oro); font-weight:700; margin:0.6rem 0; }
-.metodo-pago { display:flex; gap:0.5rem; justify-content:center; margin-bottom:1.2rem; flex-wrap:wrap; }
-.metodo-btn { padding:0.46rem 1rem; border:1px solid var(--borde); border-radius:6px; background:var(--fondo2); color:var(--texto); cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; }
-.metodo-btn.activo,.metodo-btn:hover { border-color:var(--oro); background:var(--card2); color:var(--oro); }
-
-/* ── TOAST ── */
-#toast { position:fixed; bottom:2rem; right:2rem; background:var(--verde); color:white; padding:0.8rem 1.3rem; border-radius:8px; font-weight:600; transform:translateY(100px); opacity:0; transition:all 0.3s; z-index:400; font-size:0.84rem; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
-#toast.show { transform:translateY(0); opacity:1; }
-
-.sep { height:1px; background:linear-gradient(to right,transparent,var(--borde),transparent); margin:1.1rem 0; }
-.empty-state { text-align:center; color:var(--suave); padding:2.5rem 0; }
-.empty-state .emoji { font-size:2.2rem; margin-bottom:0.6rem; }
-
-
-/* ── VISTA DÍA EMPLEADOS ── */
-.vd-grid { display:grid; grid-template-columns:40px repeat(3,1fr); gap:0; border:1px solid var(--borde); border-radius:10px; overflow:hidden; }
-.vd-head { background:#1a2d27; padding:0.3rem 0.2rem; text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--oro); border-bottom:2px solid var(--borde); }
-.vd-hora { background:#1a2d27; padding:0 0.3rem; display:flex; align-items:flex-start; justify-content:flex-end; font-size:0.56rem; color:var(--suave); font-weight:600; letter-spacing:0.5px; padding-top:4px; border-right:1px solid var(--borde); min-height:22px; }
-.vd-cell { background:var(--card); border-left:1px solid var(--borde); border-bottom:1px solid rgba(61,96,87,0.4); min-height:22px; position:relative; cursor:pointer; transition:background 0.15s; }
-.vd-cell:hover { background:var(--card2); }
-.vd-cell.hora-par { background:rgba(26,45,39,0.5); }
-.vd-cell.hora-par:hover { background:var(--card2); }
-.vd-hora-row { border-bottom:1px solid rgba(61,96,87,0.4); }
-.vd-hora-row.hora-par .vd-hora { border-bottom:1px solid var(--borde); }
-.vd-cita-bloque {
-  position:absolute; left:2px; right:2px; top:1px;
-  background:linear-gradient(135deg,var(--oro3),var(--oro));
-  border-radius:3px; padding:1px 4px;
-  font-size:0.58rem; font-weight:700; color:#1a2d27;
-  overflow:hidden; z-index:2; cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,0.3);
-  line-height:1.2;
-}
-.vd-cita-bloque:hover { filter:brightness(1.1); }
-
-
-/* ══ RESPONSIVE MOBILE ══ */
-
-/* Hamburger */
+/* ── RESPONSIVE ── */
 .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:0.6rem; margin-left:auto; }
 .hamburger span { display:block; width:22px; height:2px; background:var(--oro); border-radius:2px; transition:all 0.3s; }
 .hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
@@ -385,7 +374,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 .nav-sep { width:1px; background:var(--borde); height:1.4rem; margin:0 0.4rem; align-self:center; }
 
 @media(max-width:700px) {
-  /* Nav */
   nav { padding:0.3rem 1rem; min-height:48px; }
   .logo { font-size:1.1rem; letter-spacing:2px; }
   .hamburger { display:flex; }
@@ -402,90 +390,60 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   .nav-sep { display:none; }
   .btn-cerrar-sesion { margin:0.3rem 1rem; width:calc(100% - 2rem); text-align:center; }
 
-  /* Secciones */
   .section { padding:1rem; }
   h2 { font-size:1.4rem; }
 
-  /* Inicio: galletas en fila */
-  #sec-inicio { padding:0; }
-  .inicio-stats { grid-template-columns:repeat(2,1fr); padding:1rem; gap:0.6rem; }
-  .inicio-stat .v { font-size:1.4rem; }
-
-  /* Caja */
   .caja-layout { grid-template-columns:1fr; }
   .carrito { position:static; max-height:none; }
-  .servicios-grid { grid-template-columns:1fr; }
 
-  /* Clientes */
-  .clientes-layout { grid-template-columns:1fr; }
-  .cliente-card { flex-wrap:wrap; gap:0.5rem; }
-  .cliente-acciones { width:100%; justify-content:flex-end; }
-
-  /* Agenda */
   .agenda-layout { grid-template-columns:1fr; }
+  .clientes-layout { grid-template-columns:1fr; }
 
-  /* Resúmenes */
-  .stats-grid { grid-template-columns:repeat(2,1fr); gap:0.6rem; }
-  .tabla-ventas th:nth-child(3),
-  .tabla-ventas td:nth-child(3) { display:none; }
-  .tabla-ventas th,
-  .tabla-ventas td { padding:0.45rem 0.5rem; font-size:0.75rem; }
-
-  /* Modal */
-  .modal { padding:1.2rem; }
-
-  /* Vista día empleados */
-  #sec-inicio .vd-grid { font-size:0.55rem; }
-  .vd-head { font-size:0.55rem; padding:0.25rem 0.1rem; letter-spacing:0; }
-  .vd-cita-bloque { font-size:0.52rem; padding:1px 2px; }
-
-  /* Toast abajo centrado */
-  #toast { right:1rem; left:1rem; text-align:center; bottom:1rem; }
-
-  /* Inicio agenda en móvil: apilar vertical */
-  .inicio-agenda-row { grid-template-columns:1fr !important; }
-
-  /* Inputs más grandes para touch */
-  input, select, textarea { padding:0.75rem 0.85rem; font-size:1rem; }
-  .btn { padding:0.7rem 1.2rem; font-size:0.85rem; }
-  .cobrar-btn { padding:1rem; font-size:1rem; }
+  .info-grid { grid-template-columns:1fr; }
 }
 
 @media(max-width:400px) {
   .logo { font-size:0.95rem; letter-spacing:1px; }
-  .inicio-stats { grid-template-columns:repeat(2,1fr); }
-  .stats-grid { grid-template-columns:1fr 1fr; }
 }
 
-::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--fondo2);} ::-webkit-scrollbar-thumb{background:var(--oro3);border-radius:3px;}
+::-webkit-scrollbar{ width:5px; }
+::-webkit-scrollbar-track{ background:var(--fondo2); }
+::-webkit-scrollbar-thumb{ background:var(--oro3); border-radius:3px; }
 
-/* ── ÁREA PRIVADA ── */
-#modal-login { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:500; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
-#modal-login.open { display:flex; }
-.login-box { background:#1a2d27; border:1px solid var(--oro); border-radius:16px; padding:2.4rem 2rem; width:min(380px,90vw); text-align:center; animation:modalIn 0.3s ease; box-shadow:0 24px 60px rgba(0,0,0,0.6); }
-.login-box .lock-grande { font-size:2.8rem; margin-bottom:0.7rem; display:block; }
-.login-box h3 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--oro); font-weight:700; margin-bottom:0.25rem; }
-.login-box p { color:var(--suave); font-size:0.82rem; margin-bottom:1.4rem; letter-spacing:0.5px; }
-.login-box input[type=password] { background:#26413a; border:1px solid var(--borde); border-radius:8px; color:var(--oro); padding:0.75rem 1rem; font-size:1rem; width:100%; margin-bottom:0.9rem; text-align:center; letter-spacing:4px; font-family:'Barlow',sans-serif; }
-.login-box input[type=password]:focus { outline:none; border-color:var(--oro); }
-.login-box input[type=password]::placeholder { letter-spacing:1px; font-size:0.85rem; }
-.login-error { color:#e74c3c; font-size:0.8rem; margin-bottom:0.7rem; min-height:1.1rem; }
-.login-btns { display:flex; gap:0.8rem; justify-content:center; margin-top:0.3rem; }
-.btn-cerrar-sesion { background:transparent; border:1px solid rgba(204,181,127,0.25); color:var(--suave); font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:0.45rem 0.9rem; cursor:pointer; border-radius:6px; transition:all 0.2s; }
-.btn-cerrar-sesion:hover { border-color:#c0392b; color:#c0392b; }
+.sep { height:1px; background:linear-gradient(to right,transparent,var(--borde),transparent); margin:1.1rem 0; }
+.empty-state { text-align:center; color:var(--suave); padding:2.5rem 0; }
+
+/* ── INPUT/SELECT/TEXTAREA ── */
+input, select, textarea {
+  background:#26413a;
+  border:1px solid var(--borde);
+  border-radius:7px;
+  color:var(--oro);
+  padding:0.58rem 0.85rem;
+  font-family:'Barlow',sans-serif;
+  font-size:0.9rem;
+  transition:border-color 0.2s;
+  width:100%;
+}
+input:focus, select:focus, textarea:focus {
+  outline:none;
+  border-color:var(--oro);
+}
+input::placeholder { color:var(--suave); opacity:0.6; }
+select option, optgroup { background:var(--fondo2); color:var(--oro); }
 </style>
 </head>
 <body>
 
 <!-- ════════════ NAV ════════════ -->
 <nav>
-  <div class="logo">RITUAL BARBER</div>
+  <div class="logo" onclick="showSection('inicio-publica');cerrarMenu()">RITUAL BARBER</div>
   <div class="nav-links" id="nav-links">
-    <button onclick="showSection('inicio');cerrarMenu()" id="nav-inicio" class="active">Inicio</button>
-    <button onclick="showSection('caja');cerrarMenu()" id="nav-caja">Caja</button>
-    <button onclick="showSection('clientes');cerrarMenu()" id="nav-clientes">Clientes</button>
+    <button onclick="showSection('inicio-publica');cerrarMenu()" id="nav-inicio-publica" class="active">Inicio</button>
+    <button onclick="showSection('contacto');cerrarMenu()" id="nav-contacto">Contacto</button>
+    <button onclick="showSection('otros');cerrarMenu()" id="nav-otros">Otros</button>
     <div class="nav-sep"></div>
-    <button onclick="accederPrivado('area-privada')" id="nav-area-privada">Área Privada</button>
+    <button onclick="accederPrivado('acceso')" id="nav-acceso">Acceso</button>
     <button class="btn-cerrar-sesion" id="btn-cerrar-sesion" onclick="cerrarSesion()" style="display:none;">✕ Salir</button>
   </div>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
@@ -493,335 +451,130 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   </button>
 </nav>
 
-<!-- ════════════ INICIO ════════════ -->
-<div class="section active" id="sec-inicio">
-  <div style="display:grid;grid-template-columns:35% 1fr;gap:1.2rem;padding:2rem 1.5rem 2rem;align-items:start;" class="inicio-agenda-row">
-
-    <!-- ── COLUMNA IZQUIERDA 35% ── -->
-    <div style="display:flex;flex-direction:column;gap:1rem;min-width:0;">
-
-      <!-- Calendario mensual -->
-      <div style="background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:0.9rem;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
-          <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(-1)">←</button>
-          <span style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--oro);font-weight:700;letter-spacing:2px;text-transform:uppercase;" id="mes-label-i"></span>
-          <button class="btn btn-ghost btn-sm" onclick="cambiarMesI(1)">→</button>
-        </div>
-        <div class="calendario-grid" id="cal-grid-i"></div>
-      </div>
-
-      <!-- Nueva Cita -->
-      <div style="background:var(--card);border:1px solid var(--oro3);border-radius:10px;padding:1rem;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--oro);font-weight:700;margin-bottom:0.8rem;letter-spacing:1px;padding-bottom:0.5rem;border-bottom:1px solid var(--borde);">+ Nueva Cita</div>
-        <div class="form-group" style="margin-bottom:0.4rem;">
-          <label>Nombre <span style="color:var(--rojo);">*</span></label>
-          <input id="i-cita-nombre" placeholder="Nombre" list="dl-cli-i" oninput="checkClienteExisteI()"/>
-          <datalist id="dl-cli-i"></datalist>
-        </div>
-        <div class="form-group" style="margin-bottom:0.4rem;">
-          <label>Apellidos <span style="color:var(--rojo);">*</span></label>
-          <input id="i-cita-apellidos" placeholder="Al menos un apellido"/>
-        </div>
-        <div class="form-group" id="i-tel-wrap" style="margin-bottom:0.5rem;">
-          <label>Teléfono <span style="color:var(--suave);font-weight:400;font-size:0.65rem;">(nuevo cliente)</span></label>
-          <input id="i-cita-tel" placeholder="Opcional para nuevo cliente" type="tel"/>
-        </div>
-        <div style="margin-bottom:0.5rem;">
-          <label style="font-size:0.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--suave);display:block;margin-bottom:0.35rem;">Servicios</label>
-          <div id="i-servicios-lista" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.35rem;"></div>
-          <div style="display:flex;gap:0.35rem;">
-            <select id="i-cita-serv" style="flex:1;font-size:0.82rem;padding:0.45rem 0.6rem;min-width:0;"></select>
-            <button type="button" class="btn btn-ghost btn-sm" onclick="addServicioI()" style="padding:0.4rem 0.8rem;font-size:1.1rem;line-height:1;flex-shrink:0;">+</button>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
-          <div class="form-group">
-            <label>Hora inicio</label>
-            <div style="display:flex;gap:0.3rem;align-items:center;">
-              <select id="i-cita-hora-h" onchange="syncHoraI('inicio')" style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--oro);padding:0.38rem 0.2rem;">
-                <option>10</option><option>11</option><option>12</option><option>13</option>
-                <option>14</option><option>15</option><option>16</option><option>17</option>
-                <option>18</option><option>19</option><option>20</option><option>21</option>
-              </select>
-              <span style="color:var(--oro);font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;">:</span>
-              <select id="i-cita-hora-m" onchange="syncHoraI('inicio')" style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--oro);padding:0.38rem 0.2rem;">
-                <option value="00">00</option><option value="20">20</option><option value="40">40</option>
-              </select>
-            </div>
-            <input id="i-cita-hora" type="hidden" value="10:00"/>
-          </div>
-          <div class="form-group">
-            <label>Hora fin</label>
-            <div style="display:flex;gap:0.3rem;align-items:center;">
-              <select id="i-cita-hora-fin-h" onchange="syncHoraI('fin')" style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--oro);padding:0.38rem 0.2rem;">
-                <option>10</option><option>11</option><option>12</option><option>13</option>
-                <option>14</option><option>15</option><option>16</option><option>17</option>
-                <option>18</option><option>19</option><option>20</option><option>21</option>
-              </select>
-              <span style="color:var(--oro);font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;">:</span>
-              <select id="i-cita-hora-fin-m" onchange="syncHoraI('fin')" style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--oro);padding:0.38rem 0.2rem;">
-                <option value="00">00</option><option value="20">20</option><option value="40">40</option>
-              </select>
-            </div>
-            <input id="i-cita-hora-fin" type="hidden" value="10:20"/>
-          </div>
-        </div>
-        <div class="form-group" style="margin-bottom:0.5rem;">
-          <label>Empleado</label>
-          <select id="i-cita-emp">
-            <option value="Empleado 1">Empleado 1</option>
-            <option value="Empleado 2">Empleado 2</option>
-            <option value="Empleado 3">Empleado 3</option>
-          </select>
-        </div>
-        <div class="form-group" style="margin-bottom:0.75rem;">
-          <label>Notas</label>
-          <input id="i-cita-notas" placeholder="Opcional..."/>
-        </div>
-        <button class="btn btn-oro" style="width:100%;padding:0.6rem 0;font-size:0.85rem;" onclick="addCitaI()">✓ Agendar Cita</button>
-      </div>
-
-    </div>
-
-    <!-- ── COLUMNA DERECHA 65% ── -->
-    <div style="min-width:0;">
-      <div style="display:flex;align-items:center;margin-bottom:0.65rem;padding-bottom:0.5rem;border-bottom:1px solid var(--borde);">
-        <div style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;" id="dia-label-i">Hoy</div>
-      </div>
-      <div id="vista-dia-i" style="overflow-x:auto;"></div>
-    </div>
-
+<!-- ════════════ HOME PÚBLICA ════════════ -->
+<div class="section active" id="sec-inicio-publica">
+  <div class="inicio-hero">
+    <div class="hero-titulo">RITUAL BARBER</div>
+    <div class="hero-subtitulo">Experiencia Premium de Barbería</div>
+    <div class="hero-linea"></div>
   </div>
-</div>
 
-<!-- ════════ MODAL CITA → CAJA ════════ -->
-<div id="modal-cita-caja" class="modal-overlay">
-  <div class="modal" style="text-align:left;max-width:400px;">
-    <h3 style="text-align:center;margin-bottom:0.3rem;">📋 Pasar a Caja</h3>
-    <p style="text-align:center;font-size:0.82rem;color:var(--suave);margin-bottom:1.2rem;" id="mcj-subtitulo"></p>
-    <div style="background:#1a2d27;border-radius:8px;padding:0.9rem 1rem;margin-bottom:1rem;">
-      <div style="font-size:0.72rem;color:var(--suave);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.35rem;">Cliente</div>
-      <div id="mcj-cliente" style="color:var(--oro);font-weight:600;font-size:0.95rem;"></div>
-      <div style="font-size:0.72rem;color:var(--suave);letter-spacing:1px;text-transform:uppercase;margin:0.6rem 0 0.35rem;">Servicio</div>
-      <div id="mcj-servicio" style="color:var(--oro2);font-size:0.88rem;"></div>
+  <div class="inicio-cards">
+    <div class="inicio-card" onclick="showSection('contacto');cerrarMenu()">
+      <span class="ic-emoji">✂</span>
+      <div class="ic-titulo">Servicios Completos</div>
+      <div class="ic-desc">Cortes, barbería, tratamientos y más</div>
     </div>
-    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
-      <button class="btn btn-oro" style="flex:1;" onclick="confirmarPasarCaja()">💰 Abrir en Caja</button>
-      <button class="btn btn-danger btn-sm" style="flex:0 0 auto;" onclick="confirmarEliminarCitaCaja()">🗑 Eliminar cita</button>
-      <button class="btn btn-ghost" style="flex:0 0 auto;" onclick="cerrarModalCitaCaja()">Cancelar</button>
+    <div class="inicio-card">
+      <span class="ic-emoji">👥</span>
+      <div class="ic-titulo">Profesionales Expertos</div>
+      <div class="ic-desc">Nuestro equipo está aquí para ti</div>
+    </div>
+    <div class="inicio-card">
+      <span class="ic-emoji">⏰</span>
+      <div class="ic-titulo">Horario Flexible</div>
+      <div class="ic-desc">Lunes a domingo, abierto para ti</div>
+    </div>
+    <div class="inicio-card" onclick="showSection('otros');cerrarMenu()">
+      <span class="ic-emoji">📍</span>
+      <div class="ic-titulo">Ubicación</div>
+      <div class="ic-desc">Encuéntranos en el centro</div>
     </div>
   </div>
 </div>
 
-<!-- ════════════ CAJA ════════════ -->
-<div class="section" id="sec-caja">
-  <h2>💰 Caja Registradora</h2>
-  <div class="caja-layout">
-    <div>
-      <div class="cat-tabs" id="cat-tabs-caja"></div>
-      <div id="caja-servicios-lista"></div>
+<!-- ════════════ CONTACTO ════════════ -->
+<div class="section" id="sec-contacto">
+  <h2>📞 Contacto</h2>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3>📍 Ubicación</h3>
+      <p>Barcelona, España</p>
+      <p style="font-size:0.8rem;margin-top:0.5rem;">Centro de la ciudad</p>
     </div>
-    <div class="carrito">
-      <h3>🧾 Ticket</h3>
-      <div class="form-group" style="margin-bottom:0.8rem;">
-        <label>Cliente</label>
-        <input id="cliente-nombre" placeholder="Nombre del cliente" list="clientes-datalist" />
-        <datalist id="clientes-datalist"></datalist>
-      </div>
-      <div id="carrito-items" class="carrito-items">
-        <div class="carrito-vacio">El ticket está vacío</div>
-      </div>
-      <div class="carrito-total"><span>Total</span><span id="carrito-total">€0.00</span></div>
-      <button class="cobrar-btn" id="cobrar-btn" onclick="abrirModal()" disabled>COBRAR</button>
-      <button class="btn btn-suave btn-sm" style="width:100%;margin-top:0.5rem;" onclick="limpiarCarrito()">Limpiar ticket</button>
+    <div class="info-card">
+      <h3>📱 Teléfono</h3>
+      <p><a href="tel:+34600000000" style="color:var(--oro);text-decoration:none;">+34 600 000 000</a></p>
+      <p style="font-size:0.8rem;margin-top:0.5rem;">Llamadas y WhatsApp</p>
     </div>
+    <div class="info-card">
+      <h3>⏰ Horario</h3>
+      <p>L-V: 10:00 - 21:00</p>
+      <p style="font-size:0.8rem;margin-top:0.5rem;">Sábado y domingo disponible</p>
+    </div>
+  </div>
+
+  <div class="contacto-form">
+    <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1.3rem;margin-bottom:1.5rem;">Envíanos un mensaje</h3>
+    <div class="form-group">
+      <label>Nombre</label>
+      <input id="contacto-nombre" placeholder="Tu nombre" />
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input id="contacto-email" placeholder="tu@email.com" type="email" />
+    </div>
+    <div class="form-group">
+      <label>Teléfono</label>
+      <input id="contacto-tel" placeholder="+34 600 000 000" type="tel" />
+    </div>
+    <div class="form-group">
+      <label>Mensaje</label>
+      <textarea id="contacto-mensaje" placeholder="Tu mensaje..."></textarea>
+    </div>
+    <button class="btn btn-oro" style="width:100%;" onclick="enviarContacto()">Enviar</button>
   </div>
 </div>
 
-<!-- ════════════ AGENDA ════════════ -->
-<div class="section" id="sec-agenda">
-  <h2>📅 Agenda</h2>
-  <div class="agenda-layout">
-    <div>
-      <div class="calendario-nav">
-        <button class="btn btn-ghost btn-sm" onclick="cambiarMes(-1)">← Ant.</button>
-        <span class="mes-label" id="mes-label"></span>
-        <button class="btn btn-ghost btn-sm" onclick="cambiarMes(1)">Sig. →</button>
+<!-- ════════════ OTROS ════════════ -->
+<div class="section" id="sec-otros">
+  <h2>ℹ Información</h2>
+  <div class="info-section">
+    <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1.5rem;margin-bottom:1rem;">Sobre Ritual Barber</h3>
+    <p style="color:var(--suave);font-size:0.95rem;line-height:1.8;margin-bottom:1.5rem;">
+      En Ritual Barber creemos que la barbería es un arte. Nuestro equipo de profesionales capacitados 
+      ofrece servicios de la más alta calidad con atención personalizada para cada cliente. 
+      Somos expertos en cortes clásicos y tendencias modernas, barbería, tratamientos capilares y mucho más.
+    </p>
+
+    <h4 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1.2rem;margin-top:2rem;margin-bottom:1rem;">Nuestros Servicios</h4>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>✂ Cortes</h3>
+        <p>Cortes clásicos y tendencias actuales adaptados a tu estilo</p>
       </div>
-      <div class="card"><div class="calendario-grid" id="cal-grid"></div></div>
-    </div>
-    <div>
-      <div class="citas-panel">
-        <h3>Citas del <span id="dia-seleccionado-label">día</span></h3>
-        <div id="lista-citas"></div>
+      <div class="info-card">
+        <h3>🪒 Barbería</h3>
+        <p>Servicios completos de afeitado con técnicas profesionales</p>
       </div>
-      <div class="sep"></div>
-      <div class="nueva-cita-form">
-        <h3>+ Nueva Cita</h3>
-        <div class="form-group" style="margin-bottom:0.6rem;">
-          <label>Cliente</label>
-          <input id="cita-cliente" placeholder="Nombre" list="clientes-datalist2"/>
-          <datalist id="clientes-datalist2"></datalist>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Hora</label>
-            <input id="cita-hora" type="time" value="09:00"/>
-          </div>
-          <div class="form-group">
-            <label>Servicio</label>
-            <select id="cita-servicio"></select>
-          </div>
-        </div>
-        <div class="form-group" style="margin-bottom:0.65rem;">
-          <label>Notas</label>
-          <input id="cita-notas" placeholder="Opcional..."/>
-        </div>
-        <button class="btn btn-oro" style="width:100%;" onclick="addCita()">Agendar Cita</button>
+      <div class="info-card">
+        <h3>💆 Tratamientos</h3>
+        <p>Cuidados especiales para tu cabello y barba</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════ ÁREA PRIVADA ════════════ -->
-<div class="section" id="sec-area-privada">
-  <h2>🔒 Área Privada</h2>
-  <!-- Pestañas internas -->
-  <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--borde);padding-bottom:0.75rem;">
-    <button class="btn btn-oro" id="tab-btn-servicios" onclick="switchPrivTab('servicios')">✂ Servicios</button>
-    <button class="btn btn-ghost" id="tab-btn-resumenes" onclick="switchPrivTab('resumenes')">📊 Resúmenes</button>
+<!-- ════════════ ACCESO (PRIVADO) ════════════ -->
+<div class="section" id="sec-acceso">
+  <h2>🚪 Acceso - Herramientas de Gestión</h2>
+  <div style="max-width:1240px;margin:0 auto;">
+    <p style="color:var(--suave);text-align:center;margin:2rem 0;">Accede a tu cuenta para ver todas las herramientas de gestión.</p>
+    <button class="btn btn-oro" style="display:block;margin:0 auto;" onclick="accederPrivado('acceso')">Iniciar Sesión</button>
   </div>
-
-  <!-- Contenido: Servicios -->
-  <div id="tab-servicios" style="display:block;">
-    <div class="cat-tabs" id="cat-tabs-servicios"></div>
-    <div id="servicios-por-cat"></div>
-    <div class="card">
-      <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);margin-bottom:1rem;font-size:1rem;font-weight:600;">+ Nuevo Servicio</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Nombre</label>
-          <input id="s-nombre" placeholder="Ej: Degradado alto"/>
-        </div>
-        <div class="form-group" style="flex:0 0 115px">
-          <label>Precio (€)</label>
-          <input id="s-precio" type="number" min="0" step="0.5" placeholder="12.00"/>
-        </div>
-        <div class="form-group" style="flex:0 0 120px">
-          <label>Duración (min)</label>
-          <input id="s-duracion" type="number" min="5" step="5" placeholder="30"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group" style="flex:0 0 165px">
-          <label>Categoría</label>
-          <select id="s-cat">
-            <option value="corte">✂ Corte</option>
-            <option value="barberia">🪒 Barbería</option>
-            <option value="combos">⭐ Combos</option>
-            <option value="tratamientos">💆 Tratamientos</option>
-            <option value="otros">📦 Otros</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Descripción</label>
-          <input id="s-desc" placeholder="Breve descripción opcional"/>
-        </div>
-        <div style="display:flex;align-items:flex-end;">
-          <button class="btn btn-oro" onclick="addServicio()">Agregar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contenido: Resúmenes -->
-  <div id="tab-resumenes" style="display:none;">
-    <div class="toggle-periodo">
-      <button class="btn btn-oro"   id="btn-diario"  onclick="setPeriodo('diario')">Diario</button>
-      <button class="btn btn-ghost" id="btn-mensual" onclick="setPeriodo('mensual')">Mensual</button>
-      <button class="btn btn-ghost" id="btn-total"   onclick="setPeriodo('total')">Total</button>
-    </div>
-    <div id="stats-area"></div>
+  
+  <!-- RESTO DEL CONTENIDO PRIVADO AQUÍ -->
+  <!-- (Caja, Agenda, Clientes, Área Privada) -->
+  <div id="contenido-privado" style="display:none;">
+    <!-- Aquí irán las secciones privadas: Caja, Agenda, Clientes, etc. -->
   </div>
 </div>
 
-<!-- ════════════ CLIENTES ════════════ -->
-<div class="section" id="sec-clientes">
-  <h2>👥 Clientes</h2>
-  <div class="clientes-layout">
-    <!-- LISTA -->
-    <div>
-      <!-- Filtros -->
-      <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;">
-        <button class="btn btn-oro btn-sm" id="cli-btn-activos" onclick="setFiltroClientes('activos')">Activos</button>
-        <button class="btn btn-ghost btn-sm" id="cli-btn-archivados" onclick="setFiltroClientes('archivados')">Archivados</button>
-        <button class="btn btn-ghost btn-sm" id="cli-btn-todos" onclick="setFiltroClientes('todos')">Todos</button>
-        <div class="buscador-wrap" style="flex:1;min-width:160px;">
-          <span class="buscador-icon">🔎</span>
-          <input id="cli-buscar" placeholder="Buscar cliente..." oninput="renderClientes()"/>
-        </div>
-      </div>
-      <div id="clientes-lista"></div>
-    </div>
-
-    <!-- FORMULARIO -->
-    <div>
-      <div class="card" id="form-cliente-card">
-        <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1rem;font-weight:600;margin-bottom:1rem;" id="form-cli-titulo">+ Nuevo Cliente</h3>
-        <div class="form-group" style="margin-bottom:0.65rem;">
-          <label>Nombre completo</label>
-          <input id="cli-nombre" placeholder="Ej: Carlos Martínez"/>
-        </div>
-        <div class="form-group" style="margin-bottom:0.65rem;">
-          <label>Teléfono</label>
-          <input id="cli-tel" placeholder="+34 600 000 000" type="tel"/>
-        </div>
-        <div class="form-group" style="margin-bottom:0.65rem;">
-          <label>Email (opcional)</label>
-          <input id="cli-email" placeholder="correo@ejemplo.com" type="email"/>
-        </div>
-        <div class="form-group" style="margin-bottom:0.9rem;">
-          <label>Notas</label>
-          <input id="cli-notas" placeholder="Preferencias, alergias..."/>
-        </div>
-        <div style="display:flex;gap:0.5rem;">
-          <button class="btn btn-oro" style="flex:1;" onclick="guardarCliente()">Guardar</button>
-          <button class="btn btn-suave btn-sm" onclick="limpiarFormCliente()">✕</button>
-        </div>
-      </div>
-
-      <!-- Detalle cliente seleccionado -->
-      <div class="card" id="detalle-cliente" style="display:none;margin-top:1rem;">
-        <div id="detalle-contenido"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL COBRO -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal">
-    <h3>Cobrar</h3>
-    <p id="modal-cliente-label"></p>
-    <div class="total-modal" id="modal-total">€0.00</div>
-    <div class="metodo-pago">
-      <button class="metodo-btn activo" id="met-efectivo" onclick="selMetodo('efectivo')">💵 Efectivo</button>
-      <button class="metodo-btn"        id="met-tarjeta"  onclick="selMetodo('tarjeta')">💳 Tarjeta</button>
-      <button class="metodo-btn"        id="met-bizum"    onclick="selMetodo('bizum')">📱 Bizum</button>
-    </div>
-    <div style="display:flex;gap:1rem;justify-content:center;">
-      <button class="btn btn-ghost"   onclick="cerrarModal()">Cancelar</button>
-      <button class="btn btn-success" onclick="confirmarCobro()">✓ Confirmar</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- ════════════ MODAL LOGIN PRIVADO ════════════ -->
+<!-- ════════════ MODAL LOGIN ════════════ -->
 <div id="modal-login">
   <div class="login-box">
     <span class="lock-grande">🔐</span>
-    <h3>Área Privada</h3>
+    <h3>Acceso Privado</h3>
     <p>Introduce la contraseña para acceder</p>
     <input type="password" id="login-pass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')verificarPass()" autocomplete="off" />
     <div class="login-error" id="login-error"></div>
@@ -835,78 +588,52 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 <div id="toast"></div>
 
 <script>
-// ══════════════════════════════════════
-// DATOS
-// ══════════════════════════════════════
-const CATEGORIAS = [
-  { id:'corte',        label:'Corte',        icon:'✂'  },
-  { id:'barberia',     label:'Barbería',      icon:'🪒' },
-  { id:'combos',       label:'Combos',        icon:'⭐' },
-  { id:'tratamientos', label:'Tratamientos',  icon:'💆' },
-  { id:'otros',        label:'Otros',         icon:'📦' },
-];
-
-// Versión del listado de servicios — cambia este número si actualizas los servicios
-const SERVICIOS_VERSION = 2;
-if (localStorage.getItem('rb_servicios_v') !== String(SERVICIOS_VERSION)) {
-  localStorage.removeItem('rb_servicios');
-  localStorage.setItem('rb_servicios_v', SERVICIOS_VERSION);
-}
-let servicios = JSON.parse(localStorage.getItem('rb_servicios') || '[]');
-let ventas    = JSON.parse(localStorage.getItem('rb_ventas')    || '[]');
-let citas     = JSON.parse(localStorage.getItem('rb_citas')     || '[]');
-let clientes  = JSON.parse(localStorage.getItem('rb_clientes')  || '[]');
-
-if (servicios.length === 0) {
-  servicios = [
-    // CORTES
-    { id:1,  nombre:'Corte de cabello clásico',                    precio:16.50, duracion:30, cat:'corte',        desc:'' },
-    { id:2,  nombre:'Corte de cabello tendencia',                  precio:18.50, duracion:35, cat:'corte',        desc:'' },
-    { id:3,  nombre:'Corte clásico + Barba express',               precio:21.00, duracion:45, cat:'corte',        desc:'' },
-    { id:4,  nombre:'Corte tendencia + Barba express',             precio:23.00, duracion:50, cat:'corte',        desc:'' },
-    { id:5,  nombre:'Corte de cabello clásico + Cejas',            precio:23.50, duracion:40, cat:'corte',        desc:'' },
-    { id:6,  nombre:'Corte de cabello largo',                      precio:19.50, duracion:40, cat:'corte',        desc:'' },
-    { id:7,  nombre:'Degradado express',                           precio:15.50, duracion:25, cat:'corte',        desc:'' },
-    { id:8,  nombre:'Rapado de cabeza',                            precio:15.50, duracion:20, cat:'corte',        desc:'' },
-    { id:9,  nombre:'Corte Niño (hasta 9 años)',                   precio:14.50, duracion:25, cat:'corte',        desc:'' },
-    { id:10, nombre:'Repaso corte clientes semanales',             precio:14.50, duracion:20, cat:'corte',        desc:'' },
-    { id:11, nombre:'Corte + arreglo de barba con ritual afeitado',precio:0,     duracion:60, cat:'corte',        desc:'Consultar precio' },
-    { id:12, nombre:'Corte + arreglo de barba',                    precio:27.00, duracion:55, cat:'corte',        desc:'' },
-    { id:13, nombre:'Corte Jubilado (+65 años)',                   precio:0,     duracion:30, cat:'corte',        desc:'Consultar precio' },
-    // BARBERÍA
-    { id:14, nombre:'Acondicionamiento de barba',                  precio:0,     duracion:20, cat:'barberia',     desc:'Consultar precio' },
-    { id:15, nombre:'Afeitado',                                    precio:0,     duracion:25, cat:'barberia',     desc:'Consultar precio' },
-    { id:16, nombre:'Afeitado con cuchilla',                       precio:0,     duracion:30, cat:'barberia',     desc:'Consultar precio' },
-    // TRATAMIENTOS
-    { id:17, nombre:'Afeitado clásico + toalla caliente',          precio:0,     duracion:35, cat:'tratamientos', desc:'Consultar precio' },
-    { id:18, nombre:'Tratamiento de hidratación',                  precio:0,     duracion:30, cat:'tratamientos', desc:'Consultar precio' },
-    { id:19, nombre:'Exfoliación de barba',                        precio:0,     duracion:25, cat:'tratamientos', desc:'Consultar precio' },
-  ];
-  save('servicios');
-}
-
-let carrito = [], metodoPago = 'efectivo';
-let filtroCat = 'todos', filtroCaja = 'todos';
-let filtroClientes = 'activos';
-let editandoClienteId = null;
-let calendarioDate = new Date(), diaSeleccionado = new Date();
-
-function save(c) {
-  const data = c === 'servicios' ? servicios : c === 'ventas' ? ventas : c === 'citas' ? citas : clientes;
-  localStorage.setItem('rb_' + c, JSON.stringify(data));
-}
-
-// ══════════════════════════════════════
-// ÁREA PRIVADA — AUTENTICACIÓN
-// ══════════════════════════════════════
-const PASS_HASH = 'ritual2024'; // ← cambia aquí la contraseña
-const SECCIONES_PRIVADAS = ['area-privada'];
+// ════════════════════════════════════════
+// CONFIGURACIÓN
+// ════════════════════════════════════════
+const PASS_HASH = 'ritual2024';
 let sesionActiva = false;
-let seccionPendiente = null;
 
+// ════════════════════════════════════════
+// NAVEGACIÓN
+// ══════���═════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  
+  const section = document.getElementById('sec-' + id);
+  if (section) {
+    section.classList.add('active');
+  }
+  
+  const navBtn = document.getElementById('nav-' + id);
+  if (navBtn) {
+    navBtn.classList.add('active');
+  }
+}
+
+function toggleMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('nav-links');
+  hamburger.classList.toggle('open');
+  navLinks.classList.toggle('open');
+}
+
+function cerrarMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('nav-links');
+  hamburger.classList.remove('open');
+  navLinks.classList.remove('open');
+}
+
+// ════════════════════════════════════════
+// AUTENTICACIÓN
+// ════════════════════════════════════════
 function accederPrivado(id) {
-  if (sesionActiva) { showSection(id); return; }
-  seccionPendiente = id;
+  if (sesionActiva) {
+    showSection(id);
+    return;
+  }
   document.getElementById('login-pass').value = '';
   document.getElementById('login-error').textContent = '';
   document.getElementById('modal-login').classList.add('open');
@@ -919,7 +646,8 @@ function verificarPass() {
     sesionActiva = true;
     document.getElementById('modal-login').classList.remove('open');
     document.getElementById('btn-cerrar-sesion').style.display = 'inline-flex';
-    if (seccionPendiente) { showSection(seccionPendiente); seccionPendiente = null; }
+    showSection('acceso');
+    toast('✓ Acceso concedido');
   } else {
     const err = document.getElementById('login-error');
     err.textContent = '✕ Contraseña incorrecta';
@@ -931,825 +659,64 @@ function verificarPass() {
 
 function cerrarLogin() {
   document.getElementById('modal-login').classList.remove('open');
-  seccionPendiente = null;
 }
 
 function cerrarSesion() {
   sesionActiva = false;
   document.getElementById('btn-cerrar-sesion').style.display = 'none';
-  showSection('inicio');
+  showSection('inicio-publica');
   toast('🔒 Sesión cerrada');
 }
 
-function switchPrivTab(tab) {
-  document.getElementById('tab-servicios').style.display  = tab === 'servicios'  ? 'block' : 'none';
-  document.getElementById('tab-resumenes').style.display  = tab === 'resumenes'  ? 'block' : 'none';
-  document.getElementById('tab-btn-servicios').className  = tab === 'servicios'  ? 'btn btn-oro' : 'btn btn-ghost';
-  document.getElementById('tab-btn-resumenes').className  = tab === 'resumenes'  ? 'btn btn-oro' : 'btn btn-ghost';
-  if (tab === 'servicios') renderServicios();
-  if (tab === 'resumenes') renderResumenes();
-}
+// ════════════════════════════════════════
+// CONTACTO
+// ════════════════════════════════════════
+function enviarContacto() {
+  const nombre = document.getElementById('contacto-nombre').value;
+  const email = document.getElementById('contacto-email').value;
+  const tel = document.getElementById('contacto-tel').value;
+  const mensaje = document.getElementById('contacto-mensaje').value;
 
-// ══════════════════════════════════════
-// NAVEGACIÓN
-// ══════════════════════════════════════
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
-  document.getElementById('nav-' + id).classList.add('active');
-  if (id === 'inicio')        renderInicio();
-  if (id === 'caja')          renderCaja();
-  if (id === 'agenda')        { renderCalendario(); renderCitas(); actualizarSelectServicios(); }
-  if (id === 'clientes')      renderClientes();
-  if (id === 'area-privada')  { renderServicios(); switchPrivTab('servicios'); }
-}
-
-// ══════════════════════════════════════
-// AGENDA INLINE INICIO (vista por empleados)
-// ══════════════════════════════════════
-const EMPLEADOS = ['Empleado 1', 'Empleado 2', 'Empleado 3'];
-const HORA_INI  = 10;  // 10:00
-const HORA_FIN  = 21;  // 21:00
-const SLOT_MIN  = 20;  // minutos por slot
-
-let calDateI = new Date();
-let diaSel_I = new Date();
-
-function cambiarMesI(dir) {
-  calDateI.setMonth(calDateI.getMonth() + dir);
-  renderCalI();
-}
-function selDiaI(d) {
-  diaSel_I = new Date(calDateI.getFullYear(), calDateI.getMonth(), d);
-  renderCalI();
-  renderVistaDiaI();
-}
-
-function renderCalI() {
-  const hoy = new Date();
-  const y = calDateI.getFullYear(), m = calDateI.getMonth();
-  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const lbl = document.getElementById('mes-label-i');
-  if (lbl) lbl.textContent = MESES[m] + ' ' + y;
-  const grid = document.getElementById('cal-grid-i');
-  if (!grid) return;
-  let dS = new Date(y,m,1).getDay(); if(dS===0) dS=7;
-  let html = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d=>`<div class="cal-header">${d}</div>`).join('');
-  for(let i=1;i<dS;i++){const d=new Date(y,m,1-(dS-i));html+=`<div class="cal-dia otro-mes">${d.getDate()}</div>`;}
-  const tot=new Date(y,m+1,0).getDate();
-  for(let d=1;d<=tot;d++){
-    const fk=fechaKey(new Date(y,m,d));
-    const esH=new Date(y,m,d).toDateString()===hoy.toDateString();
-    const esS=new Date(y,m,d).toDateString()===diaSel_I.toDateString();
-    const tiC=citas.some(c=>c.fecha===fk);
-    html+=`<div class="cal-dia${esH?' hoy':''}${esS?' seleccionado':''}${tiC?' con-citas':''}" onclick="selDiaI(${d})">${d}</div>`;
-  }
-  const r=(dS-1+tot)%7; if(r>0) for(let i=1;i<=7-r;i++) html+=`<div class="cal-dia otro-mes">${i}</div>`;
-  grid.innerHTML = html;
-}
-
-function renderVistaDiaI() {
-  const fk = fechaKey(diaSel_I);
-  const D=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  const M=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  const lbl = document.getElementById('dia-label-i');
-  if (lbl) lbl.textContent = D[diaSel_I.getDay()].charAt(0).toUpperCase()+D[diaSel_I.getDay()].slice(1)+', '+diaSel_I.getDate()+' de '+M[diaSel_I.getMonth()];
-
-  const citasDia = citas.filter(c => c.fecha === fk);
-  const totalSlots = (HORA_FIN - HORA_INI) * 60 / SLOT_MIN;
-
-  // Cabecera
-  let html = `<div class="vd-grid" id="vd-main">`;
-  html += `<div class="vd-head" style="background:#1a2d27;"></div>`;
-  EMPLEADOS.forEach(e => { html += `<div class="vd-head">${e}</div>`; });
-
-  // Slots
-  for (let s = 0; s < totalSlots; s++) {
-    const totalMins = HORA_INI * 60 + s * SLOT_MIN;
-    const hh = String(Math.floor(totalMins/60)).padStart(2,'0');
-    const mm = String(totalMins%60).padStart(2,'0');
-    const horaStr = hh + ':' + mm;
-    const esPar = s % 2 === 0;
-    const mostrarHora = mm === '00'; // solo marca horas en punto
-
-    html += `<div class="vd-hora${esPar?'':''}" style="background:#1a2d27;padding:0 0.4rem;display:flex;align-items:flex-start;justify-content:flex-end;font-size:0.62rem;color:var(--suave);font-weight:600;padding-top:4px;border-right:1px solid var(--borde);border-bottom:1px solid rgba(61,96,87,${mostrarHora?'0.8':'0.3'});">
-      ${mostrarHora ? horaStr : ''}
-    </div>`;
-
-    EMPLEADOS.forEach((emp, ei) => {
-      const cita = citasDia.find(c => c.hora === horaStr && (c.empleado||'Empleado 1') === emp);
-      html += `<div class="vd-cell${esPar?' hora-par':''}" 
-        style="border-bottom:1px solid rgba(61,96,87,${mostrarHora?'0.8':'0.25'});"
-        onclick="clickSlotI('${horaStr}','${emp}')" 
-        title="Añadir cita ${horaStr} - ${emp}">`;
-      if (cita) {
-        const servsLabel = (cita.servicios && cita.servicios.length > 0)
-          ? cita.servicios.join(', ')
-          : (cita.servicio || '');
-        const finLabel = cita.horaFin ? ` → ${cita.horaFin}` : '';
-        html += `<div class="vd-cita-bloque" onclick="event.stopPropagation();abrirModalCitaCaja(${cita.id})" title="${cita.cliente} — ${servsLabel}">
-          <div>${cita.cliente}${finLabel ? '<span style="font-weight:400;opacity:0.75;"> '+finLabel+'</span>' : ''}</div>
-          <div style="font-weight:400;opacity:0.8;font-size:0.6rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${servsLabel}</div>
-        </div>`;
-      }
-      html += `</div>`;
-    });
-  }
-  html += `</div>`;
-
-  const cont = document.getElementById('vista-dia-i');
-  if (cont) cont.innerHTML = html;
-
-  // Actualizar select servicios y datalist
-  const sel = document.getElementById('i-cita-serv');
-  if (sel) sel.innerHTML = servicios.map(s=>`<option value="${s.nombre}">${s.nombre}${s.precio?' — €'+s.precio:''}</option>`).join('');
-  const dl = document.getElementById('dl-cli-i');
-  if (dl) dl.innerHTML = clientes.filter(c=>!c.archivado).map(c=>{
-    const partes = c.nombre.split(' ');
-    return `<option value="${partes[0]}" data-fullname="${c.nombre}"></option>`;
-  }).join('');
-}
-
-// Lista temporal de servicios añadidos al formulario
-let _serviciosNuevaCita = [];
-
-function addServicioI() {
-  const sel = document.getElementById('i-cita-serv');
-  const nombre = sel.value;
-  if (!nombre) return;
-  if (_serviciosNuevaCita.includes(nombre)) return toast('Ya añadido','#c0392b');
-  _serviciosNuevaCita.push(nombre);
-  renderServiciosNuevaCita();
-  // Auto-calcular hora fin según duraciones
-  autoHoraFin();
-}
-
-function removeServicioI(idx) {
-  _serviciosNuevaCita.splice(idx, 1);
-  renderServiciosNuevaCita();
-  autoHoraFin();
-}
-
-function renderServiciosNuevaCita() {
-  const cont = document.getElementById('i-servicios-lista');
-  if (!cont) return;
-  if (_serviciosNuevaCita.length === 0) { cont.innerHTML = ''; return; }
-  cont.innerHTML = _serviciosNuevaCita.map((s,i) =>
-    `<div style="display:flex;align-items:center;gap:0.3rem;background:#1a2d27;border:1px solid var(--borde);border-radius:5px;padding:0.25rem 0.5rem;">
-      <span style="flex:1;font-size:0.72rem;color:var(--oro);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${s}">${s}</span>
-      <button type="button" onclick="removeServicioI(${i})" style="background:none;border:none;color:var(--suave);cursor:pointer;font-size:0.8rem;padding:0;line-height:1;" title="Quitar">✕</button>
-    </div>`
-  ).join('');
-}
-
-// ── SELECTORES DE HORA (dos selects: horas 10-21 + minutos 00/20/40) ──
-function syncHoraI(campo) {
-  const pfx = campo === 'fin' ? 'i-cita-hora-fin' : 'i-cita-hora';
-  const h = document.getElementById(pfx + '-h').value;
-  const m = document.getElementById(pfx + '-m').value;
-  document.getElementById(pfx).value = h.padStart(2,'0') + ':' + m.padStart(2,'0');
-  if (campo === 'inicio') autoHoraFin();
-}
-
-function _setHoraSelectores(campo, val) {
-  const [hStr, mStr] = val.split(':');
-  const h = parseInt(hStr), m = parseInt(mStr);
-  const mSnap = [0,20,40].reduce((a,b) => Math.abs(b-m) < Math.abs(a-m) ? b : a, 0);
-  const hClamp = Math.max(10, Math.min(21, h));
-  const pfx = campo === 'fin' ? 'i-cita-hora-fin' : 'i-cita-hora';
-  document.getElementById(pfx + '-h').value = String(hClamp);
-  document.getElementById(pfx + '-m').value = String(mSnap).padStart(2,'0');
-  document.getElementById(pfx).value = String(hClamp).padStart(2,'0') + ':' + String(mSnap).padStart(2,'0');
-}
-
-function autoHoraFin() {
-  const horaInicio = document.getElementById('i-cita-hora').value;
-  if (!horaInicio) return;
-  const [hh, mm] = horaInicio.split(':').map(Number);
-  let totalMin = hh * 60 + mm;
-  let dur = 0;
-  _serviciosNuevaCita.forEach(nombre => {
-    const s = servicios.find(x => x.nombre === nombre);
-    if (s && s.duracion) dur += s.duracion;
-  });
-  if (dur === 0) dur = 20;
-  totalMin += dur;
-  totalMin = Math.round(totalMin / 20) * 20;
-  totalMin = Math.min(totalMin, 21 * 60);
-  const finH = Math.floor(totalMin / 60);
-  const finM = totalMin % 60;
-  _setHoraSelectores('fin', String(finH).padStart(2,'0') + ':' + String(finM).padStart(2,'0'));
-}
-
-function clickSlotI(hora, emp) {
-  _setHoraSelectores('inicio', hora);
-  document.getElementById('i-cita-emp').value = emp;
-  autoHoraFin();
-  document.getElementById('i-cita-nombre').focus();
-}
-
-function checkClienteExisteI() {
-  const nombre = document.getElementById('i-cita-nombre').value.trim();
-  const telWrap = document.getElementById('i-tel-wrap');
-  const apellidosInput = document.getElementById('i-cita-apellidos');
-  // Buscar si existe cliente cuyo nombre empieza igual (nombre completo)
-  const existe = clientes.find(c => c.nombre.toLowerCase().startsWith(nombre.toLowerCase()) && nombre.length > 1);
-  if (existe && nombre.length > 1) {
-    // Si existe, rellenar apellidos automáticamente y ocultar tel
-    const partes = existe.nombre.split(' ');
-    const apellidos = partes.slice(1).join(' ');
-    if (apellidos) apellidosInput.value = apellidos;
-    if (telWrap) telWrap.style.display = 'none';
-  } else {
-    if (telWrap) telWrap.style.display = '';
-  }
-}
-
-function addCitaI() {
-  const nombre    = document.getElementById('i-cita-nombre').value.trim();
-  const apellidos = document.getElementById('i-cita-apellidos').value.trim();
-  const tel       = document.getElementById('i-cita-tel') ? document.getElementById('i-cita-tel').value.trim() : '';
-  const hora      = document.getElementById('i-cita-hora').value;
-  const horaFin   = document.getElementById('i-cita-hora-fin').value;
-  const emp       = document.getElementById('i-cita-emp').value;
-  const notas     = document.getElementById('i-cita-notas').value.trim();
-
-  if (!nombre) return toast('⚠ El nombre es obligatorio','#c0392b');
-  if (!apellidos) return toast('⚠ Introduce al menos un apellido','#c0392b');
-  if (!hora) return toast('⚠ La hora es obligatoria','#c0392b');
-
-  const nombreCompleto = (nombre + ' ' + apellidos).trim();
-
-  // Si no hay servicios en la lista, usar el del select
-  let servs = [..._serviciosNuevaCita];
-  if (servs.length === 0) {
-    const sel = document.getElementById('i-cita-serv').value;
-    if (sel) servs.push(sel);
-  }
-
-  // Auto-crear cliente si no existe
-  const clienteExistente = clientes.find(c => c.nombre.toLowerCase() === nombreCompleto.toLowerCase());
-  if (!clienteExistente) {
-    clientes.push({
-      id: Date.now(),
-      nombre: nombreCompleto,
-      tel: tel,
-      email: '',
-      notas: '',
-      visitas: 0,
-      archivado: false,
-      creado: new Date().toISOString()
-    });
-    save('clientes');
-    actualizarDatalistClientes();
-    actualizarDatalistClientes2();
-    toast('✓ Cliente nuevo creado: ' + nombreCompleto);
-  }
-
-  citas.push({
-    id: Date.now() + 1,
-    fecha: fechaKey(diaSel_I),
-    hora,
-    horaFin,
-    cliente: nombreCompleto,
-    empleado: emp,
-    servicio: servs[0] || '',
-    servicios: servs,
-    notas
-  });
-  save('citas');
-  _serviciosNuevaCita = [];
-  renderServiciosNuevaCita();
-  document.getElementById('i-cita-nombre').value    = '';
-  document.getElementById('i-cita-apellidos').value = '';
-  if (document.getElementById('i-cita-tel')) document.getElementById('i-cita-tel').value = '';
-  document.getElementById('i-cita-notas').value     = '';
-  const telWrap = document.getElementById('i-tel-wrap');
-  if (telWrap) telWrap.style.display = '';
-  renderVistaDiaI();
-  renderCalI();
-  if (clienteExistente) toast('✓ Cita agendada');
-}
-
-function delCitaI(id) {
-  if (!confirm('¿Eliminar esta cita?')) return;
-  citas = citas.filter(c => c.id !== id);
-  save('citas');
-  renderVistaDiaI();
-  renderCalI();
-  toast('Cita eliminada');
-}
-
-// ── MODAL CITA → CAJA ──
-let _citaCajaId = null;
-
-function abrirModalCitaCaja(id) {
-  const cita = citas.find(c => c.id === id); if (!cita) return;
-  _citaCajaId = id;
-  document.getElementById('mcj-subtitulo').textContent = (cita.hora||'') + ' · ' + (cita.empleado||'');
-  document.getElementById('mcj-cliente').textContent   = cita.cliente || '—';
-  document.getElementById('mcj-servicio').textContent  = (cita.servicios && cita.servicios.length > 0) ? cita.servicios.join(', ') : (cita.servicio || '(sin servicio asignado)');
-  document.getElementById('modal-cita-caja').classList.add('open');
-}
-
-function cerrarModalCitaCaja() {
-  document.getElementById('modal-cita-caja').classList.remove('open');
-  _citaCajaId = null;
-}
-
-function confirmarPasarCaja() {
-  const cita = citas.find(c => c.id === _citaCajaId); if (!cita) return;
-  // Limpiar carrito y cargar servicio
-  carrito = [];
-  const serv = servicios.find(s => s.nombre === cita.servicio);
-  if (serv) carrito.push({...serv});
-  // Poner cliente en caja
-  cerrarModalCitaCaja();
-  showSection('caja');
-  setTimeout(() => {
-    document.getElementById('cliente-nombre').value = cita.cliente || '';
-    renderCaja();
-    renderCarrito();
-    actualizarDatalistClientes();
-    if (serv) toast('✓ Cita cargada en caja: ' + serv.nombre);
-    else toast('⚠ Servicio no encontrado, añádelo manualmente', '#c0392b');
-  }, 80);
-}
-
-function confirmarEliminarCitaCaja() {
-  if (!confirm('¿Eliminar esta cita?')) return;
-  citas = citas.filter(c => c.id !== _citaCajaId);
-  save('citas');
-  cerrarModalCitaCaja();
-  renderVistaDiaI();
-  renderCalI();
-  toast('Cita eliminada');
-}
-
-// ══════════════════════════════════════
-// INICIO
-// ══════════════════════════════════════
-function renderInicio() {
-  renderCalI();
-  renderVistaDiaI();
-}
-
-// ══════════════════════════════════════
-// TABS CATEGORÍA
-// ══════════════════════════════════════
-function renderCatTabs(containerId, filtroActual, fnName) {
-  const cats = CATEGORIAS.filter(c => servicios.some(s => s.cat === c.id));
-  let html = `<button class="cat-tab ${filtroActual==='todos'?'active':''}" onclick="${fnName}('todos')">🔎 Todos <span class="cat-count">${servicios.length}</span></button>`;
-  cats.forEach(c => {
-    const n = servicios.filter(s => s.cat === c.id).length;
-    html += `<button class="cat-tab ${filtroActual===c.id?'active':''}" onclick="${fnName}('${c.id}')">${c.icon} ${c.label} <span class="cat-count">${n}</span></button>`;
-  });
-  document.getElementById(containerId).innerHTML = html;
-}
-
-function renderPorCat(filtro, buildCard) {
-  const catsUsadas = filtro === 'todos'
-    ? CATEGORIAS.filter(c => servicios.some(s => s.cat === c.id))
-    : CATEGORIAS.filter(c => c.id === filtro && servicios.some(s => s.cat === c.id));
-  if (!catsUsadas.length) return '<div class="empty-state"><div class="emoji">✂</div><p>Sin servicios</p></div>';
-  return catsUsadas.map(c => `
-    <div class="cat-section">
-      <div class="cat-header"><span class="cat-icon">${c.icon}</span><span class="cat-title">${c.label}</span><div class="cat-line"></div></div>
-      <div class="servicios-grid">${servicios.filter(s=>s.cat===c.id).map(s=>buildCard(s,c)).join('')}</div>
-    </div>`).join('');
-}
-
-// ══════════════════════════════════════
-// SERVICIOS
-// ══════════════════════════════════════
-function setFiltro(cat) { filtroCat = cat; renderServicios(); }
-
-function renderServicios() {
-  renderCatTabs('cat-tabs-servicios', filtroCat, 'setFiltro');
-  document.getElementById('servicios-por-cat').innerHTML = renderPorCat(filtroCat, (s, c) => `
-    <div class="servicio-card" data-cat="${s.cat}">
-      <div class="servicio-info">
-        <h3>${s.nombre}</h3>
-        <p>${s.desc||''}${s.duracion?' · '+s.duracion+' min':''}</p>
-        <span class="badge-cat bc-${s.cat}">${c.icon} ${c.label}</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;margin-left:0.65rem;">
-        <div class="servicio-precio">${s.precio > 0 ? "€"+s.precio.toFixed(2) : "Consultar"}</div>
-        <button class="btn btn-danger btn-sm" onclick="delServicio(${s.id})">✕</button>
-      </div>
-    </div>`);
-}
-
-function addServicio() {
-  const nombre = document.getElementById('s-nombre').value.trim();
-  const precio = parseFloat(document.getElementById('s-precio').value);
-  const duracion = parseInt(document.getElementById('s-duracion').value) || 0;
-  const cat = document.getElementById('s-cat').value;
-  const desc = document.getElementById('s-desc').value.trim();
-  if (!nombre || isNaN(precio)) return toast('⚠ Rellena nombre y precio', '#c0392b');
-  servicios.push({ id: Date.now(), nombre, precio, duracion, cat, desc });
-  save('servicios');
-  ['s-nombre','s-precio','s-duracion','s-desc'].forEach(id => document.getElementById(id).value = '');
-  renderServicios();
-  toast('✓ Servicio añadido');
-}
-
-function delServicio(id) {
-  servicios = servicios.filter(s => s.id !== id);
-  save('servicios');
-  renderServicios();
-}
-
-// ══════════════════════════════════════
-// CAJA
-// ══════════════════════════════════════
-function setFiltroCaja(cat) { filtroCaja = cat; renderCaja(); }
-
-function renderCaja() {
-  renderCatTabs('cat-tabs-caja', filtroCaja, 'setFiltroCaja');
-  actualizarDatalistClientes();
-  document.getElementById('caja-servicios-lista').innerHTML = renderPorCat(filtroCaja, (s) => `
-    <div class="servicio-card ${carrito.find(x=>x.id===s.id)?'selected':''}" data-cat="${s.cat}" onclick="toggleCarrito(${s.id})">
-      <div class="servicio-info"><h3>${s.nombre}</h3><p>${s.desc||''}</p></div>
-      <div class="servicio-precio">${s.precio > 0 ? "€"+s.precio.toFixed(2) : "Consultar"}</div>
-    </div>`);
-}
-
-function toggleCarrito(id) {
-  const s = servicios.find(s => s.id === id); if (!s) return;
-  const idx = carrito.findIndex(c => c.id === id);
-  if (idx >= 0) carrito.splice(idx, 1); else carrito.push({...s});
-  renderCaja(); renderCarrito();
-}
-
-function renderCarrito() {
-  const el = document.getElementById('carrito-items');
-  el.innerHTML = carrito.length === 0
-    ? '<div class="carrito-vacio">El ticket está vacío</div>'
-    : carrito.map(item => `
-        <div class="carrito-item">
-          <span class="carrito-item-nombre">${item.nombre}</span>
-          <span class="carrito-item-precio">€${item.precio.toFixed(2)}</span>
-          <button class="carrito-item-del" onclick="quitarItem(${item.id})">✕</button>
-        </div>`).join('');
-  const total = carrito.reduce((a,b) => a+b.precio, 0);
-  document.getElementById('carrito-total').textContent = '€' + total.toFixed(2);
-  document.getElementById('cobrar-btn').disabled = carrito.length === 0;
-}
-
-function quitarItem(id) { carrito = carrito.filter(c => c.id !== id); renderCaja(); renderCarrito(); }
-function limpiarCarrito() { carrito = []; document.getElementById('cliente-nombre').value=''; renderCaja(); renderCarrito(); }
-
-// ══════════════════════════════════════
-// MODAL COBRO
-// ══════════════════════════════════════
-function abrirModal() {
-  const total = carrito.reduce((a,b) => a+b.precio, 0);
-  const cli   = document.getElementById('cliente-nombre').value.trim() || 'Cliente';
-  document.getElementById('modal-total').textContent = '€'+total.toFixed(2);
-  document.getElementById('modal-cliente-label').textContent = '👤 '+cli;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function cerrarModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-function selMetodo(m) {
-  metodoPago = m;
-  document.querySelectorAll('.metodo-btn').forEach(b=>b.classList.remove('activo'));
-  document.getElementById('met-'+m).classList.add('activo');
-}
-function confirmarCobro() {
-  const cliente = document.getElementById('cliente-nombre').value.trim() || 'Anónimo';
-  const total   = carrito.reduce((a,b) => a+b.precio, 0);
-  ventas.push({ id:Date.now(), fecha:new Date().toISOString(), cliente, servicios:carrito.map(c=>c.nombre), cats:[...new Set(carrito.map(c=>c.cat))], total, metodo:metodoPago });
-  save('ventas');
-  // Actualizar visitas e historial del cliente (matching flexible)
-  const cli = clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase()
-    || c.nombre.toLowerCase().replace(/\s+/g,' ').trim() === cliente.toLowerCase().replace(/\s+/g,' ').trim());
-  if (cli) {
-    cli.visitas = (cli.visitas||0)+1;
-    cli.ultimaVisita = new Date().toISOString();
-    if (!cli.historial) cli.historial = [];
-    cli.historial.unshift({
-      fecha: new Date().toISOString(),
-      servicios: carrito.map(c=>c.nombre),
-      total: total,
-      metodo: metodoPago
-    });
-    save('clientes');
-    renderClientes && renderClientes();
-  }
-  cerrarModal(); limpiarCarrito();
-  toast('✓ Cobro registrado: €'+total.toFixed(2));
-}
-
-// ══════════════════════════════════════
-// AGENDA
-// ══════════════════════════════════════
-function actualizarSelectServicios() {
-  document.getElementById('cita-servicio').innerHTML =
-    CATEGORIAS.map(c => {
-      const items = servicios.filter(s => s.cat === c.id);
-      if (!items.length) return '';
-      return `<optgroup label="${c.icon} ${c.label}">${items.map(s=>`<option value="${s.id}">${s.nombre}</option>`).join('')}</optgroup>`;
-    }).join('') || '<option>Sin servicios</option>';
-  actualizarDatalistClientes2();
-}
-
-function actualizarDatalistClientes() {
-  const dl = document.getElementById('clientes-datalist');
-  if (dl) dl.innerHTML = clientes.filter(c=>!c.archivado).map(c=>`<option value="${c.nombre}"></option>`).join('');
-}
-function actualizarDatalistClientes2() {
-  const dl = document.getElementById('clientes-datalist2');
-  if (dl) dl.innerHTML = clientes.filter(c=>!c.archivado).map(c=>`<option value="${c.nombre}"></option>`).join('');
-}
-
-function renderCalendario() {
-  const mes=calendarioDate.getMonth(), anio=calendarioDate.getFullYear(), hoy=new Date();
-  const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  document.getElementById('mes-label').textContent = MESES[mes]+' '+anio;
-  const primero=new Date(anio,mes,1), ultimo=new Date(anio,mes+1,0);
-  let dS=primero.getDay(); if(dS===0) dS=7;
-  let html=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d=>`<div class="cal-header">${d}</div>`).join('');
-  for(let i=1;i<dS;i++){const d=new Date(anio,mes,1-(dS-i));html+=`<div class="cal-dia otro-mes">${d.getDate()}</div>`;}
-  for(let d=1;d<=ultimo.getDate();d++){
-    const f=new Date(anio,mes,d),fs=fechaKey(f);
-    const esH=f.toDateString()===hoy.toDateString(),esS=f.toDateString()===diaSeleccionado.toDateString(),tiC=citas.some(c=>c.fecha===fs);
-    html+=`<div class="cal-dia${esH?' hoy':''}${esS?' seleccionado':''}${tiC?' con-citas':''}" onclick="selDia(${d})">${d}</div>`;
-  }
-  const r=(dS-1+ultimo.getDate())%7; if(r>0) for(let i=1;i<=7-r;i++) html+=`<div class="cal-dia otro-mes">${i}</div>`;
-  document.getElementById('cal-grid').innerHTML=html;
-}
-function cambiarMes(dir){calendarioDate.setMonth(calendarioDate.getMonth()+dir);renderCalendario();}
-function selDia(d){diaSeleccionado=new Date(calendarioDate.getFullYear(),calendarioDate.getMonth(),d);renderCalendario();renderCitas();}
-function fechaKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-
-function renderCitas(){
-  const fs=fechaKey(diaSeleccionado);
-  const D=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  const M=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  document.getElementById('dia-seleccionado-label').textContent=`${D[diaSeleccionado.getDay()]} ${diaSeleccionado.getDate()} de ${M[diaSeleccionado.getMonth()]}`;
-  const cd=citas.filter(c=>c.fecha===fs).sort((a,b)=>a.hora.localeCompare(b.hora));
-  document.getElementById('lista-citas').innerHTML=cd.length===0
-    ?'<div class="empty-state"><div class="emoji">📅</div><p>Sin citas este día</p></div>'
-    :cd.map(c=>`<div class="cita-item">
-        <div class="cita-hora">⏰ ${c.hora}</div>
-        <div class="cita-nombre">${c.cliente}</div>
-        <div class="cita-servicio">${c.servicio}</div>
-        ${c.notas?`<div style="font-size:0.72rem;color:var(--suave);margin-top:2px">📝 ${c.notas}</div>`:''}
-        <button class="cita-del" onclick="delCita(${c.id})">✕</button>
-      </div>`).join('');
-}
-
-function addCita(){
-  const cliente=document.getElementById('cita-cliente').value.trim();
-  const hora=document.getElementById('cita-hora').value;
-  const sid=parseInt(document.getElementById('cita-servicio').value);
-  const notas=document.getElementById('cita-notas').value.trim();
-  const serv=servicios.find(s=>s.id===sid);
-  if(!cliente||!hora) return toast('⚠ Rellena cliente y hora','#c0392b');
-  citas.push({id:Date.now(),fecha:fechaKey(diaSeleccionado),hora,cliente,servicio:serv?serv.nombre:'Servicio',notas});
-  save('citas');
-  document.getElementById('cita-cliente').value='';
-  document.getElementById('cita-notas').value='';
-  renderCitas(); renderCalendario(); toast('✓ Cita agendada');
-}
-function delCita(id){citas=citas.filter(c=>c.id!==id);save('citas');renderCitas();renderCalendario();}
-
-// ══════════════════════════════════════
-// CLIENTES
-// ══════════════════════════════════════
-function setFiltroClientes(f) {
-  filtroClientes = f;
-  ['activos','archivados','todos'].forEach(x => {
-    document.getElementById('cli-btn-'+x).className = x===f ? 'btn btn-oro btn-sm' : 'btn btn-ghost btn-sm';
-  });
-  renderClientes();
-}
-
-function renderClientes() {
-  const buscar = (document.getElementById('cli-buscar')?.value || '').toLowerCase();
-  let lista = clientes.filter(c => {
-    if (filtroClientes === 'activos'    && c.archivado) return false;
-    if (filtroClientes === 'archivados' && !c.archivado) return false;
-    if (buscar && !c.nombre.toLowerCase().includes(buscar) && !(c.tel||'').includes(buscar)) return false;
-    return true;
-  }).sort((a,b) => a.nombre.localeCompare(b.nombre));
-
-  const el = document.getElementById('clientes-lista');
-  if (lista.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="emoji">👥</div><p>No hay clientes en esta vista</p></div>';
+  if (!nombre || !email || !mensaje) {
+    toast('✕ Por favor completa los campos requeridos');
     return;
   }
 
-  el.innerHTML = lista.map(c => {
-    const iniciales = c.nombre.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-    const visitas   = c.visitas || 0;
-    const ultima    = c.ultimaVisita ? new Date(c.ultimaVisita).toLocaleDateString('es-ES') : '—';
-    const historial = c.historial || [];
-    const histHtml = historial.length === 0
-      ? '<div style="color:var(--suave);font-size:0.75rem;padding:0.4rem 0;">Sin historial de visitas aún</div>'
-      : historial.slice(0,20).map(h => {
-          const d = new Date(h.fecha).toLocaleDateString('es-ES');
-          const t = new Date(h.fecha).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-          const servs = (h.servicios||[]).join(', ') || '—';
-          const metIcon = h.metodo==='Efectivo'?'💵':h.metodo==='Tarjeta'?'💳':h.metodo==='Bizum'?'📱':'💰';
-          return `<div style="display:flex;align-items:flex-start;gap:0.6rem;padding:0.42rem 0;border-bottom:1px solid rgba(61,96,87,0.3);">
-            <div style="flex-shrink:0;font-size:0.65rem;color:var(--suave);min-width:72px;padding-top:1px;">${d}<br><span style="opacity:0.7;">${t}</span></div>
-            <div style="flex:1;min-width:0;">
-              <div style="font-size:0.78rem;color:var(--oro);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${servs}">${servs}</div>
-              <div style="font-size:0.68rem;color:var(--suave);margin-top:1px;">${metIcon} ${h.metodo||'—'} · <span style="color:var(--verde2);font-weight:600;">€${(h.total||0).toFixed(2)}</span></div>
-            </div>
-          </div>`;
-        }).join('');
-    const hasHist = historial.length > 0;
-    return `
-      <div class="cliente-card ${c.archivado?'archivado':''}" style="flex-direction:column;align-items:stretch;gap:0;">
-        <div style="display:flex;align-items:center;gap:0;">
-          <div class="cliente-avatar" style="flex-shrink:0;margin-right:1rem;">${iniciales}</div>
-          <div class="cliente-info" style="flex:1;min-width:0;">
-            <div class="cliente-nombre">${c.nombre} ${c.archivado?'<span style="font-size:0.68rem;color:var(--suave)">(archivado)</span>':''}</div>
-            <div class="cliente-tel">📞 ${c.tel||'—'} ${c.email?'  ✉ '+c.email:''}</div>
-            <div class="cliente-meta">Visitas: ${visitas} · Última: ${ultima}</div>
-          </div>
-          <div class="cliente-acciones" style="flex-shrink:0;">
-            <button class="btn btn-ghost btn-sm" onclick="editarCliente(${c.id})" title="Editar">✏</button>
-            <button class="btn btn-suave btn-sm" onclick="toggleArchivar(${c.id})" title="${c.archivado?'Restaurar':'Archivar'}">${c.archivado?'↩':'📁'}</button>
-            <button class="btn btn-danger btn-sm" onclick="eliminarCliente(${c.id})" title="Eliminar">✕</button>
-            <button class="btn btn-suave btn-sm" onclick="toggleHistorial(${c.id})" title="Ver historial" style="${hasHist?'':'opacity:0.4;cursor:default;'}" ${hasHist?'':'disabled'}>
-              📋<span style="font-size:0.6rem;margin-left:2px;">${historial.length}</span>
-            </button>
-          </div>
-        </div>
-        <div id="hist-${c.id}" style="display:none;margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--borde);">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--suave);margin-bottom:0.35rem;">Historial de servicios</div>
-          ${histHtml}
-        </div>
-      </div>`;
-  }).join('');
+  // Guardar en localStorage como referencia
+  const contactos = JSON.parse(localStorage.getItem('rb_contactos') || '[]');
+  contactos.push({
+    nombre,
+    email,
+    tel,
+    mensaje,
+    fecha: new Date().toLocaleString()
+  });
+  localStorage.setItem('rb_contactos', JSON.stringify(contactos));
+
+  // Limpiar formulario
+  document.getElementById('contacto-nombre').value = '';
+  document.getElementById('contacto-email').value = '';
+  document.getElementById('contacto-tel').value = '';
+  document.getElementById('contacto-mensaje').value = '';
+
+  toast('✓ Mensaje enviado correctamente');
 }
 
-function guardarCliente() {
-  const nombre = document.getElementById('cli-nombre').value.trim();
-  const tel    = document.getElementById('cli-tel').value.trim();
-  const email  = document.getElementById('cli-email').value.trim();
-  const notas  = document.getElementById('cli-notas').value.trim();
-  if (!nombre) return toast('⚠ El nombre es obligatorio','#c0392b');
-
-  if (editandoClienteId) {
-    const c = clientes.find(c => c.id === editandoClienteId);
-    if (c) { c.nombre=nombre; c.tel=tel; c.email=email; c.notas=notas; }
-    editandoClienteId = null;
-    document.getElementById('form-cli-titulo').textContent = '+ Nuevo Cliente';
-  } else {
-    clientes.push({ id:Date.now(), nombre, tel, email, notas, visitas:0, archivado:false, creado:new Date().toISOString() });
-  }
-  save('clientes');
-  limpiarFormCliente();
-  renderClientes();
-  toast('✓ Cliente guardado');
+// ════════════════════════════════════════
+// UTILIDADES
+// ════════════════════════════════════════
+function toast(mensaje) {
+  const el = document.getElementById('toast');
+  el.textContent = mensaje;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-function editarCliente(id) {
-  const c = clientes.find(c => c.id === id); if (!c) return;
-  editandoClienteId = id;
-  document.getElementById('cli-nombre').value = c.nombre;
-  document.getElementById('cli-tel').value    = c.tel || '';
-  document.getElementById('cli-email').value  = c.email || '';
-  document.getElementById('cli-notas').value  = c.notas || '';
-  document.getElementById('form-cli-titulo').textContent = '✏ Editar Cliente';
-  document.getElementById('form-cliente-card').scrollIntoView({behavior:'smooth'});
-}
-
-function limpiarFormCliente() {
-  editandoClienteId = null;
-  ['cli-nombre','cli-tel','cli-email','cli-notas'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('form-cli-titulo').textContent = '+ Nuevo Cliente';
-}
-
-function toggleHistorial(id) {
-  const el = document.getElementById('hist-' + id);
-  if (!el) return;
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-function toggleArchivar(id) {
-  const c = clientes.find(c => c.id === id); if (!c) return;
-  c.archivado = !c.archivado;
-  save('clientes'); renderClientes();
-  toast(c.archivado ? '📁 Cliente archivado' : '↩ Cliente restaurado');
-}
-
-function eliminarCliente(id) {
-  if (!confirm('¿Eliminar este cliente? Esta acción no se puede deshacer.')) return;
-  clientes = clientes.filter(c => c.id !== id);
-  save('clientes'); renderClientes();
-  toast('Cliente eliminado');
-}
-
-// ══════════════════════════════════════
-// RESÚMENES
-// ══════════════════════════════════════
-let periodoActual = 'diario';
-
-function setPeriodo(p) {
-  periodoActual=p;
-  ['diario','mensual','total'].forEach(x=>{ document.getElementById('btn-'+x).className=x===p?'btn btn-oro':'btn btn-ghost'; });
-  renderResumenes();
-}
-
-function renderResumenes() {
-  const hoy=new Date(); let vf=ventas, titulo='';
-  if (periodoActual==='diario') { vf=ventas.filter(v=>v.fecha.startsWith(fechaKey(hoy))); titulo='Hoy · '+hoy.toLocaleDateString('es-ES'); }
-  else if (periodoActual==='mensual') {
-    const ms=hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0');
-    vf=ventas.filter(v=>v.fecha.startsWith(ms));
-    const M=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    titulo=M[hoy.getMonth()]+' '+hoy.getFullYear();
-  } else titulo='Histórico completo';
-
-  const totalEur=vf.reduce((a,b)=>a+b.total,0), numV=vf.length, tickM=numV>0?totalEur/numV:0;
-  const conteo={}; vf.forEach(v=>v.servicios.forEach(s=>{conteo[s]=(conteo[s]||0)+1;}));
-  const top=Object.keys(conteo).sort((a,b)=>conteo[b]-conteo[a])[0]||'—';
-
-  const porCat={};
-  vf.forEach(v=>v.servicios.forEach(sn=>{const m=servicios.find(s=>s.nombre===sn);if(m){porCat[m.cat]=(porCat[m.cat]||0)+m.precio;}}));
-  const catBars=CATEGORIAS.filter(c=>porCat[c.id]).map(c=>{
-    const pct=totalEur>0?Math.round((porCat[c.id]/totalEur)*100):0;
-    return `<div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:0.42rem;">
-      <div style="width:98px;font-size:0.74rem;color:var(--suave);text-align:right;">${c.icon} ${c.label}</div>
-      <div style="flex:1;background:var(--fondo2);border-radius:3px;height:8px;overflow:hidden;">
-        <div style="height:100%;width:${pct}%;background:linear-gradient(to right,var(--oro3),var(--oro));border-radius:3px;"></div>
-      </div>
-      <div style="font-size:0.78rem;color:var(--oro);font-weight:600;width:52px;">€${porCat[c.id].toFixed(0)}</div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('stats-area').innerHTML=`
-    <p style="color:var(--suave);margin-bottom:1rem;font-size:0.84rem;">${titulo}</p>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="icono">💰</div><div class="valor">€${totalEur.toFixed(2)}</div><div class="etiqueta">Ingresos</div></div>
-      <div class="stat-card"><div class="icono">🧾</div><div class="valor">${numV}</div><div class="etiqueta">Ventas</div></div>
-      <div class="stat-card"><div class="icono">📊</div><div class="valor">€${tickM.toFixed(2)}</div><div class="etiqueta">Ticket Medio</div></div>
-      <div class="stat-card"><div class="icono">⭐</div><div class="valor" style="font-size:0.88rem;padding-top:8px;">${top}</div><div class="etiqueta">Top Servicio</div></div>
-    </div>
-    ${catBars?`<div class="card" style="margin-bottom:1.2rem;"><h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);margin-bottom:0.85rem;font-size:0.92rem;font-weight:600;">Ingresos por categoría</h3>${catBars}</div>`:''}
-    ${periodoActual!=='diario'?renderGrafica(vf,periodoActual):''}
-    <div class="card">
-      <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);margin-bottom:0.85rem;font-size:0.92rem;font-weight:600;">Últimas ventas</h3>
-      ${vf.length===0
-        ?'<div class="empty-state"><div class="emoji">📊</div><p>Sin ventas en este período</p></div>'
-        :`<table class="tabla-ventas"><thead><tr><th>Fecha/Hora</th><th>Cliente</th><th>Servicios</th><th>Método</th><th>Total</th></tr></thead><tbody>
-          ${[...vf].reverse().slice(0,50).map(v=>`<tr>
-            <td style="white-space:nowrap;font-size:0.76rem;color:var(--suave);">${new Date(v.fecha).toLocaleDateString('es-ES')} ${new Date(v.fecha).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</td>
-            <td>${v.cliente}</td>
-            <td style="font-size:0.76rem;color:var(--suave);">${v.servicios.join(', ')}</td>
-            <td><span style="font-size:0.7rem;padding:2px 7px;border-radius:99px;background:rgba(204,181,127,0.08);color:var(--oro);border:1px solid rgba(204,181,127,0.2);">${v.metodo}</span></td>
-            <td class="monto-verde">€${v.total.toFixed(2)}</td>
-          </tr>`).join('')}
-          </tbody></table>`}
-    </div>`;
-}
-
-function renderGrafica(ventas,periodo){
-  const ag={};
-  ventas.forEach(v=>{const d=new Date(v.fecha);const k=periodo==='mensual'?d.getDate():(d.getMonth()+1)+'/'+d.getFullYear();ag[k]=(ag[k]||0)+v.total;});
-  const keys=Object.keys(ag).sort((a,b)=>periodo==='mensual'?Number(a)-Number(b):0);
-  if(!keys.length) return '';
-  const max=Math.max(...Object.values(ag));
-  const bars=keys.slice(-14).map(k=>{const h=max>0?Math.round((ag[k]/max)*100):2;return `<div class="chart-bar-wrap"><div class="chart-bar" style="height:${h}%"></div><div class="chart-label">${k}</div></div>`;}).join('');
-  return `<div class="card" style="margin-bottom:1.1rem;"><h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);margin-bottom:0.6rem;font-size:0.9rem;font-weight:600;">Ventas por ${periodo==='mensual'?'día':'mes'}</h3><div class="chart-bar-container">${bars}</div></div>`;
-}
-
-// ══════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════
-function toast(msg,color){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.style.background=color||'var(--verde)';
-  el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2800);
-}
-
-
-// ── MENÚ HAMBURGUESA ──
-function toggleMenu() {
-  const links = document.getElementById('nav-links');
-  const btn   = document.getElementById('hamburger');
-  links.classList.toggle('open');
-  btn.classList.toggle('open');
-}
-function cerrarMenu() {
-  document.getElementById('nav-links').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
-}
-// Cerrar al tocar fuera
-document.addEventListener('click', function(e) {
-  const nav = document.querySelector('nav');
-  if (!nav.contains(e.target)) cerrarMenu();
+// Inicializar
+document.addEventListener('DOMContentLoaded', () => {
+  showSection('inicio-publica');
 });
-
-// ── INIT ──
-renderInicio();
 </script>
+
 </body>
 </html>
