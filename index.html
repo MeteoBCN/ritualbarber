@@ -135,7 +135,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   letter-spacing:6px; text-transform:uppercase;
   color:var(--suave); margin-top:0.6rem;
 }
-.hero-linea { width:80px; height:1px; background:var(--oro3); margin:1.5rem auto; }
+.hero-linea { width:80px; height:1px; background:var(--oro); margin:1.5rem auto; }
 
 .inicio-cards {
   display:grid;
@@ -421,18 +421,12 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 /* ── HERO ACORDEÓN ── */
 .hero-acordeon {
   margin: 1.6rem auto 0;
-  width: min(320px, 82vw);
+  width: min(420px, 90vw);
   text-align: center;
-  margin-left: auto;
-  margin-right: auto;
 }
 .hero-drop-item {
-  padding: 0.75rem 0;
+  padding: 0.75rem 0.2rem;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  tap-highlight-color: transparent;
-  user-select: none;
-  -webkit-user-select: none;
 }
 .hero-drop-header {
   display: flex;
@@ -472,7 +466,6 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
-  text-align: center;
 }
 .hero-drop-item.open .drop-desc {
   max-height: 80px;
@@ -506,7 +499,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 }
 .hero-reserva-titulo {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--oro);
   letter-spacing: 3px;
@@ -565,45 +558,55 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 <div class="section active" id="sec-inicio-publica">
   <div class="inicio-hero">
 
+    <!-- Imagen barbería con degradado lateral -->
+    <div style="position:relative;width:100%;max-width:700px;height:220px;margin-bottom:2rem;overflow:hidden;border-radius:4px;">
+      <img src="barberia.jpg" alt="Ritual Barber" style="width:100%;height:100%;object-fit:cover;display:block;">
+      <div style="position:absolute;inset:0;background:linear-gradient(to right, #1a2d27 0%, transparent 30%, transparent 70%, #1a2d27 100%);"></div>
+    </div>
+
     <div class="hero-titulo">RITUAL BARBER</div>
     <div class="hero-subtitulo">Experiencia Premium</div>
     <div class="hero-linea"></div>
 
-    <!-- Acordeón centrado -->
+    <!-- Acordeón hero -->
     <div class="hero-acordeon">
-      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+      <div class="hero-drop-item open">
         <div class="hero-drop-header">
           <span class="drop-titulo">Servicios y Tratamientos</span>
+          
         </div>
         <div class="drop-desc">Cortes clásicos y modernos, barbería profesional y tratamientos capilares a medida.</div>
       </div>
       <div class="hero-drop-divider"></div>
-      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+      <div class="hero-drop-item open">
         <div class="hero-drop-header">
           <span class="drop-titulo">Profesionales Expertos</span>
+          
         </div>
         <div class="drop-desc">Nuestro equipo está aquí para ti. Especialistas formados en las últimas técnicas de barbería y cuidado del cabello.</div>
       </div>
       <div class="hero-drop-divider"></div>
-      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+      <div class="hero-drop-item open">
         <div class="hero-drop-header">
           <span class="drop-titulo">Horario</span>
+          
         </div>
         <div class="drop-desc">Lunes a Sábado de 10:00 a 21:00 h.</div>
       </div>
       <div class="hero-drop-divider"></div>
-      <div class="hero-drop-item" onclick="toggleDropItem(this)">
+      <div class="hero-drop-item open">
         <div class="hero-drop-header">
           <span class="drop-titulo">Nos encontrará en...</span>
+          
         </div>
         <div class="drop-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
       </div>
     </div>
 
-    <!-- Logo entre línea dorada y reserva -->
-    <div style="margin:1.5rem auto;">
+    <!-- Logo RB -->
+    <div style="margin:2rem auto 0;display:flex;justify-content:center;">
       <img src="logo__1_.png" alt="Ritual Barber Logo"
-           style="width:110px;height:110px;border-radius:16px;border:2px solid #ccb57f;box-shadow:0 0 22px rgba(204,181,127,0.3);display:block;margin:0 auto;">
+           style="width:120px;height:120px;border-radius:18px;border:2px solid #ccb57f;box-shadow:0 0 18px rgba(204,181,127,0.25);display:block;">
     </div>
 
     <!-- Tarjeta Reserva tu Cita -->
