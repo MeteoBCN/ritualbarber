@@ -787,17 +787,73 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ ACCESO (PRIVADO) ════════════ -->
 <div class="section" id="sec-acceso">
-  <h2>Acceso - Herramientas de Gestión</h2>
-  <div style="max-width:1240px;margin:0 auto;">
-    <p style="color:var(--suave);text-align:center;margin:2rem 0;">Accede a tu cuenta para ver todas las herramientas de gestión.</p>
-    <button class="btn btn-oro" style="display:block;margin:0 auto;" onclick="accederPrivado('acceso')">Iniciar Sesión</button>
+  <h2>📊 Panel de Gestión</h2>
+
+  <!-- ── ESTADÍSTICAS ── -->
+  <div class="stats-grid" style="margin-bottom:2rem;">
+    <div class="stat-card">
+      <div class="valor" id="stat-total-servicios">—</div>
+      <div class="etiqueta">Servicios registrados</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="stat-precio-medio">—</div>
+      <div class="etiqueta">Precio medio</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="stat-precio-min">—</div>
+      <div class="etiqueta">Precio mínimo</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="stat-precio-max">—</div>
+      <div class="etiqueta">Precio máximo</div>
+    </div>
   </div>
-  
-  <!-- RESTO DEL CONTENIDO PRIVADO AQUÍ -->
-  <!-- (Caja, Agenda, Clientes, Área Privada) -->
-  <div id="contenido-privado" style="display:none;">
-    <!-- Aquí irán las secciones privadas: Caja, Agenda, Clientes, etc. -->
+
+  <!-- ── SERVICIOS Y PRECIOS ── -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;">
+    <h2 style="margin-bottom:0;">✂ Servicios y Precios</h2>
+    <button class="btn btn-oro" onclick="abrirModalServicio()">+ Añadir Servicio</button>
   </div>
+
+  <!-- Tabs por categoría -->
+  <div class="cat-tabs" id="cat-tabs-panel"></div>
+
+  <!-- Lista de servicios -->
+  <div id="servicios-panel"></div>
+
+  <!-- ── MODAL AÑADIR/EDITAR SERVICIO ── -->
+  <div class="modal-overlay" id="modal-servicio">
+    <div class="modal" style="text-align:left;">
+      <h3 style="font-family:'Cormorant Garamond',serif;color:var(--oro);font-size:1.3rem;margin-bottom:1.2rem;" id="modal-servicio-titulo">Nuevo Servicio</h3>
+      <div class="form-group">
+        <label>Nombre del servicio</label>
+        <input id="srv-nombre" placeholder="Ej: Corte de cabello" />
+      </div>
+      <div class="form-group">
+        <label>Categoría</label>
+        <select id="srv-cat">
+          <option value="corte">✂ Cortes</option>
+          <option value="barberia">🪒 Barbería</option>
+          <option value="combos">⭐ Combos</option>
+          <option value="tratamientos">🌿 Tratamientos</option>
+          <option value="otros">➕ Otros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Precio (€)</label>
+        <input id="srv-precio" type="number" min="0" step="0.5" placeholder="Ej: 15" />
+      </div>
+      <div class="form-group">
+        <label>Descripción (opcional)</label>
+        <input id="srv-desc" placeholder="Ej: Incluye lavado y secado" />
+      </div>
+      <div style="display:flex;gap:0.8rem;justify-content:flex-end;margin-top:1.2rem;">
+        <button class="btn btn-ghost" onclick="cerrarModalServicio()">Cancelar</button>
+        <button class="btn btn-oro" onclick="guardarServicio()">💾 Guardar</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ════════════ MODAL LOGIN ════════════ -->
@@ -821,7 +877,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 // ════════════════════════════════════════
 // CONFIGURACIÓN
 // ════════════════════════════════════════
-const PASS_HASH = 'ritual2024';
+const PASS_HASH = '206ac68e3a13b7b3d2fa3bf7f1ca101b3d4d77a6670476f40d14e1e9da59c626';
 let sesionActiva = false;
 
 // ════════════════════════════════════════
@@ -901,9 +957,14 @@ function accederPrivado(id) {
   setTimeout(() => document.getElementById('login-pass').focus(), 100);
 }
 
-function verificarPass() {
+async function verificarPass() {
   const pass = document.getElementById('login-pass').value;
-  if (pass === PASS_HASH) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(pass);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  if (hashHex === PASS_HASH) {
     sesionActiva = true;
     document.getElementById('modal-login').classList.remove('open');
     document.getElementById('btn-cerrar-sesion').style.display = 'inline-flex';
@@ -1005,7 +1066,172 @@ function toast(mensaje) {
 // Inicializar
 document.addEventListener('DOMContentLoaded', () => {
   showSection('inicio-publica');
+  cargarServicios();
 });
+
+// ════════════════════════════════════════
+// SERVICIOS Y PRECIOS
+// ════════════════════════════════════════
+const CATS = {
+  corte:        { label: '✂ Cortes',        color: '#ccb57f' },
+  barberia:     { label: '🪒 Barbería',      color: '#5B8DD9' },
+  combos:       { label: '⭐ Combos',        color: '#9B59B6' },
+  tratamientos: { label: '🌿 Tratamientos',  color: '#38a16e' },
+  otros:        { label: '➕ Otros',          color: '#e67e22' },
+};
+
+const SERVICIOS_DEFAULT = [
+  { id:1, nombre:'Corte de cabello',   cat:'corte',        precio:12,  desc:'Corte clásico o moderno' },
+  { id:2, nombre:'Corte + Barba',      cat:'corte',        precio:18,  desc:'Corte y arreglo de barba' },
+  { id:3, nombre:'Afeitado clásico',   cat:'barberia',     precio:10,  desc:'Afeitado con navaja y toalla caliente' },
+  { id:4, nombre:'Arreglo de barba',   cat:'barberia',     precio:8,   desc:'Perfilado y definición' },
+  { id:5, nombre:'Tratamiento capilar',cat:'tratamientos', precio:20,  desc:'Hidratación y nutrición' },
+  { id:6, nombre:'Combo completo',     cat:'combos',       precio:25,  desc:'Corte + Barba + Tratamiento' },
+];
+
+let editandoId = null;
+let catActiva  = 'todas';
+
+function getServicios() {
+  const raw = localStorage.getItem('rb_servicios');
+  return raw ? JSON.parse(raw) : SERVICIOS_DEFAULT;
+}
+function setServicios(list) {
+  localStorage.setItem('rb_servicios', JSON.stringify(list));
+}
+
+function cargarServicios() {
+  const servicios = getServicios();
+  renderTabs(servicios);
+  renderServicios(servicios);
+  renderStats(servicios);
+}
+
+function renderStats(servicios) {
+  const precios = servicios.map(s => s.precio);
+  document.getElementById('stat-total-servicios').textContent = servicios.length;
+  document.getElementById('stat-precio-medio').textContent   = precios.length ? (precios.reduce((a,b)=>a+b,0)/precios.length).toFixed(0)+'€' : '—';
+  document.getElementById('stat-precio-min').textContent     = precios.length ? Math.min(...precios)+'€' : '—';
+  document.getElementById('stat-precio-max').textContent     = precios.length ? Math.max(...precios)+'€' : '—';
+}
+
+function renderTabs(servicios) {
+  const cont = document.getElementById('cat-tabs-panel');
+  if (!cont) return;
+  const catsUsadas = ['todas', ...Object.keys(CATS).filter(c => servicios.some(s=>s.cat===c))];
+  cont.innerHTML = catsUsadas.map(c => {
+    const label = c === 'todas' ? '🗂 Todas' : CATS[c].label;
+    return `<button class="cat-tab ${catActiva===c?'active':''}" onclick="filtrarCat('${c}')">${label}</button>`;
+  }).join('');
+}
+
+function filtrarCat(cat) {
+  catActiva = cat;
+  const servicios = getServicios();
+  renderTabs(servicios);
+  renderServicios(servicios);
+}
+
+function renderServicios(servicios) {
+  const cont = document.getElementById('servicios-panel');
+  if (!cont) return;
+  const filtrados = catActiva === 'todas' ? servicios : servicios.filter(s=>s.cat===catActiva);
+  if (!filtrados.length) {
+    cont.innerHTML = '<div class="empty-state">No hay servicios en esta categoría</div>';
+    return;
+  }
+  // Agrupar por categoría
+  const grupos = {};
+  filtrados.forEach(s => {
+    if (!grupos[s.cat]) grupos[s.cat] = [];
+    grupos[s.cat].push(s);
+  });
+  cont.innerHTML = Object.entries(grupos).map(([cat, items]) => `
+    <div class="cat-section">
+      <div class="cat-header">
+        <span class="cat-icon">${CATS[cat]?.label.split(' ')[0]||'•'}</span>
+        <span class="cat-title">${CATS[cat]?.label.replace(/^\S+\s/,'')||cat}</span>
+        <div class="cat-line"></div>
+      </div>
+      <div class="servicios-grid">
+        ${items.map(s=>`
+          <div class="servicio-card" data-cat="${s.cat}">
+            <div class="servicio-info">
+              <h3>${s.nombre}</h3>
+              ${s.desc?`<p>${s.desc}</p>`:''}
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
+              <span class="servicio-precio">${s.precio}€</span>
+              <div style="display:flex;gap:0.4rem;">
+                <button class="btn btn-ghost btn-sm" onclick="editarServicio(${s.id})">✏️</button>
+                <button class="btn btn-ghost btn-sm" style="border-color:var(--rojo);color:var(--rojo);" onclick="eliminarServicio(${s.id})">🗑</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function abrirModalServicio(id=null) {
+  editandoId = id;
+  const modal = document.getElementById('modal-servicio');
+  document.getElementById('modal-servicio-titulo').textContent = id ? 'Editar Servicio' : 'Nuevo Servicio';
+  if (id) {
+    const s = getServicios().find(x=>x.id===id);
+    document.getElementById('srv-nombre').value = s.nombre;
+    document.getElementById('srv-cat').value    = s.cat;
+    document.getElementById('srv-precio').value = s.precio;
+    document.getElementById('srv-desc').value   = s.desc||'';
+  } else {
+    document.getElementById('srv-nombre').value = '';
+    document.getElementById('srv-cat').value    = 'corte';
+    document.getElementById('srv-precio').value = '';
+    document.getElementById('srv-desc').value   = '';
+  }
+  modal.classList.add('open');
+}
+
+function cerrarModalServicio() {
+  document.getElementById('modal-servicio').classList.remove('open');
+  editandoId = null;
+}
+
+function guardarServicio() {
+  const nombre = document.getElementById('srv-nombre').value.trim();
+  const cat    = document.getElementById('srv-cat').value;
+  const precio = parseFloat(document.getElementById('srv-precio').value);
+  const desc   = document.getElementById('srv-desc').value.trim();
+
+  if (!nombre || isNaN(precio) || precio < 0) {
+    toast('✕ Nombre y precio son obligatorios');
+    return;
+  }
+  const servicios = getServicios();
+  if (editandoId) {
+    const i = servicios.findIndex(x=>x.id===editandoId);
+    servicios[i] = { ...servicios[i], nombre, cat, precio, desc };
+    toast('✓ Servicio actualizado');
+  } else {
+    const newId = servicios.length ? Math.max(...servicios.map(s=>s.id))+1 : 1;
+    servicios.push({ id:newId, nombre, cat, precio, desc });
+    toast('✓ Servicio añadido');
+  }
+  setServicios(servicios);
+  cerrarModalServicio();
+  cargarServicios();
+}
+
+function editarServicio(id) { abrirModalServicio(id); }
+
+function eliminarServicio(id) {
+  if (!confirm('¿Eliminar este servicio?')) return;
+  const servicios = getServicios().filter(s=>s.id!==id);
+  setServicios(servicios);
+  toast('🗑 Servicio eliminado');
+  cargarServicios();
+}
 </script>
 
 </body>
