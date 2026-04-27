@@ -969,6 +969,7 @@ async function verificarPass() {
     document.getElementById('modal-login').classList.remove('open');
     document.getElementById('btn-cerrar-sesion').style.display = 'inline-flex';
     showSection('acceso');
+    cargarServicios();
     toast('✓ Acceso concedido');
   } else {
     const err = document.getElementById('login-error');
