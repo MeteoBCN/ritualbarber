@@ -141,6 +141,20 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .client-row b{font-size:14px}
 .client-row span{font-size:12px;color:var(--muted)}
 .client-detail{margin-top:10px}
+
+/* CLIENT AUTOCOMPLETE */
+.client-suggest{position:absolute;top:100%;left:0;right:0;z-index:40;background:var(--cream);border:1px solid var(--gold);border-radius:10px;margin-top:4px;overflow:hidden;box-shadow:0 10px 24px rgba(26,45,39,0.15)}
+.client-suggest.hidden{display:none}
+.suggest-item{display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:10px 14px;gap:2px;border-bottom:1px solid var(--border)}
+.suggest-item:last-child{border-bottom:none}
+.suggest-item:hover{background:var(--ivory)}
+.suggest-item b{font-size:13px}
+.suggest-item span{font-size:11px;color:var(--muted)}
+.client-preview-box{background:var(--ivory);border:1px solid var(--gold);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.client-preview-box.hidden{display:none}
+.cp-head{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:16px;margin-bottom:4px;color:var(--dark)}
+.cp-line{font-size:12px;color:var(--dark)}
+.cp-line.muted{color:var(--muted);margin-top:2px}
 .hist-item{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid var(--border)}
 .hist-item:last-child{border-bottom:none}
 
@@ -293,13 +307,16 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 
     <div id="book-step-3" class="hidden">
       <div class="card" style="max-width:460px;margin:0 auto">
-        <div class="field">
+        <div id="f-client-preview" class="client-preview-box hidden"></div>
+        <div class="field" style="position:relative">
           <label>Nombre y apellidos</label>
-          <input id="f-nombre" placeholder="Ej. Marc Puig">
+          <input id="f-nombre" placeholder="Ej. Marc Puig" autocomplete="off" oninput="onClientFieldInput('f','nombre')" onblur="hideSuggestSoon('f','nombre')">
+          <div id="f-suggest-nombre" class="client-suggest hidden"></div>
         </div>
-        <div class="field">
+        <div class="field" style="position:relative">
           <label>Teléfono</label>
-          <input id="f-telefono" placeholder="Ej. 600 123 456">
+          <input id="f-telefono" placeholder="Ej. 600 123 456" autocomplete="off" oninput="onClientFieldInput('f','telefono')" onblur="hideSuggestSoon('f','telefono')">
+          <div id="f-suggest-telefono" class="client-suggest hidden"></div>
         </div>
         <div class="field">
           <label>Email (opcional)</label>
@@ -848,6 +865,7 @@ function resetBooking(){
   document.getElementById('f-telefono').value='';
   document.getElementById('f-email').value='';
   document.getElementById('f-notas').value='';
+  clearClientPreview('f');
   renderCatFilter();
   renderServiceCards();
   updateSvcSelectionBar();
@@ -1043,8 +1061,9 @@ function openManualBookingModal(){
     <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
       <div class="modal-box">
         <h3>Nueva cita manual</h3>
-        <div class="field"><label>Nombre del cliente</label><input id="mb-nombre" placeholder="Ej. Marc Puig"></div>
-        <div class="field"><label>Teléfono</label><input id="mb-telefono" placeholder="Ej. 600 123 456"></div>
+        <div id="mb-client-preview" class="client-preview-box hidden"></div>
+        <div class="field" style="position:relative"><label>Nombre del cliente</label><input id="mb-nombre" placeholder="Ej. Marc Puig" autocomplete="off" oninput="onClientFieldInput('mb','nombre')" onblur="hideSuggestSoon('mb','nombre')"><div id="mb-suggest-nombre" class="client-suggest hidden"></div></div>
+        <div class="field" style="position:relative"><label>Teléfono</label><input id="mb-telefono" placeholder="Ej. 600 123 456" autocomplete="off" oninput="onClientFieldInput('mb','telefono')" onblur="hideSuggestSoon('mb','telefono')"><div id="mb-suggest-telefono" class="client-suggest hidden"></div></div>
         <div class="field"><label>Servicios</label>
           ${svcOptions || '<p style="color:var(--muted);font-style:italic;font-size:13px">No hay servicios cargados</p>'}
         </div>
@@ -1198,6 +1217,71 @@ async function marcarCobrado(bookingId){
     showToast('Cobro registrado: '+euros(total));
     closeModal();
   }catch(e){ console.error(e); showToast('No se pudo registrar el cobro'); }
+}
+
+/* ============ AUTOCOMPLETAR FICHA DE CLIENTE (reserva pública y cita manual) ============ */
+function onClientFieldInput(prefix, field){
+  const val = document.getElementById(`${prefix}-${field}`).value.trim();
+  const box = document.getElementById(`${prefix}-suggest-${field}`);
+  if(!box) return;
+  if(val.length < 2){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  const q = val.toLowerCase();
+  const qDigits = q.replace(/\s+/g,'');
+  const matches = clients.filter(c=>
+    (c.name||'').toLowerCase().includes(q) || (c.phone||'').replace(/\s+/g,'').includes(qDigits)
+  ).slice(0,5);
+  if(matches.length===0){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  box.classList.remove('hidden');
+  box.innerHTML = matches.map(c=>{
+    const visits = bookings.filter(b=>b.clientId===c.id).length;
+    return `<button type="button" class="suggest-item" onmousedown="selectClientSuggestion('${c.id}','${prefix}')">
+      <b>${escapeHtml(c.name)}</b>
+      <span>${escapeHtml(c.phone)} · ${visits} cita${visits===1?'':'s'}</span>
+    </button>`;
+  }).join('');
+}
+function hideSuggestSoon(prefix, field){
+  setTimeout(()=>{
+    const box = document.getElementById(`${prefix}-suggest-${field}`);
+    if(box) box.classList.add('hidden');
+  }, 150);
+}
+function selectClientSuggestion(id, prefix){
+  const c = clients.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById(`${prefix}-nombre`).value = c.name || '';
+  document.getElementById(`${prefix}-telefono`).value = c.phone || '';
+  const emailEl = document.getElementById(`${prefix}-email`);
+  if(emailEl) emailEl.value = c.email || '';
+  ['nombre','telefono'].forEach(f=>{
+    const box = document.getElementById(`${prefix}-suggest-${f}`);
+    if(box){ box.classList.add('hidden'); box.innerHTML=''; }
+  });
+  renderClientPreview(prefix, c.id);
+}
+function renderClientPreview(prefix, id){
+  const el = document.getElementById(`${prefix}-client-preview`);
+  if(!el) return;
+  const c = clients.find(x=>x.id===id);
+  if(!c){ el.classList.add('hidden'); el.innerHTML=''; return; }
+  const history = bookings.filter(b=>b.clientId===id).sort((a,b)=> (b.date+b.time).localeCompare(a.date+a.time));
+  const last = history[0];
+  el.classList.remove('hidden');
+  el.innerHTML = `
+    <div class="cp-head">👋 Ya te conocemos, ${escapeHtml((c.name||'').split(' ')[0])}</div>
+    ${last
+      ? `<div class="cp-line">Última visita: ${last.date} · ${escapeHtml(bookingServiceList(last).map(s=>s.name).join(' + '))}</div>`
+      : `<div class="cp-line">Ficha sin citas registradas todavía</div>`}
+    <div class="cp-line muted">${history.length} cita${history.length===1?'':'s'} en el historial${c.notes ? ' · tiene notas internas' : ''}</div>
+  `;
+}
+function clearClientPreview(prefix){
+  const el = document.getElementById(`${prefix}-client-preview`);
+  if(el){ el.classList.add('hidden'); el.innerHTML=''; }
+  ['nombre','telefono'].forEach(f=>{
+    const box = document.getElementById(`${prefix}-suggest-${f}`);
+    if(box){ box.classList.add('hidden'); box.innerHTML=''; }
+  });
 }
 
 /* ============ CLIENTES (panel) ============ */
