@@ -1270,7 +1270,7 @@ function renderClientPreview(prefix, id){
   el.innerHTML = `
     <div class="cp-head">👋 Ya te conocemos, ${escapeHtml((c.name||'').split(' ')[0])}</div>
     ${last
-      ? `<div class="cp-line">Última visita: ${last.date} · ${escapeHtml(bookingServiceList(last).map(s=>s.name).join(' + '))}</div>`
+      ? `<div class="cp-line">Última visita: ${last.date} · ${escapeHtml(bookingServiceList(last).map(s=>s.name).join(' + '))} · ${euros(last.price)}</div>`
       : `<div class="cp-line">Ficha sin citas registradas todavía</div>`}
     <div class="cp-line muted">${history.length} cita${history.length===1?'':'s'} en el historial${c.notes ? ' · tiene notas internas' : ''}</div>
   `;
