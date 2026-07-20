@@ -548,7 +548,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   <div class="logo" onclick="showSection('inicio-publica');cerrarMenu()">RITUAL BARBER</div>
   <div class="nav-links" id="nav-links">
     <button onclick="showSection('inicio-publica');cerrarMenu()" id="nav-inicio-publica" class="active">Inicio</button>
-    <button onclick="showSection('reservar');cerrarMenu()" id="nav-reservar">Reservar Cita</button>
+    <button onclick="window.location.href='agenda.html'" id="nav-reservar">Reservar Cita</button>
     <button onclick="showSection('contacto');cerrarMenu()" id="nav-contacto">Contacto</button>
     <button onclick="showSection('otros');cerrarMenu()" id="nav-otros">Otros</button>
     <div class="nav-sep"></div>
@@ -618,7 +618,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Tarjeta Reserva tu Cita -->
     <div class="hero-reserva-wrap">
-      <div class="hero-reserva-card" onclick="showSection('reservar');cerrarMenu()">
+      <div class="hero-reserva-card" onclick="window.location.href='agenda.html'">
         <div class="hero-reserva-titulo">Reserva tu Cita</div>
       </div>
     </div>
@@ -653,7 +653,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Widget Calendly -->
     <div class="calendly-inline-widget"
-         data-url="https://calendly.com/ritualbarbersvh"
+         data-url="https://calendly.com/TU-USUARIO"
          style="min-width:320px; height:700px; border-radius:12px; overflow:hidden;">
     </div>
     <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
