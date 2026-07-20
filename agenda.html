@@ -183,6 +183,34 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .booking-item .emp-select{width:auto;font-size:11px;padding:6px 8px;margin-top:6px}
 .svc-tags{font-size:12px;color:var(--muted);display:block;margin-top:2px}
 
+/* AGENDA TIMELINE (estilo GoBarber) */
+.tl-outer{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--cream)}
+.tl-head{display:grid;grid-template-columns:56px repeat(var(--emp-count,2),1fr);background:var(--ivory);border-bottom:1px solid var(--border)}
+.tl-head-gutter{border-right:1px solid var(--border)}
+.tl-head-emp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--dark);border-right:1px solid var(--border)}
+.tl-head-emp:last-child{border-right:none}
+.tl-avatar{width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:15px}
+.tl-scroll{max-height:640px;overflow-y:auto}
+.tl-grid{display:grid;grid-template-columns:56px repeat(var(--emp-count,2),1fr);position:relative}
+.tl-hourlabel{grid-column:1;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);text-align:right;padding-right:8px;transform:translateY(-6px);border-right:1px solid var(--border)}
+.tl-hourline{grid-column:2 / -1;border-top:1px solid var(--border);opacity:.4}
+.tl-hourline.tl-hourline-solid{opacity:.9}
+.tl-card{background:var(--cream);border:1px solid var(--border);border-left:4px solid var(--gold2);border-radius:8px;padding:6px 9px;margin:1px 4px;overflow:hidden;font-size:11.5px;cursor:pointer;box-shadow:0 1px 3px rgba(26,45,39,.08);transition:all .15s;line-height:1.3}
+.tl-card:hover{border-color:var(--gold);transform:translateY(-1px)}
+.tl-card b{display:block;font-size:12.5px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-card .svc{display:block;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-card.status-completada{border-left-color:#888;opacity:.7}
+.tl-card.status-cancelada{border-left-color:var(--warn);opacity:.5;text-decoration:line-through}
+.tl-empty{margin-top:16px}
+.booking-detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.booking-detail-row:last-of-type{border-bottom:none}
+@media(max-width:640px){
+  .tl-grid,.tl-head{grid-template-columns:44px repeat(var(--emp-count,2),1fr)}
+  .tl-hourlabel{font-size:9px;padding-right:4px}
+  .tl-card{font-size:10.5px;padding:4px 6px}
+  .tl-card b{font-size:11px}
+}
+
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(26,45,39,.6);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .modal-box{background:var(--cream);border-radius:16px;padding:26px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto}
@@ -313,7 +341,12 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
           <button class="icon-btn" onclick="shiftAgendaDay(1)">›</button>
           <input type="date" id="agenda-date-pick" style="width:auto" onchange="setAgendaDate(this.value)">
         </div>
-        <div id="agenda-list" class="agenda-cols"></div>
+        <div class="tl-outer" id="tl-outer">
+          <div class="tl-head" id="tl-head"></div>
+          <div class="tl-scroll">
+            <div id="agenda-list" class="tl-grid"></div>
+          </div>
+        </div>
       </div>
 
       <!-- CLIENTES -->
@@ -836,19 +869,102 @@ function renderAgenda(){
     .filter(b=>b.date===iso)
     .sort((a,b)=>a.time.localeCompare(b.time));
 
+  const emps = empList();
+  const outer = document.getElementById('tl-outer');
+  const headEl = document.getElementById('tl-head');
   const el = document.getElementById('agenda-list');
+
+  outer.style.setProperty('--emp-count', emps.length);
+  headEl.style.setProperty('--emp-count', emps.length);
+  headEl.innerHTML = `<div class="tl-head-gutter"></div>` + emps.map(emp=>`
+    <div class="tl-head-emp"><span class="tl-avatar">${escapeHtml((emp||'?').trim().charAt(0).toUpperCase())}</span>${escapeHtml(emp)}</div>
+  `).join('');
+
+  const existingEmpty = outer.querySelector('.tl-empty');
+  if(existingEmpty) existingEmpty.remove();
+
   if(dayBookings.length===0){
-    el.innerHTML = `<div class="empty"><div class="big">Sin reservas este día</div>Las nuevas reservas online aparecerán aquí</div>`;
+    el.style.display='none';
+    outer.insertAdjacentHTML('beforeend', `<div class="empty tl-empty"><div class="big">Sin reservas este día</div>Las nuevas reservas online aparecerán aquí</div>`);
     return;
   }
-  const emps = empList();
-  el.innerHTML = emps.map(emp=>{
+  el.style.display='grid';
+
+  const SLOT_MIN = 15;
+  const ROW_H = 22; // px por cada 15 minutos
+  const [openH,openM] = (settings.open||'10:00').split(':').map(Number);
+  const [closeH,closeM] = (settings.close||'21:00').split(':').map(Number);
+  const openMinutes = openH*60+openM;
+  const closeMinutes = closeH*60+closeM;
+  const totalRows = Math.max(1, Math.ceil((closeMinutes-openMinutes)/SLOT_MIN));
+
+  el.style.gridTemplateRows = `repeat(${totalRows}, ${ROW_H}px)`;
+
+  let html = '';
+  for(let r=0; r<=totalRows; r++){
+    const minutes = openMinutes + r*SLOT_MIN;
+    const isHour = minutes % 60 === 0;
+    if(isHour && r<totalRows){
+      const hh = String(Math.floor(minutes/60)).padStart(2,'0');
+      const mm = String(minutes%60).padStart(2,'0');
+      html += `<div class="tl-hourlabel" style="grid-row:${r+1}">${hh}:${mm}</div>`;
+    }
+    html += `<div class="tl-hourline ${isHour?'tl-hourline-solid':''}" style="grid-row:${r+1}"></div>`;
+  }
+
+  emps.forEach((emp,i)=>{
     const empBookings = dayBookings.filter(b=>(b.employee||emps[0])===emp);
-    return `<div class="agenda-col">
-      <h4>${escapeHtml(emp)}</h4>
-      ${empBookings.length ? empBookings.map(bookingItemHtml).join('') : '<div class="empty" style="padding:24px 10px">Sin citas</div>'}
-    </div>`;
-  }).join('');
+    empBookings.forEach(b=>{
+      const [bh,bm] = (b.time||'00:00').split(':').map(Number);
+      const startMin = bh*60+bm;
+      let startRow = Math.round((startMin-openMinutes)/SLOT_MIN);
+      const spanRows = Math.max(1, Math.round((b.duration||30)/SLOT_MIN));
+      if(startRow<0) startRow=0;
+      const svcNames = bookingServiceList(b).map(s=>s.name).join(' + ');
+      html += `<div class="tl-card status-${b.status}" style="grid-row:${startRow+1} / span ${spanRows};grid-column:${i+2}" onclick="openBookingDetail('${b.id}')">
+        <b>${escapeHtml(b.clientName)}</b>
+        <span class="svc">${escapeHtml(svcNames)}</span>
+        <span class="svc">${euros(b.price)}</span>
+      </div>`;
+    });
+  });
+
+  el.innerHTML = html;
+}
+function openBookingDetail(bookingId){
+  const b = bookings.find(x=>x.id===bookingId);
+  if(!b) return;
+  const svcList = bookingServiceList(b);
+  const svcNames = svcList.map(s=>s.name).join(' + ');
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box">
+        <h3>${escapeHtml(b.clientName)} · ${b.time}</h3>
+        <div class="booking-detail-row"><span>Servicio</span><span>${escapeHtml(svcNames)}</span></div>
+        <div class="booking-detail-row"><span>Duración</span><span>${b.duration} min</span></div>
+        <div class="booking-detail-row"><span>Precio</span><span>${euros(b.price)}</span></div>
+        <div class="booking-detail-row"><span>Teléfono</span><span>${escapeHtml(b.clientPhone||'')}</span></div>
+        ${b.notes ? `<div class="booking-detail-row"><span>Notas</span><span style="font-style:italic">"${escapeHtml(b.notes)}"</span></div>` : ''}
+        <div class="booking-detail-row"><span>Estado</span><span class="status-badge status-${b.status}">${b.status}</span></div>
+        <div class="field" style="margin-top:14px">
+          <label>Barbero</label>
+          <select onchange="changeBookingEmployee('${b.id}',this.value)">
+            ${empList().map(e=>`<option value="${escapeHtml(e)}" ${b.employee===e?'selected':''}>${escapeHtml(e)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="row-btns" style="margin-top:18px">
+          <button class="btn btn-ghost btn-sm" onclick="openAddServiceModal('${b.id}')">＋ Servicio</button>
+          <button class="btn btn-ghost btn-sm" onclick="openCobroModal('${b.id}')">€ Cobrar</button>
+          ${b.status==='confirmada' ? `<button class="btn btn-gold btn-sm" onclick="setBookingStatus('${b.id}','completada');closeModal()">✓ Completada</button>` : ''}
+          ${b.status!=='cancelada' ? `<button class="btn btn-ghost btn-sm btn-danger" onclick="setBookingStatus('${b.id}','cancelada');closeModal()">✕ Cancelar</button>` : ''}
+        </div>
+        <div class="row-btns" style="margin-top:10px">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 async function setBookingStatus(id, status){
   try{
