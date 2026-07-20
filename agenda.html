@@ -372,12 +372,24 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 <div class="toast" id="toast"></div>
 <div id="modal-root"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-/* ============ ALMACENAMIENTO (localStorage) ============ */
-const LS_SERVICIOS = 'rb_servicios';       // compartido con index.html
-const LS_CLIENTES  = 'rb_agenda_clientes';
-const LS_RESERVAS  = 'rb_agenda_reservas';
-const LS_SETTINGS  = 'rb_agenda_settings';
+/* ============ FIREBASE ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDWdZvqbCtMv-w_xHB_Pui69ywcrfqLM0Y",
+  authDomain: "ritualbarberagenda.firebaseapp.com",
+  projectId: "ritualbarberagenda",
+  storageBucket: "ritualbarberagenda.firebasestorage.app",
+  messagingSenderId: "79494512684",
+  appId: "1:79494512684:web:e4a615eebc1a8a2c1a1189"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const svcCol = db.collection('services');
+const cliCol = db.collection('clients');
+const bkCol = db.collection('bookings');
+const setDoc = db.collection('settings').doc('config');
 
 function uid(p){ return p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function showToast(msg){
@@ -401,12 +413,12 @@ const CATS = {
 const CATEGORY_ORDER = ['corte','barberia','combos','tratamientos','otros'];
 
 const SERVICIOS_DEFAULT = [
-  { id:1, nombre:'Corte de cabello',    cat:'corte',        precio:12, duracion:30, desc:'Corte clásico o moderno' },
-  { id:2, nombre:'Corte + Barba',       cat:'corte',        precio:18, duracion:45, desc:'Corte y arreglo de barba' },
-  { id:3, nombre:'Afeitado clásico',    cat:'barberia',     precio:10, duracion:20, desc:'Afeitado con navaja y toalla caliente' },
-  { id:4, nombre:'Arreglo de barba',    cat:'barberia',     precio:8,  duracion:15, desc:'Perfilado y definición' },
-  { id:5, nombre:'Tratamiento capilar', cat:'tratamientos', precio:20, duracion:30, desc:'Hidratación y nutrición' },
-  { id:6, nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento' },
+  { nombre:'Corte de cabello',    cat:'corte',        precio:12, duracion:30, desc:'Corte clásico o moderno' },
+  { nombre:'Corte + Barba',       cat:'corte',        precio:18, duracion:45, desc:'Corte y arreglo de barba' },
+  { nombre:'Afeitado clásico',    cat:'barberia',     precio:10, duracion:20, desc:'Afeitado con navaja y toalla caliente' },
+  { nombre:'Arreglo de barba',    cat:'barberia',     precio:8,  duracion:15, desc:'Perfilado y definición' },
+  { nombre:'Tratamiento capilar', cat:'tratamientos', precio:20, duracion:30, desc:'Hidratación y nutrición' },
+  { nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento' },
 ];
 
 const ADMIN_PIN = '1234';
@@ -421,6 +433,7 @@ let categoryFilter = 'todas';
 let bookingState = { serviceIds:[], date:null, time:null, employee:'cualquiera' };
 let agendaDate = new Date();
 let openClientId = null;
+let seededServices = false;
 
 function fmtDate(d){
   const y = d.getFullYear();
@@ -430,58 +443,43 @@ function fmtDate(d){
 }
 function fmtDateLabel(d){ return d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}); }
 
-/* ============ CARGA / GUARDADO ============ */
-function loadServices(){
-  let raw;
-  try{ raw = JSON.parse(localStorage.getItem(LS_SERVICIOS)); }catch(e){ raw = null; }
-  let list = Array.isArray(raw) && raw.length ? raw : SERVICIOS_DEFAULT;
-  let changed = false;
-  list = list.map(s=>{
-    if(s.duracion==null){ changed = true; return { ...s, duracion:30 }; }
-    return s;
-  });
-  if(changed || !raw) localStorage.setItem(LS_SERVICIOS, JSON.stringify(list));
-  return list;
-}
-function saveServices(){ localStorage.setItem(LS_SERVICIOS, JSON.stringify(services)); }
-
-function loadClients(){
-  try{ return JSON.parse(localStorage.getItem(LS_CLIENTES)) || []; }catch(e){ return []; }
-}
-function saveClients(){ localStorage.setItem(LS_CLIENTES, JSON.stringify(clients)); }
-
-function loadBookings(){
-  try{ return JSON.parse(localStorage.getItem(LS_RESERVAS)) || []; }catch(e){ return []; }
-}
-function saveBookings(){ localStorage.setItem(LS_RESERVAS, JSON.stringify(bookings)); }
-
-function loadSettings(){
-  try{
-    const raw = JSON.parse(localStorage.getItem(LS_SETTINGS));
-    if(raw) return { ...settings, ...raw };
-  }catch(e){}
-  return settings;
-}
-function saveSettingsToStorage(){ localStorage.setItem(LS_SETTINGS, JSON.stringify(settings)); }
-
-/* ============ INIT ============ */
+/* ============ INIT (Firestore en tiempo real) ============ */
 function init(){
-  services = loadServices();
-  clients = loadClients();
-  bookings = loadBookings();
-  settings = loadSettings();
+  svcCol.onSnapshot(snap=>{
+    services = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    if(services.length===0 && !seededServices){
+      seededServices = true;
+      SERVICIOS_DEFAULT.forEach(s=>svcCol.add(s));
+    }
+    renderCatFilter();
+    renderServiceCards();
+    updateSvcSelectionBar();
+    renderSvcAdminList();
+    renderSlots();
+  }, err=>{ console.error(err); showToast('Error al leer servicios: revisa las reglas de Firestore'); });
 
-  renderCatFilter();
-  renderServiceCards();
-  updateSvcSelectionBar();
-  renderSvcAdminList();
-  renderClientList();
-  renderAgenda();
-  renderSettingsForm();
-  renderClosedDays();
-  renderDateStrip();
-  renderSlots();
+  cliCol.onSnapshot(snap=>{
+    clients = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    renderClientList();
+  }, err=>{ console.error(err); showToast('Error al leer clientes'); });
+
+  bkCol.onSnapshot(snap=>{
+    bookings = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    renderAgenda();
+    renderSlots();
+    renderClientList();
+  }, err=>{ console.error(err); showToast('Error al leer reservas'); });
+
+  setDoc.onSnapshot(doc=>{
+    if(doc.exists) settings = { ...settings, ...doc.data() };
+    renderSettingsForm();
+    renderClosedDays();
+    renderDateStrip();
+    renderSlots();
+  }, err=>{ console.error(err); showToast('Error al leer horario'); });
 }
+init();
+populateCategorySelect();
 
 /* ============ NAV TOP ============ */
 document.querySelectorAll('.tab-btn').forEach(b=>{
@@ -552,7 +550,7 @@ function renderServiceCards(){
     return;
   }
   const cardHtml = s => `
-    <button class="svc-card ${bookingState.serviceIds.includes(s.id)?'sel':''}" onclick="selectService(${JSON.stringify(s.id)})">
+    <button class="svc-card ${bookingState.serviceIds.includes(s.id)?'sel':''}" onclick="selectService('${s.id}')">
       <span class="check">✓</span>
       <div class="cat-tag">${CATS[s.cat]?CATS[s.cat].label:'Otros'}</div>
       <h4>${escapeHtml(s.nombre)}</h4>
@@ -715,7 +713,7 @@ function selectTime(hhmm){
 }
 
 /* ============ CONFIRMAR RESERVA ============ */
-function confirmarReserva(){
+async function confirmarReserva(){
   const nombre = document.getElementById('f-nombre').value.trim();
   const telefono = document.getElementById('f-telefono').value.trim();
   const email = document.getElementById('f-email').value.trim();
@@ -728,16 +726,14 @@ function confirmarReserva(){
   document.getElementById('btn-confirmar').disabled = true;
   try{
     let clientId;
-    const existing = clients.find(c=>c.phone===telefono);
-    if(!existing){
-      clientId = uid('cli');
-      clients.push({ id:clientId, name:nombre, phone:telefono, email:email||'', notes:'', createdAt:new Date().toISOString() });
+    const existing = await cliCol.where('phone','==',telefono).limit(1).get();
+    if(existing.empty){
+      const ref = await cliCol.add({ name:nombre, phone:telefono, email:email||'', notes:'', createdAt:new Date().toISOString() });
+      clientId = ref.id;
     } else {
-      clientId = existing.id;
-      existing.name = nombre;
-      if(email) existing.email = email;
+      clientId = existing.docs[0].id;
+      await cliCol.doc(clientId).update({ name:nombre, ...(email?{email}:{}) });
     }
-    saveClients();
 
     const totalPrice = chosen.reduce((a,s)=>a+Number(s.precio||0),0);
     const totalDuration = chosen.reduce((a,s)=>a+Number(s.duracion||0),0);
@@ -749,8 +745,7 @@ function confirmarReserva(){
       employee = empList().find(e=>employeeFreeAt(e, t, totalDuration, dayBookings)) || empList()[0];
     }
 
-    bookings.push({
-      id: uid('bk'),
+    await bkCol.add({
       clientId,
       clientName: nombre,
       clientPhone: telefono,
@@ -766,19 +761,15 @@ function confirmarReserva(){
       paid: false,
       createdAt: new Date().toISOString()
     });
-    saveBookings();
 
     const d = new Date(bookingState.date+'T00:00:00');
     document.getElementById('confirm-text').textContent =
       `${serviceNames} · ${fmtDateLabel(d)} a las ${bookingState.time} con ${employee}. Te esperamos, ${nombre.split(' ')[0]}.`;
     goStep(4);
     showToast('Reserva guardada');
-    renderAgenda();
-    renderClientList();
-    renderSlots();
   }catch(e){
     console.error(e);
-    showToast('No se pudo guardar la reserva');
+    showToast('No se pudo guardar la reserva, revisa la conexión');
   }
   document.getElementById('btn-confirmar').disabled = false;
 }
@@ -859,31 +850,25 @@ function renderAgenda(){
     </div>`;
   }).join('');
 }
-function setBookingStatus(id, status){
-  const b = bookings.find(x=>x.id===id);
-  if(!b) return;
-  b.status = status;
-  saveBookings();
-  renderAgenda();
-  renderSlots();
-  renderClientList();
-  showToast('Reserva actualizada');
+async function setBookingStatus(id, status){
+  try{
+    await bkCol.doc(id).update({ status });
+    showToast('Reserva actualizada');
+  }catch(e){ console.error(e); showToast('No se pudo actualizar'); }
 }
-function changeBookingEmployee(id, employee){
-  const b = bookings.find(x=>x.id===id);
-  if(!b) return;
-  b.employee = employee;
-  saveBookings();
-  renderAgenda();
-  showToast('Barbero reasignado');
+async function changeBookingEmployee(id, employee){
+  try{
+    await bkCol.doc(id).update({ employee });
+    showToast('Barbero reasignado');
+  }catch(e){ console.error(e); showToast('No se pudo reasignar'); }
 }
-function saveEmployees(){
+async function saveEmployees(){
   const e0 = document.getElementById('set-emp-0').value.trim() || 'Barbero 1';
   const e1 = document.getElementById('set-emp-1').value.trim() || 'Barbero 2';
-  settings.employees = [e0, e1];
-  saveSettingsToStorage();
-  showToast('Barberos guardados');
-  renderAgenda();
+  try{
+    await setDoc.set({ employees:[e0,e1] }, { merge:true });
+    showToast('Barberos guardados');
+  }catch(e){ console.error(e); showToast('No se pudieron guardar los barberos'); }
 }
 
 /* ============ MODALES: añadir servicio / calculadora de cobro ============ */
@@ -893,7 +878,7 @@ function openAddServiceModal(bookingId){
   const options = services.map(s=>`
     <div class="pickable-svc">
       <span>${escapeHtml(s.nombre)} · ${euros(s.precio)}</span>
-      <button onclick="addServiceToBooking('${bookingId}',${JSON.stringify(s.id)})">Añadir</button>
+      <button onclick="addServiceToBooking('${bookingId}','${s.id}')">Añadir</button>
     </div>
   `).join('');
   root.innerHTML = `
@@ -906,21 +891,23 @@ function openAddServiceModal(bookingId){
     </div>
   `;
 }
-function addServiceToBooking(bookingId, svcId){
+async function addServiceToBooking(bookingId, svcId){
   const b = bookings.find(x=>x.id===bookingId);
   const s = services.find(x=>x.id===svcId);
   if(!b || !s) return;
   const list = bookingServiceList(b).concat([{ id:s.id, name:s.nombre, price:s.precio, duration:s.duracion }]);
   const totalPrice = list.reduce((a,x)=>a+Number(x.price||0),0);
   const totalDuration = list.reduce((a,x)=>a+Number(x.duration||0),0);
-  b.services = list;
-  b.serviceName = list.map(x=>x.name).join(', ');
-  b.price = totalPrice;
-  b.duration = totalDuration;
-  saveBookings();
-  showToast('Servicio añadido a la cita');
-  closeModal();
-  renderAgenda();
+  try{
+    await bkCol.doc(bookingId).update({
+      services:list,
+      serviceName: list.map(x=>x.name).join(', '),
+      price: totalPrice,
+      duration: totalDuration
+    });
+    showToast('Servicio añadido a la cita');
+    closeModal();
+  }catch(e){ console.error(e); showToast('No se pudo añadir el servicio'); }
 }
 
 function openCobroModal(bookingId){
@@ -954,18 +941,17 @@ function updateCobroTotal(basePrice){
   const total = basePrice * (1 - desc/100) + tip;
   document.getElementById('cobro-total').textContent = euros(Math.max(0,total));
 }
-function marcarCobrado(bookingId){
+async function marcarCobrado(bookingId){
   const b = bookings.find(x=>x.id===bookingId);
   if(!b) return;
   const desc = Number(document.getElementById('cobro-desc').value||0);
   const tip = Number(document.getElementById('cobro-tip').value||0);
   const total = Math.max(0, b.price * (1 - desc/100) + tip);
-  b.paid = true;
-  b.paidAmount = total;
-  saveBookings();
-  showToast('Cobro registrado: '+euros(total));
-  closeModal();
-  renderAgenda();
+  try{
+    await bkCol.doc(bookingId).update({ paid:true, paidAmount:total });
+    showToast('Cobro registrado: '+euros(total));
+    closeModal();
+  }catch(e){ console.error(e); showToast('No se pudo registrar el cobro'); }
 }
 
 /* ============ CLIENTES (panel) ============ */
@@ -1023,28 +1009,26 @@ function renderClientDetail(id){
     </div>
   `;
 }
-function updateClientField(id, field, value){
-  const c = clients.find(x=>x.id===id);
-  if(!c) return;
-  c[field] = value;
-  saveClients();
-  showToast('Ficha guardada');
+async function updateClientField(id, field, value){
+  try{
+    await cliCol.doc(id).update({ [field]: value });
+    showToast('Ficha guardada');
+  }catch(e){ console.error(e); showToast('No se pudo guardar la ficha'); }
 }
-function deleteClient(id, name){
+async function deleteClient(id, name){
   if(!confirm(`¿Seguro que quieres eliminar a ${name}? Esta acción no se puede deshacer.`)) return;
   const visits = bookings.filter(b=>b.clientId===id);
   const alsoDeleteHistory = visits.length>0
     ? confirm(`${name} tiene ${visits.length} cita(s) en el historial. ¿Borrarlas también? Aceptar = borrar todo. Cancelar = dejar las citas y borrar solo la ficha del cliente.`)
     : false;
-  if(alsoDeleteHistory){
-    bookings = bookings.filter(b=>b.clientId!==id);
-    saveBookings();
-  }
-  clients = clients.filter(c=>c.id!==id);
-  saveClients();
-  closeClientDetail();
-  renderAgenda();
-  showToast('Cliente eliminado');
+  try{
+    if(alsoDeleteHistory){
+      await Promise.all(visits.map(v=>bkCol.doc(v.id).delete()));
+    }
+    await cliCol.doc(id).delete();
+    closeClientDetail();
+    showToast('Cliente eliminado');
+  }catch(e){ console.error(e); showToast('No se pudo eliminar el cliente'); }
 }
 function closeClientDetail(){
   openClientId = null;
@@ -1061,54 +1045,46 @@ function renderSvcAdminList(){
   }
   el.innerHTML = services.map(s=>`
     <div class="svc-row">
-      <input value="${escapeHtml(s.nombre)}" onchange="updateSvcField(${JSON.stringify(s.id)},'nombre',this.value)">
-      <select onchange="updateSvcField(${JSON.stringify(s.id)},'cat',this.value)">
+      <input value="${escapeHtml(s.nombre)}" onchange="updateSvcField('${s.id}','nombre',this.value)">
+      <select onchange="updateSvcField('${s.id}','cat',this.value)">
         ${CATEGORY_ORDER.map(c=>`<option value="${c}" ${s.cat===c?'selected':''}>${CATS[c].label}</option>`).join('')}
       </select>
-      <input type="number" value="${s.precio}" step="0.5" onchange="updateSvcField(${JSON.stringify(s.id)},'precio',Number(this.value))">
-      <input type="number" value="${s.duracion}" step="5" onchange="updateSvcField(${JSON.stringify(s.id)},'duracion',Number(this.value))">
-      <button class="icon-btn btn-danger" title="Eliminar" onclick="deleteSvc(${JSON.stringify(s.id)})">✕</button>
+      <input type="number" value="${s.precio}" step="0.5" onchange="updateSvcField('${s.id}','precio',Number(this.value))">
+      <input type="number" value="${s.duracion}" step="5" onchange="updateSvcField('${s.id}','duracion',Number(this.value))">
+      <button class="icon-btn btn-danger" title="Eliminar" onclick="deleteSvc('${s.id}')">✕</button>
     </div>
   `).join('');
 }
-function updateSvcField(id, field, value){
-  const s = services.find(x=>x.id===id);
-  if(!s) return;
-  s[field] = value;
-  saveServices();
-  renderServiceCards();
-  renderCatFilter();
-  updateSvcSelectionBar();
-  showToast('Servicio actualizado');
+async function updateSvcField(id, field, value){
+  try{
+    await svcCol.doc(id).update({ [field]: value });
+    showToast('Servicio actualizado');
+  }catch(e){ console.error(e); showToast('No se pudo actualizar'); }
 }
-function deleteSvc(id){
-  services = services.filter(x=>x.id!==id);
-  saveServices();
-  renderServiceCards();
-  renderCatFilter();
-  showToast('Servicio eliminado');
+async function deleteSvc(id){
+  try{
+    await svcCol.doc(id).delete();
+    showToast('Servicio eliminado');
+  }catch(e){ console.error(e); showToast('No se pudo eliminar'); }
 }
 function populateCategorySelect(){
   const sel = document.getElementById('new-svc-categoria');
   if(!sel || sel.options.length) return;
   sel.innerHTML = CATEGORY_ORDER.map(c=>`<option value="${c}">${CATS[c].label}</option>`).join('');
 }
-function addServicio(){
+async function addServicio(){
   const nombre = document.getElementById('new-svc-nombre').value.trim();
   const cat = document.getElementById('new-svc-categoria').value;
   const precio = Number(document.getElementById('new-svc-precio').value);
   const duracion = Number(document.getElementById('new-svc-duracion').value);
   if(!nombre || !precio || !duracion){ showToast('Completa nombre, precio y duración'); return; }
-  const newId = services.length ? Math.max(...services.map(s=>Number(s.id)||0))+1 : 1;
-  services.push({ id:newId, nombre, cat, precio, duracion, desc:'' });
-  saveServices();
-  document.getElementById('new-svc-nombre').value='';
-  document.getElementById('new-svc-precio').value='';
-  document.getElementById('new-svc-duracion').value='';
-  renderSvcAdminList();
-  renderServiceCards();
-  renderCatFilter();
-  showToast('Servicio añadido');
+  try{
+    await svcCol.add({ nombre, cat, precio, duracion, desc:'' });
+    document.getElementById('new-svc-nombre').value='';
+    document.getElementById('new-svc-precio').value='';
+    document.getElementById('new-svc-duracion').value='';
+    showToast('Servicio añadido');
+  }catch(e){ console.error(e); showToast('No se pudo añadir el servicio'); }
 }
 
 /* ============ SETTINGS (horario) ============ */
@@ -1131,18 +1107,16 @@ function toggleClosedDay(i){
   settings.closedDays = arr;
   renderClosedDays();
 }
-function saveSettings(){
-  settings.open = document.getElementById('set-open').value || '10:00';
-  settings.close = document.getElementById('set-close').value || '21:00';
-  settings.slot = Number(document.getElementById('set-slot').value || 30);
-  saveSettingsToStorage();
-  showToast('Horario guardado');
-  renderDateStrip();
-  renderSlots();
+async function saveSettings(){
+  const open = document.getElementById('set-open').value || '10:00';
+  const close = document.getElementById('set-close').value || '21:00';
+  const slot = Number(document.getElementById('set-slot').value || 30);
+  try{
+    await setDoc.set({ open, close, slot, closedDays: settings.closedDays||[] }, { merge:true });
+    showToast('Horario guardado');
+  }catch(e){ console.error(e); showToast('No se pudo guardar el horario'); }
 }
-
-init();
-populateCategorySelect();
 </script>
+
 </body>
 </html>
