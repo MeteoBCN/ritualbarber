@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RITUAL BARBER — Panel</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#ffffff;
+  --ivory:#f5f2ea;
+  --gold:#ccb57f;
+  --gold2:#a8914a;
+  --dark:#1a2d27;
+  --charcoal:#26413a;
+  --muted:#5c7d74;
+  --border:rgba(61,96,87,0.28);
+  --ok:#2e7d5a;
+  --warn:#c0392b;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:700}
+em{font-style:italic;color:var(--gold2)}
+button{font-family:'Barlow',sans-serif;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:'Barlow',sans-serif;font-size:14px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--dark);width:100%;outline:none;transition:border-color .25s}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+label{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:6px}
+.field{margin-bottom:16px}
+
+/* BACK BAR */
+.back-bar{display:flex;align-items:center;gap:8px;padding:12px 28px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--ivory);border-bottom:1px solid var(--border);text-decoration:none;transition:color .2s}
+.back-bar:hover{color:var(--gold2)}
+.back-bar .arrow{font-size:15px;line-height:1}
+
+/* NAV */
+.topbar{position:sticky;top:0;z-index:50;background:#1a2d27;border-bottom:1px solid var(--border);padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.logo{font-family:'Cormorant Garamond',serif;font-size:19px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
+.tabs{display:flex;gap:6px;background:rgba(255,255,255,0.06);border-radius:24px;padding:4px}
+.tab-btn{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:10px 20px;border-radius:20px;color:var(--gold);opacity:.55;font-weight:600;transition:all .25s}
+.tab-btn.active{background:var(--gold);color:var(--dark);opacity:1}
+
+main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
+.view{display:none}
+.view.active{display:block}
+.hidden{display:none !important}
+
+.page-head{margin-bottom:36px;text-align:center}
+.page-head h1{font-size:clamp(28px,4vw,42px);margin-bottom:8px;color:var(--dark)}
+.page-head p{color:var(--muted);font-style:italic;font-size:14px}
+
+/* STEPS */
+.steps{display:flex;justify-content:center;gap:28px;margin-bottom:40px}
+.step-dot{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--border);font-weight:600}
+.step-dot .n{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px}
+.step-dot.active{color:var(--dark)}
+.step-dot.active .n{background:var(--gold);border-color:var(--gold);color:var(--dark)}
+.step-dot.done .n{background:var(--charcoal);border-color:var(--charcoal);color:var(--cream)}
+
+/* CATEGORY FILTER */
+.cat-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;justify-content:center}
+.cat-chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border-radius:18px;border:1px solid var(--border);color:var(--muted);font-weight:600;background:var(--ivory);transition:all .2s}
+.cat-chip:hover{border-color:var(--gold)}
+.cat-chip.sel{background:var(--gold);border-color:var(--gold);color:var(--dark)}
+.cat-group{margin-bottom:32px}
+.cat-group h3{font-size:16px;letter-spacing:.06em;color:var(--gold2);margin-bottom:12px;text-transform:uppercase;font-weight:700;font-family:'Barlow Condensed',sans-serif}
+.svc-card .cat-tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);font-weight:700;margin-bottom:4px}
+
+/* SERVICE CARDS */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.svc-card{background:var(--ivory);border:1px solid var(--border);border-radius:14px;padding:22px;text-align:left;transition:all .25s;position:relative}
+.svc-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.svc-card.sel{border-color:var(--gold);background:#efe4c9;box-shadow:0 0 0 1px var(--gold)}
+.svc-card h4{font-size:18px;margin-bottom:6px;color:var(--dark)}
+.svc-card .dur{font-size:11px;color:var(--muted);margin-bottom:10px}
+.svc-card .price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold2)}
+
+.empty{text-align:center;padding:60px 20px;color:var(--muted);font-style:italic}
+.empty .big{font-size:15px;margin-bottom:6px;color:var(--dark);font-style:normal;font-weight:600}
+
+/* DATE STRIP */
+.date-strip{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 16px}
+.date-chip{flex-shrink:0;width:64px;padding:12px 4px;border:1px solid var(--border);border-radius:12px;text-align:center;background:var(--ivory);transition:all .2s}
+.date-chip .dow{font-family:'Barlow Condensed',sans-serif;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:.08em}
+.date-chip .num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;margin:2px 0}
+.date-chip.sel{background:var(--gold);border-color:var(--gold)}
+.date-chip.sel .dow,.date-chip.sel .num{color:var(--dark)}
+.date-chip.closed{opacity:.35;pointer-events:none}
+
+/* TIME SLOTS */
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.slot-btn{padding:11px 4px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--cream);transition:all .2s}
+.slot-btn:hover{border-color:var(--gold)}
+.slot-btn.sel{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+.slot-btn:disabled{opacity:.3;pointer-events:none;text-decoration:line-through}
+
+/* BUTTONS */
+.btn{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:14px 34px;border-radius:22px;font-weight:700;transition:all .3s;display:inline-block}
+.btn-gold{background:var(--gold);color:var(--dark)}
+.btn-gold:hover{background:var(--gold2);color:var(--cream)}
+.btn-gold:disabled{opacity:.4;pointer-events:none}
+.btn-dark{background:var(--dark);color:var(--gold)}
+.btn-dark:hover{background:var(--charcoal)}
+.btn-ghost{border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold2)}
+.btn-sm{padding:9px 18px;font-size:9px}
+.btn-danger{color:var(--warn)}
+.row-btns{display:flex;gap:12px;justify-content:center;margin-top:32px;flex-wrap:wrap}
+
+.card{background:var(--ivory);border:1px solid var(--border);border-radius:14px;padding:26px}
+
+/* PANEL */
+.panel-nav{display:flex;gap:8px;margin-bottom:28px;border-bottom:1px solid var(--border);padding-bottom:0}
+.panel-nav button{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:12px 4px;margin-right:24px;color:var(--muted);font-weight:600;border-bottom:2px solid transparent}
+.panel-nav button.active{color:var(--dark);border-color:var(--gold)}
+
+.pin-box{max-width:320px;margin:80px auto;text-align:center}
+.pin-box h2{margin-bottom:20px}
+
+/* AGENDA LIST */
+.agenda-day-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.booking-item{display:flex;gap:16px;align-items:center;padding:16px 18px;border:1px solid var(--border);border-radius:12px;margin-bottom:10px;background:var(--ivory)}
+.booking-item .time{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--gold2);width:64px;flex-shrink:0}
+.booking-item .info{flex:1;min-width:0}
+.booking-item .info b{display:block;font-size:14px}
+.booking-item .info span{font-size:12px;color:var(--muted)}
+.status-badge{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:10px;font-weight:700}
+.status-confirmada{background:#dbe9e3;color:var(--ok)}
+.status-completada{background:#e4e4e4;color:#666}
+.status-cancelada{background:#f2d9d3;color:var(--warn)}
+.booking-actions{display:flex;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s}
+.icon-btn:hover{border-color:var(--gold);background:var(--gold);color:var(--dark)}
+
+/* CLIENTS */
+.client-list{display:flex;flex-direction:column;gap:8px}
+.client-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);transition:all .2s}
+.client-row:hover{border-color:var(--gold)}
+.client-row b{font-size:14px}
+.client-row span{font-size:12px;color:var(--muted)}
+.client-detail{margin-top:10px}
+
+/* CLIENT AUTOCOMPLETE */
+.client-suggest{position:absolute;top:100%;left:0;right:0;z-index:40;background:var(--cream);border:1px solid var(--gold);border-radius:10px;margin-top:4px;overflow:hidden;box-shadow:0 10px 24px rgba(26,45,39,0.15)}
+.client-suggest.hidden{display:none}
+.suggest-item{display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:10px 14px;gap:2px;border-bottom:1px solid var(--border)}
+.suggest-item:last-child{border-bottom:none}
+.suggest-item:hover{background:var(--ivory)}
+.suggest-item b{font-size:13px}
+.suggest-item span{font-size:11px;color:var(--muted)}
+.client-preview-box{background:var(--ivory);border:1px solid var(--gold);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.client-preview-box.hidden{display:none}
+.cp-head{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:16px;margin-bottom:4px;color:var(--dark)}
+.cp-line{font-size:12px;color:var(--dark)}
+.cp-line.muted{color:var(--muted);margin-top:2px}
+.hist-item{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid var(--border)}
+.hist-item:last-child{border-bottom:none}
+
+/* SERVICES ADMIN */
+.svc-row{display:grid;grid-template-columns:1.6fr 1.3fr 0.8fr 0.8fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);margin-bottom:8px}
+.svc-row input,.svc-row select{padding:8px 10px}
+.add-svc-card{border:1px dashed var(--border);border-radius:12px;padding:20px;margin-top:20px}
+.grid3{display:grid;grid-template-columns:1.5fr 1.2fr 0.9fr 0.9fr;gap:12px}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.settings-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.settings-row .field{flex:1;min-width:120px}
+.day-toggle{display:flex;gap:6px;flex-wrap:wrap}
+.day-toggle button{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);font-size:11px;font-weight:600}
+.day-toggle button.on{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+
+/* SCHEDULE FORM */
+.sched-day{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--border)}
+.sched-day:last-child{border-bottom:none}
+.sched-day-name{width:90px;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--dark)}
+.sched-closed{display:flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;flex-shrink:0}
+.sched-closed input{width:auto;padding:0}
+.sched-ranges{display:flex;gap:18px;flex-wrap:wrap;flex:1}
+.sched-range{display:flex;align-items:center;gap:6px}
+.sched-range input[type=time]{width:110px}
+.sched-range span{font-size:11px;color:var(--muted)}
+.sched-range .sched-hint{font-style:italic;font-size:11px;white-space:nowrap}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:var(--gold);padding:14px 26px;border-radius:24px;font-size:13px;opacity:0;transition:all .35s;pointer-events:none;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.confirm-box{text-align:center;padding:40px 20px}
+.confirm-box .mark{width:56px;height:56px;border-radius:50%;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 22px}
+
+/* MULTI-SERVICE SELECTION */
+.svc-card .check{position:absolute;top:14px;right:14px;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent}
+.svc-card.sel .check{background:var(--gold);border-color:var(--gold);color:var(--dark)}
+.selection-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:14px 0;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.selection-bar .sum{font-size:13px;color:var(--muted)}
+.selection-bar .sum b{color:var(--dark);font-family:'Cormorant Garamond',serif;font-size:17px}
+
+/* EMPLOYEE CHIPS */
+.emp-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.emp-chip{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.06em;padding:10px 18px;border-radius:18px;border:1px solid var(--border);color:var(--muted);font-weight:600;background:var(--ivory)}
+.emp-chip.sel{background:var(--gold);border-color:var(--gold);color:var(--dark)}
+
+/* AGENDA 2 EMPLOYEES */
+.agenda-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.agenda-col h4{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);margin-bottom:12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;border-bottom:1px solid var(--border);padding-bottom:8px}
+@media(max-width:760px){.agenda-cols{grid-template-columns:1fr}}
+.booking-item{flex-wrap:wrap}
+.booking-item .emp-select{width:auto;font-size:11px;padding:6px 8px;margin-top:6px}
+.svc-tags{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+
+/* AGENDA TIMELINE (estilo GoBarber) */
+.tl-outer{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--cream)}
+.tl-head{display:grid;grid-template-columns:56px repeat(var(--emp-count,2),1fr);background:var(--ivory);border-bottom:1px solid var(--border)}
+.tl-head-gutter{border-right:1px solid var(--border)}
+.tl-head-emp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--dark);border-right:1px solid var(--border)}
+.tl-head-emp:last-child{border-right:none}
+.tl-avatar{width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:15px}
+.tl-scroll{max-height:640px;overflow-y:auto}
+.tl-grid{display:grid;grid-template-columns:56px repeat(var(--emp-count,2),1fr);position:relative}
+.tl-hourlabel{grid-column:1;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);text-align:right;padding-right:8px;transform:translateY(-6px);border-right:1px solid var(--border)}
+.tl-hourline{grid-column:2 / -1;border-top:1px solid var(--border);opacity:.4}
+.tl-hourline.tl-hourline-solid{opacity:.9}
+.tl-card{background:var(--cream);border:1px solid var(--border);border-left:4px solid var(--gold2);border-radius:8px;padding:6px 9px;margin:1px 4px;overflow:hidden;font-size:11.5px;cursor:pointer;box-shadow:0 1px 3px rgba(26,45,39,.08);transition:all .15s;line-height:1.3}
+.tl-card:hover{border-color:var(--gold);transform:translateY(-1px)}
+.tl-card b{display:block;font-size:12.5px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-card .svc{display:block;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-card.status-completada{border-left-color:#888;opacity:.7}
+.tl-card.status-cancelada{border-left-color:var(--warn);opacity:.5;text-decoration:line-through}
+.tl-empty{margin-top:16px}
+.booking-detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.booking-detail-row:last-of-type{border-bottom:none}
+@media(max-width:640px){
+  .tl-grid,.tl-head{grid-template-columns:44px repeat(var(--emp-count,2),1fr)}
+  .tl-hourlabel{font-size:9px;padding-right:4px}
+  .tl-card{font-size:10.5px;padding:4px 6px}
+  .tl-card b{font-size:11px}
+}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,45,39,.6);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-box{background:var(--cream);border-radius:16px;padding:26px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto}
+.modal-box h3{margin-bottom:16px}
+.calc-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.calc-row.total{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--gold2);border-bottom:none;margin-top:6px;padding-top:14px;border-top:1px solid var(--border)}
+.calc-adjust{display:flex;gap:12px;margin:14px 0}
+.calc-adjust .field{flex:1;margin-bottom:0}
+.pickable-svc{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--ivory);font-size:13px}
+.pickable-svc button{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:var(--dark);padding:7px 12px;border-radius:14px;font-weight:700}
+
+@media(max-width:640px){
+  .two-col{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .svc-row{grid-template-columns:1fr 1fr}
+  .topbar{padding:14px 16px}
+  main{padding:24px 14px 90px}
+}
+</style>
+<body>
+
+<a href="index.html" class="back-bar"><span class="arrow">←</span> Volver a página principal</a>
+
+<div class="topbar">
+  <div class="logo">Ritual Barber · Panel</div>
+</div>
+
+<main>
+
+  <!-- ================= PANEL (privado) ================= -->
+  <section class="view active" id="view-panel">
+
+    <div id="panel-gate" class="pin-box">
+      <h2>Acceso al panel</h2>
+      <p style="color:var(--muted);font-style:italic;margin-bottom:20px">Introduce el PIN de la barbería</p>
+      <div class="field"><input id="pin-input" type="password" inputmode="numeric" placeholder="····" maxlength="6" style="text-align:center;letter-spacing:.3em;font-size:20px"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="checkPin()">Entrar</button>
+      <p id="pin-error" style="color:var(--warn);font-size:12px;margin-top:10px;display:none">PIN incorrecto</p>
+    </div>
+
+    <div id="panel-content" class="hidden">
+      <div class="panel-nav">
+        <button class="active" data-p="agenda">Agenda</button>
+        <button data-p="clientes">Clientes</button>
+        <button data-p="servicios">Servicios</button>
+      </div>
+
+      <!-- AGENDA -->
+      <div id="p-agenda" class="p-view">
+        <div class="agenda-day-head">
+          <button class="icon-btn" onclick="shiftAgendaDay(-1)">‹</button>
+          <h3 id="agenda-date-label" style="flex:1"></h3>
+          <button class="icon-btn" onclick="shiftAgendaDay(1)">›</button>
+          <input type="date" id="agenda-date-pick" style="width:auto" onchange="setAgendaDate(this.value)">
+          <button class="btn btn-gold btn-sm" onclick="openManualBookingModal()">＋ Nueva cita</button>
+        </div>
+        <div class="tl-outer" id="tl-outer">
+          <div class="tl-head" id="tl-head"></div>
+          <div class="tl-scroll">
+            <div id="agenda-list" class="tl-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENTES -->
+      <div id="p-clientes" class="p-view hidden">
+        <div class="field" style="max-width:340px"><input id="client-search" placeholder="Buscar por nombre o teléfono..." oninput="renderClientList()"></div>
+        <div id="client-list" class="client-list"></div>
+        <div id="client-detail-wrap"></div>
+      </div>
+
+      <!-- SERVICIOS -->
+      <div id="p-servicios" class="p-view hidden">
+        <div class="card" style="margin-bottom:24px">
+          <h3 style="margin-bottom:16px">Barberos</h3>
+          <div class="settings-row">
+            <div class="field"><label>Barbero 1</label><input id="set-emp-0" placeholder="Ej. Marc"></div>
+            <div class="field"><label>Barbero 2</label><input id="set-emp-1" placeholder="Ej. Àlex"></div>
+          </div>
+          <button class="btn btn-dark btn-sm" onclick="saveEmployees()">Guardar barberos</button>
+        </div>
+
+        <div class="card" style="margin-bottom:24px">
+          <h3 style="margin-bottom:16px">Horario de la barbería</h3>
+          <div class="field" style="max-width:220px">
+            <label>Duración de turno (huecos)</label>
+            <select id="set-slot"><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option></select>
+          </div>
+          <div class="field" style="margin-top:6px">
+            <label>Horario por día (deja el turno tarde vacío si el día solo tiene un turno)</label>
+            <div id="schedule-form"></div>
+          </div>
+          <button class="btn btn-dark btn-sm" onclick="saveSettings()">Guardar horario</button>
+        </div>
+
+        <h3 style="margin-bottom:14px">Servicios y precios</h3>
+        <div id="svc-admin-list"></div>
+        <div class="add-svc-card">
+          <div class="grid3">
+            <div class="field"><label>Nombre del servicio</label><input id="new-svc-nombre" placeholder="Ej. Corte + Barba"></div>
+            <div class="field"><label>Categoría</label>
+              <select id="new-svc-categoria"></select>
+            </div>
+            <div class="field"><label>Precio (€)</label><input id="new-svc-precio" type="number" min="0" step="0.5" placeholder="18"></div>
+            <div class="field"><label>Duración (min)</label><input id="new-svc-duracion" type="number" min="5" step="5" placeholder="30"></div>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="addServicio()">Añadir servicio</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+<div id="modal-root"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ============ FIREBASE ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDWdZvqbCtMv-w_xHB_Pui69ywcrfqLM0Y",
+  authDomain: "ritualbarberagenda.firebaseapp.com",
+  projectId: "ritualbarberagenda",
+  storageBucket: "ritualbarberagenda.firebasestorage.app",
+  messagingSenderId: "79494512684",
+  appId: "1:79494512684:web:e4a615eebc1a8a2c1a1189"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const svcCol = db.collection('services');
+const cliCol = db.collection('clients');
+const bkCol = db.collection('bookings');
+const setDoc = db.collection('settings').doc('config');
+
+function uid(p){ return p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+function euros(n){ return Number(n).toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2})+' €'; }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+/* ============ CATEGORÍAS Y DATOS POR DEFECTO ============ */
+const CATS = {
+  corte:        { label:'Cortes',        emoji:'✂' },
+  barberia:     { label:'Barbería',      emoji:'🪒' },
+  combos:       { label:'Combos',        emoji:'⭐' },
+  tratamientos: { label:'Tratamientos',  emoji:'🌿' },
+  otros:        { label:'Otros',         emoji:'➕' },
+};
+const CATEGORY_ORDER = ['corte','barberia','combos','tratamientos','otros'];
+
+const SERVICIOS_DEFAULT = [
+  { nombre:'Corte de cabello',    cat:'corte',        precio:12, duracion:30, desc:'Corte clásico o moderno' },
+  { nombre:'Corte + Barba',       cat:'corte',        precio:18, duracion:45, desc:'Corte y arreglo de barba' },
+  { nombre:'Afeitado clásico',    cat:'barberia',     precio:10, duracion:20, desc:'Afeitado con navaja y toalla caliente' },
+  { nombre:'Arreglo de barba',    cat:'barberia',     precio:8,  duracion:15, desc:'Perfilado y definición' },
+  { nombre:'Tratamiento capilar', cat:'tratamientos', precio:20, duracion:30, desc:'Hidratación y nutrición' },
+  { nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento' },
+];
+
+const ADMIN_PIN = '1234';
+const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+/* ============ ESTADO ============ */
+let services = [];
+let clients = [];
+let bookings = [];
+const DEFAULT_SCHEDULE = {
+  1: [{open:'16:00',close:'21:00'}],
+  2: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
+  3: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
+  4: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
+  5: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
+  6: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
+};
+let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:['Barbero 1','Barbero 2'] };
+function daySchedule(dow){ return (settings.schedule && settings.schedule[dow]) || []; }
+function isDayClosed(dow){ return daySchedule(dow).length===0; }
+function dayRangeSpan(dow){
+  const ranges = daySchedule(dow);
+  if(!ranges.length) return null;
+  return { start: ranges[0].open, end: ranges[ranges.length-1].close };
+}
+let categoryFilter = 'todas';
+let bookingState = { serviceIds:[], date:null, time:null, employee:'cualquiera' };
+let agendaDate = new Date();
+let openClientId = null;
+let seededServices = false;
+
+function fmtDate(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function fmtDateLabel(d){ return d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}); }
+/* ============ INIT (Firestore en tiempo real) ============ */
+function init(){
+  svcCol.onSnapshot(snap=>{
+    services = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    if(services.length===0 && !seededServices){
+      seededServices = true;
+      SERVICIOS_DEFAULT.forEach(s=>svcCol.add(s));
+    }
+    renderSvcAdminList();
+  }, err=>{ console.error(err); showToast('Error al leer servicios: revisa las reglas de Firestore'); });
+
+  cliCol.onSnapshot(snap=>{
+    clients = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    renderClientList();
+  }, err=>{ console.error(err); showToast('Error al leer clientes'); });
+
+  bkCol.onSnapshot(snap=>{
+    bookings = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    renderAgenda();
+    renderClientList();
+  }, err=>{ console.error(err); showToast('Error al leer reservas'); });
+
+  setDoc.onSnapshot(doc=>{
+    if(doc.exists){
+      const data = doc.data();
+      settings = { ...settings, ...data };
+      if(!data.schedule) settings.schedule = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+    }
+    renderSettingsForm();
+    renderScheduleForm();
+    renderAgenda();
+  }, err=>{ console.error(err); showToast('Error al leer horario'); });
+}
+init();
+populateCategorySelect();
+
+/* ============ ACCESO POR PIN ============ */
+function checkPin(){
+  const val = document.getElementById('pin-input').value;
+  if(val === ADMIN_PIN){
+    document.getElementById('panel-gate').classList.add('hidden');
+    document.getElementById('panel-content').classList.remove('hidden');
+    document.getElementById('pin-error').style.display='none';
+  } else {
+    document.getElementById('pin-error').style.display='block';
+  }
+}
+document.querySelectorAll('.panel-nav button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.panel-nav button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelectorAll('.p-view').forEach(v=>v.classList.add('hidden'));
+    document.getElementById('p-'+b.dataset.p).classList.remove('hidden');
+    if(b.dataset.p==='clientes') renderClientList();
+    if(b.dataset.p==='servicios'){ renderSvcAdminList(); populateCategorySelect(); renderSettingsForm(); renderScheduleForm(); }
+    if(b.dataset.p==='agenda') renderAgenda();
+  });
+});
+function empList(){
+  const emps = settings.employees && settings.employees.filter(Boolean).length===2 ? settings.employees : ['Barbero 1','Barbero 2'];
+  return emps;
+}
+function renderEmpFilter(){
+  const el = document.getElementById('emp-filter');
+  if(!el) return;
+  const options = ['cualquiera', ...empList()];
+  el.innerHTML = options.map(o=>`
+    <button class="emp-chip ${bookingState.employee===o?'sel':''}" onclick="selectEmployee('${o.replace(/'/g,"\\'")}')">${o==='cualquiera'?'Sin preferencia':escapeHtml(o)}</button>
+  `).join('');
+}
+function selectEmployee(name){
+  bookingState.employee = name;
+  bookingState.time = null;
+  renderEmpFilter();
+  renderSlots();
+}
+
+function setAgendaDate(iso){
+  agendaDate = new Date(iso+'T00:00:00');
+  renderAgenda();
+}
+function shiftAgendaDay(n){
+  agendaDate.setDate(agendaDate.getDate()+n);
+  renderAgenda();
+}
+function bookingServiceList(b){
+  if(Array.isArray(b.services) && b.services.length) return b.services;
+  return [{ id:b.serviceId, name:b.serviceName, price:b.price, duration:b.duration }];
+}
+function renderAgenda(){
+  const labelEl = document.getElementById('agenda-date-label');
+  if(!labelEl) return;
+  labelEl.textContent = fmtDateLabel(agendaDate);
+  document.getElementById('agenda-date-pick').value = fmtDate(agendaDate);
+  const iso = fmtDate(agendaDate);
+  const dayBookings = bookings
+    .filter(b=>b.date===iso)
+    .sort((a,b)=>a.time.localeCompare(b.time));
+
+  const emps = empList();
+  const outer = document.getElementById('tl-outer');
+  const headEl = document.getElementById('tl-head');
+  const el = document.getElementById('agenda-list');
+
+  outer.style.setProperty('--emp-count', emps.length);
+  headEl.style.setProperty('--emp-count', emps.length);
+  headEl.innerHTML = `<div class="tl-head-gutter"></div>` + emps.map(emp=>`
+    <div class="tl-head-emp"><span class="tl-avatar">${escapeHtml((emp||'?').trim().charAt(0).toUpperCase())}</span>${escapeHtml(emp)}</div>
+  `).join('');
+
+  const existingEmpty = outer.querySelector('.tl-empty');
+  if(existingEmpty) existingEmpty.remove();
+
+  const dow = agendaDate.getDay();
+  const span = dayRangeSpan(dow);
+
+  if(!span){
+    el.style.display='none';
+    outer.insertAdjacentHTML('beforeend', `<div class="empty tl-empty"><div class="big">Cerrado este día</div>La barbería no abre este día según el horario configurado</div>`);
+    return;
+  }
+
+  if(dayBookings.length===0){
+    el.style.display='none';
+    outer.insertAdjacentHTML('beforeend', `<div class="empty tl-empty"><div class="big">Sin reservas este día</div>Las nuevas reservas online aparecerán aquí. Usa "+ Nueva cita" para añadir una manualmente.</div>`);
+    return;
+  }
+  el.style.display='grid';
+
+  const SLOT_MIN = 15;
+  const ROW_H = 22; // px por cada 15 minutos
+  const [openH,openM] = span.start.split(':').map(Number);
+  const [closeH,closeM] = span.end.split(':').map(Number);
+  const openMinutes = openH*60+openM;
+  const closeMinutes = closeH*60+closeM;
+  const totalRows = Math.max(1, Math.ceil((closeMinutes-openMinutes)/SLOT_MIN));
+
+  el.style.gridTemplateRows = `repeat(${totalRows}, ${ROW_H}px)`;
+
+  let html = '';
+  for(let r=0; r<=totalRows; r++){
+    const minutes = openMinutes + r*SLOT_MIN;
+    const isHour = minutes % 60 === 0;
+    if(isHour && r<totalRows){
+      const hh = String(Math.floor(minutes/60)).padStart(2,'0');
+      const mm = String(minutes%60).padStart(2,'0');
+      html += `<div class="tl-hourlabel" style="grid-row:${r+1}">${hh}:${mm}</div>`;
+    }
+    html += `<div class="tl-hourline ${isHour?'tl-hourline-solid':''}" style="grid-row:${r+1}"></div>`;
+  }
+
+  emps.forEach((emp,i)=>{
+    const empBookings = dayBookings.filter(b=>(b.employee||emps[0])===emp);
+    empBookings.forEach(b=>{
+      const [bh,bm] = (b.time||'00:00').split(':').map(Number);
+      const startMin = bh*60+bm;
+      let startRow = Math.round((startMin-openMinutes)/SLOT_MIN);
+      const spanRows = Math.max(1, Math.round((b.duration||30)/SLOT_MIN));
+      if(startRow<0) startRow=0;
+      const svcNames = bookingServiceList(b).map(s=>s.name).join(' + ');
+      html += `<div class="tl-card status-${b.status}" style="grid-row:${startRow+1} / span ${spanRows};grid-column:${i+2}" onclick="openBookingDetail('${b.id}')">
+        <b>${escapeHtml(b.clientName)}</b>
+        <span class="svc">${escapeHtml(svcNames)}</span>
+        <span class="svc">${euros(b.price)}</span>
+      </div>`;
+    });
+  });
+
+  el.innerHTML = html;
+}
+function openBookingDetail(bookingId){
+  const b = bookings.find(x=>x.id===bookingId);
+  if(!b) return;
+  const svcList = bookingServiceList(b);
+  const svcNames = svcList.map(s=>s.name).join(' + ');
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box">
+        <h3>${escapeHtml(b.clientName)} · ${b.time}</h3>
+        <div class="booking-detail-row"><span>Servicio</span><span>${escapeHtml(svcNames)}</span></div>
+        <div class="booking-detail-row"><span>Duración</span><span>${b.duration} min</span></div>
+        <div class="booking-detail-row"><span>Precio</span><span>${euros(b.price)}</span></div>
+        <div class="booking-detail-row"><span>Teléfono</span><span>${escapeHtml(b.clientPhone||'')}</span></div>
+        ${b.notes ? `<div class="booking-detail-row"><span>Notas</span><span style="font-style:italic">"${escapeHtml(b.notes)}"</span></div>` : ''}
+        <div class="booking-detail-row"><span>Estado</span><span class="status-badge status-${b.status}">${b.status}</span></div>
+        <div class="field" style="margin-top:14px">
+          <label>Barbero</label>
+          <select onchange="changeBookingEmployee('${b.id}',this.value)">
+            ${empList().map(e=>`<option value="${escapeHtml(e)}" ${b.employee===e?'selected':''}>${escapeHtml(e)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="row-btns" style="margin-top:18px">
+          <button class="btn btn-ghost btn-sm" onclick="openAddServiceModal('${b.id}')">＋ Servicio</button>
+          <button class="btn btn-ghost btn-sm" onclick="openCobroModal('${b.id}')">€ Cobrar</button>
+          ${b.status==='confirmada' ? `<button class="btn btn-gold btn-sm" onclick="setBookingStatus('${b.id}','completada');closeModal()">✓ Completada</button>` : ''}
+          ${b.status!=='cancelada' ? `<button class="btn btn-ghost btn-sm btn-danger" onclick="setBookingStatus('${b.id}','cancelada');closeModal()">✕ Cancelar</button>` : ''}
+        </div>
+        <div class="row-btns" style="margin-top:10px">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+async function setBookingStatus(id, status){
+  try{
+    await bkCol.doc(id).update({ status });
+    showToast('Reserva actualizada');
+  }catch(e){ console.error(e); showToast('No se pudo actualizar'); }
+}
+async function changeBookingEmployee(id, employee){
+  try{
+    await bkCol.doc(id).update({ employee });
+    showToast('Barbero reasignado');
+  }catch(e){ console.error(e); showToast('No se pudo reasignar'); }
+}
+async function saveEmployees(){
+  const e0 = document.getElementById('set-emp-0').value.trim() || 'Barbero 1';
+  const e1 = document.getElementById('set-emp-1').value.trim() || 'Barbero 2';
+  try{
+    await setDoc.set({ employees:[e0,e1] }, { merge:true });
+    showToast('Barberos guardados');
+  }catch(e){ console.error(e); showToast('No se pudieron guardar los barberos'); }
+}
+
+/* ============ NUEVA CITA MANUAL (panel privado) ============ */
+function openManualBookingModal(){
+  const root = document.getElementById('modal-root');
+  const svcOptions = services.map(s=>`
+    <label class="pickable-svc" style="cursor:pointer">
+      <input type="checkbox" class="manual-svc-chk" value="${s.id}" style="width:auto;margin-right:8px">
+      <span style="flex:1">${escapeHtml(s.nombre)} · ${euros(s.precio)} · ${s.duracion}min</span>
+    </label>
+  `).join('');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box">
+        <h3>Nueva cita manual</h3>
+        <div id="mb-client-preview" class="client-preview-box hidden"></div>
+        <div class="field" style="position:relative"><label>Nombre del cliente</label><input id="mb-nombre" placeholder="Ej. Marc Puig" autocomplete="off" oninput="onClientFieldInput('mb','nombre')" onblur="hideSuggestSoon('mb','nombre')"><div id="mb-suggest-nombre" class="client-suggest hidden"></div></div>
+        <div class="field" style="position:relative"><label>Teléfono</label><input id="mb-telefono" placeholder="Ej. 600 123 456" autocomplete="off" oninput="onClientFieldInput('mb','telefono')" onblur="hideSuggestSoon('mb','telefono')"><div id="mb-suggest-telefono" class="client-suggest hidden"></div></div>
+        <div class="field"><label>Servicios</label>
+          ${svcOptions || '<p style="color:var(--muted);font-style:italic;font-size:13px">No hay servicios cargados</p>'}
+        </div>
+        <div class="two-col" style="margin-top:10px">
+          <div class="field"><label>Fecha</label><input type="date" id="mb-fecha" value="${fmtDate(agendaDate)}"></div>
+          <div class="field"><label>Hora</label><input type="time" id="mb-hora"></div>
+        </div>
+        <div class="field"><label>Barbero</label>
+          <select id="mb-barbero">${empList().map(e=>`<option value="${escapeHtml(e)}">${escapeHtml(e)}</option>`).join('')}</select>
+        </div>
+        <div class="field"><label>Notas (opcional)</label><textarea id="mb-notas" rows="2"></textarea></div>
+        <div class="row-btns" style="margin-top:16px">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-gold btn-sm" onclick="submitManualBooking()">Guardar cita</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+async function submitManualBooking(){
+  const nombre = document.getElementById('mb-nombre').value.trim();
+  const telefono = document.getElementById('mb-telefono').value.trim();
+  const fecha = document.getElementById('mb-fecha').value;
+  const hora = document.getElementById('mb-hora').value;
+  const employee = document.getElementById('mb-barbero').value;
+  const notas = document.getElementById('mb-notas').value.trim();
+  const chosenIds = Array.from(document.querySelectorAll('.manual-svc-chk:checked')).map(c=>c.value);
+  const chosen = services.filter(s=>chosenIds.includes(s.id));
+
+  if(!nombre || !telefono){ showToast('Indica nombre y teléfono del cliente'); return; }
+  if(!fecha || !hora){ showToast('Indica fecha y hora de la cita'); return; }
+  if(chosen.length===0){ showToast('Elige al menos un servicio'); return; }
+
+  try{
+    let clientId;
+    const existing = await cliCol.where('phone','==',telefono).limit(1).get();
+    if(existing.empty){
+      const ref = await cliCol.add({ name:nombre, phone:telefono, email:'', notes:'', createdAt:new Date().toISOString() });
+      clientId = ref.id;
+    } else {
+      clientId = existing.docs[0].id;
+      await cliCol.doc(clientId).update({ name:nombre });
+    }
+
+    const totalPrice = chosen.reduce((a,s)=>a+Number(s.precio||0),0);
+    const totalDuration = chosen.reduce((a,s)=>a+Number(s.duracion||0),0);
+    const serviceNames = chosen.map(s=>s.nombre).join(', ');
+
+    await bkCol.add({
+      clientId,
+      clientName: nombre,
+      clientPhone: telefono,
+      services: chosen.map(s=>({ id:s.id, name:s.nombre, price:s.precio, duration:s.duracion })),
+      serviceName: serviceNames,
+      price: totalPrice,
+      date: fecha,
+      time: hora,
+      duration: totalDuration,
+      employee,
+      status: 'confirmada',
+      notes: notas,
+      paid: false,
+      createdAt: new Date().toISOString(),
+      manual: true
+    });
+
+    closeModal();
+    showToast('Cita añadida a la agenda');
+    setAgendaDate(fecha);
+  }catch(e){ console.error(e); showToast('No se pudo guardar la cita'); }
+}
+
+/* ============ MODALES: añadir servicio / calculadora de cobro ============ */
+function closeModal(){ document.getElementById('modal-root').innerHTML=''; }
+function openAddServiceModal(bookingId){
+  const root = document.getElementById('modal-root');
+  const options = services.map(s=>`
+    <div class="pickable-svc">
+      <span>${escapeHtml(s.nombre)} · ${euros(s.precio)}</span>
+      <button onclick="addServiceToBooking('${bookingId}','${s.id}')">Añadir</button>
+    </div>
+  `).join('');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box">
+        <h3>Añadir servicio a la cita</h3>
+        ${options || '<p style="color:var(--muted);font-style:italic">No hay servicios cargados</p>'}
+        <div class="row-btns" style="margin-top:16px"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button></div>
+      </div>
+    </div>
+  `;
+}
+async function addServiceToBooking(bookingId, svcId){
+  const b = bookings.find(x=>x.id===bookingId);
+  const s = services.find(x=>x.id===svcId);
+  if(!b || !s) return;
+  const list = bookingServiceList(b).concat([{ id:s.id, name:s.nombre, price:s.precio, duration:s.duracion }]);
+  const totalPrice = list.reduce((a,x)=>a+Number(x.price||0),0);
+  const totalDuration = list.reduce((a,x)=>a+Number(x.duration||0),0);
+  try{
+    await bkCol.doc(bookingId).update({
+      services:list,
+      serviceName: list.map(x=>x.name).join(', '),
+      price: totalPrice,
+      duration: totalDuration
+    });
+    showToast('Servicio añadido a la cita');
+    closeModal();
+  }catch(e){ console.error(e); showToast('No se pudo añadir el servicio'); }
+}
+
+function openCobroModal(bookingId){
+  const b = bookings.find(x=>x.id===bookingId);
+  if(!b) return;
+  const root = document.getElementById('modal-root');
+  const svcList = bookingServiceList(b);
+  const rows = svcList.map(s=>`<div class="calc-row"><span>${escapeHtml(s.name)}</span><span>${euros(s.price)}</span></div>`).join('');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box">
+        <h3>Calculadora de cobro</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px">${escapeHtml(b.clientName)} · ${b.date} ${b.time}</p>
+        ${rows}
+        <div class="calc-adjust">
+          <div class="field"><label>Descuento (%)</label><input type="number" id="cobro-desc" min="0" max="100" value="0" oninput="updateCobroTotal(${JSON.stringify(b.price)})"></div>
+          <div class="field"><label>Propina (€)</label><input type="number" id="cobro-tip" min="0" step="0.5" value="0" oninput="updateCobroTotal(${JSON.stringify(b.price)})"></div>
+        </div>
+        <div class="calc-row total"><span>Total a cobrar</span><span id="cobro-total">${euros(b.price)}</span></div>
+        <div class="row-btns" style="margin-top:16px">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button>
+          <button class="btn btn-gold btn-sm" onclick="marcarCobrado('${b.id}')">Marcar como cobrado</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function updateCobroTotal(basePrice){
+  const desc = Number(document.getElementById('cobro-desc').value||0);
+  const tip = Number(document.getElementById('cobro-tip').value||0);
+  const total = basePrice * (1 - desc/100) + tip;
+  document.getElementById('cobro-total').textContent = euros(Math.max(0,total));
+}
+async function marcarCobrado(bookingId){
+  const b = bookings.find(x=>x.id===bookingId);
+  if(!b) return;
+  const desc = Number(document.getElementById('cobro-desc').value||0);
+  const tip = Number(document.getElementById('cobro-tip').value||0);
+  const total = Math.max(0, b.price * (1 - desc/100) + tip);
+  try{
+    await bkCol.doc(bookingId).update({ paid:true, paidAmount:total });
+    showToast('Cobro registrado: '+euros(total));
+    closeModal();
+  }catch(e){ console.error(e); showToast('No se pudo registrar el cobro'); }
+}
+/* ============ AUTOCOMPLETAR FICHA DE CLIENTE (reserva pública y cita manual) ============ */
+function onClientFieldInput(prefix, field){
+  const val = document.getElementById(`${prefix}-${field}`).value.trim();
+  const box = document.getElementById(`${prefix}-suggest-${field}`);
+  if(!box) return;
+  if(val.length < 2){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  const q = val.toLowerCase();
+  const qDigits = q.replace(/\s+/g,'');
+  const matches = clients.filter(c=>
+    (c.name||'').toLowerCase().includes(q) || (c.phone||'').replace(/\s+/g,'').includes(qDigits)
+  ).slice(0,5);
+  if(matches.length===0){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  box.classList.remove('hidden');
+  box.innerHTML = matches.map(c=>{
+    const visits = bookings.filter(b=>b.clientId===c.id).length;
+    return `<button type="button" class="suggest-item" onmousedown="selectClientSuggestion('${c.id}','${prefix}')">
+      <b>${escapeHtml(c.name)}</b>
+      <span>${escapeHtml(c.phone)} · ${visits} cita${visits===1?'':'s'}</span>
+    </button>`;
+  }).join('');
+}
+function hideSuggestSoon(prefix, field){
+  setTimeout(()=>{
+    const box = document.getElementById(`${prefix}-suggest-${field}`);
+    if(box) box.classList.add('hidden');
+  }, 150);
+}
+function selectClientSuggestion(id, prefix){
+  const c = clients.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById(`${prefix}-nombre`).value = c.name || '';
+  document.getElementById(`${prefix}-telefono`).value = c.phone || '';
+  const emailEl = document.getElementById(`${prefix}-email`);
+  if(emailEl) emailEl.value = c.email || '';
+  ['nombre','telefono'].forEach(f=>{
+    const box = document.getElementById(`${prefix}-suggest-${f}`);
+    if(box){ box.classList.add('hidden'); box.innerHTML=''; }
+  });
+  renderClientPreview(prefix, c.id);
+}
+function renderClientPreview(prefix, id){
+  const el = document.getElementById(`${prefix}-client-preview`);
+  if(!el) return;
+  const c = clients.find(x=>x.id===id);
+  if(!c){ el.classList.add('hidden'); el.innerHTML=''; return; }
+  const history = bookings.filter(b=>b.clientId===id).sort((a,b)=> (b.date+b.time).localeCompare(a.date+a.time));
+  const last = history[0];
+  el.classList.remove('hidden');
+  el.innerHTML = `
+    <div class="cp-head">👋 Ya te conocemos, ${escapeHtml((c.name||'').split(' ')[0])}</div>
+    ${last
+      ? `<div class="cp-line">Última visita: ${last.date} · ${escapeHtml(bookingServiceList(last).map(s=>s.name).join(' + '))} · ${euros(last.price)}</div>`
+      : `<div class="cp-line">Ficha sin citas registradas todavía</div>`}
+    <div class="cp-line muted">${history.length} cita${history.length===1?'':'s'} en el historial${c.notes ? ' · tiene notas internas' : ''}</div>
+  `;
+}
+function clearClientPreview(prefix){
+  const el = document.getElementById(`${prefix}-client-preview`);
+  if(el){ el.classList.add('hidden'); el.innerHTML=''; }
+  ['nombre','telefono'].forEach(f=>{
+    const box = document.getElementById(`${prefix}-suggest-${f}`);
+    if(box){ box.classList.add('hidden'); box.innerHTML=''; }
+  });
+}
+
+/* ============ CLIENTES (panel) ============ */
+function renderClientList(){
+  const searchEl = document.getElementById('client-search');
+  const q = (searchEl ? searchEl.value : '').toLowerCase().trim();
+  const el = document.getElementById('client-list');
+  if(!el) return;
+  let list = [...clients].sort((a,b)=>a.name.localeCompare(b.name));
+  if(q) list = list.filter(c=>c.name.toLowerCase().includes(q) || c.phone.includes(q));
+
+  if(list.length===0){
+    el.innerHTML = `<div class="empty"><div class="big">No hay clientes todavía</div>Las fichas se crean solas cuando alguien reserva</div>`;
+    document.getElementById('client-detail-wrap').innerHTML='';
+    return;
+  }
+  el.innerHTML = list.map(c=>{
+    const visits = bookings.filter(b=>b.clientId===c.id).length;
+    return `<button class="client-row" onclick="openClient('${c.id}')">
+      <div><b>${escapeHtml(c.name)}</b><br><span>${escapeHtml(c.phone)}</span></div>
+      <span>${visits} cita${visits===1?'':'s'}</span>
+    </button>`;
+  }).join('');
+  if(openClientId) renderClientDetail(openClientId);
+}
+function openClient(id){
+  openClientId = id;
+  renderClientDetail(id);
+}
+function renderClientDetail(id){
+  const c = clients.find(x=>x.id===id);
+  const wrap = document.getElementById('client-detail-wrap');
+  if(!c){ wrap.innerHTML=''; return; }
+  const history = bookings.filter(b=>b.clientId===id).sort((a,b)=> (b.date+b.time).localeCompare(a.date+a.time));
+  wrap.innerHTML = `
+    <div class="card client-detail">
+      <h3 style="margin-bottom:16px">${escapeHtml(c.name)}</h3>
+      <div class="two-col">
+        <div>
+          <div class="field"><label>Teléfono</label><input value="${escapeHtml(c.phone)}" onchange="updateClientField('${c.id}','phone',this.value)"></div>
+          <div class="field"><label>Email</label><input value="${escapeHtml(c.email||'')}" onchange="updateClientField('${c.id}','email',this.value)"></div>
+          <div class="field"><label>Notas internas</label><textarea rows="4" onchange="updateClientField('${c.id}','notes',this.value)">${escapeHtml(c.notes||'')}</textarea></div>
+        </div>
+        <div>
+          <label>Historial de citas</label>
+          ${history.length===0 ? '<p style="color:var(--muted);font-style:italic;font-size:13px">Sin citas todavía</p>' :
+            history.map(h=>`<div class="hist-item"><span>${h.date} · ${h.time} · ${escapeHtml(bookingServiceList(h).map(s=>s.name).join(' + '))} · ${euros(h.price)}${h.employee?' · '+escapeHtml(h.employee):''}</span><span class="status-badge status-${h.status}">${h.status}</span></div>`).join('')
+          }
+        </div>
+      </div>
+      <div class="row-btns" style="justify-content:flex-start;margin-top:20px">
+        <button class="btn btn-ghost btn-sm" onclick="closeClientDetail()">Cerrar ficha</button>
+        <button class="btn btn-ghost btn-sm btn-danger" onclick="deleteClient('${c.id}','${escapeHtml(c.name).replace(/'/g,"\\'")}')">Eliminar cliente</button>
+      </div>
+    </div>
+  `;
+}
+async function updateClientField(id, field, value){
+  try{
+    await cliCol.doc(id).update({ [field]: value });
+    showToast('Ficha guardada');
+  }catch(e){ console.error(e); showToast('No se pudo guardar la ficha'); }
+}
+async function deleteClient(id, name){
+  if(!confirm(`¿Seguro que quieres eliminar a ${name}? Esta acción no se puede deshacer.`)) return;
+  const visits = bookings.filter(b=>b.clientId===id);
+  const alsoDeleteHistory = visits.length>0
+    ? confirm(`${name} tiene ${visits.length} cita(s) en el historial. ¿Borrarlas también? Aceptar = borrar todo. Cancelar = dejar las citas y borrar solo la ficha del cliente.`)
+    : false;
+  try{
+    if(alsoDeleteHistory){
+      await Promise.all(visits.map(v=>bkCol.doc(v.id).delete()));
+    }
+    await cliCol.doc(id).delete();
+    closeClientDetail();
+    showToast('Cliente eliminado');
+  }catch(e){ console.error(e); showToast('No se pudo eliminar el cliente'); }
+}
+function closeClientDetail(){
+  openClientId = null;
+  document.getElementById('client-detail-wrap').innerHTML = '';
+}
+
+/* ============ SERVICIOS (panel) ============ */
+function renderSvcAdminList(){
+  const el = document.getElementById('svc-admin-list');
+  if(!el) return;
+  if(services.length===0){
+    el.innerHTML = `<div class="empty"><div class="big">Todavía no has añadido servicios</div>Usa el formulario de abajo para crear el primero</div>`;
+    return;
+  }
+  el.innerHTML = services.map(s=>`
+    <div class="svc-row">
+      <input value="${escapeHtml(s.nombre)}" onchange="updateSvcField('${s.id}','nombre',this.value)">
+      <select onchange="updateSvcField('${s.id}','cat',this.value)">
+        ${CATEGORY_ORDER.map(c=>`<option value="${c}" ${s.cat===c?'selected':''}>${CATS[c].label}</option>`).join('')}
+      </select>
+      <input type="number" value="${s.precio}" step="0.5" onchange="updateSvcField('${s.id}','precio',Number(this.value))">
+      <input type="number" value="${s.duracion}" step="5" onchange="updateSvcField('${s.id}','duracion',Number(this.value))">
+      <button class="icon-btn btn-danger" title="Eliminar" onclick="deleteSvc('${s.id}')">✕</button>
+    </div>
+  `).join('');
+}
+async function updateSvcField(id, field, value){
+  try{
+    await svcCol.doc(id).update({ [field]: value });
+    showToast('Servicio actualizado');
+  }catch(e){ console.error(e); showToast('No se pudo actualizar'); }
+}
+async function deleteSvc(id){
+  try{
+    await svcCol.doc(id).delete();
+    showToast('Servicio eliminado');
+  }catch(e){ console.error(e); showToast('No se pudo eliminar'); }
+}
+function populateCategorySelect(){
+  const sel = document.getElementById('new-svc-categoria');
+  if(!sel || sel.options.length) return;
+  sel.innerHTML = CATEGORY_ORDER.map(c=>`<option value="${c}">${CATS[c].label}</option>`).join('');
+}
+async function addServicio(){
+  const nombre = document.getElementById('new-svc-nombre').value.trim();
+  const cat = document.getElementById('new-svc-categoria').value;
+  const precio = Number(document.getElementById('new-svc-precio').value);
+  const duracion = Number(document.getElementById('new-svc-duracion').value);
+  if(!nombre || !precio || !duracion){ showToast('Completa nombre, precio y duración'); return; }
+  try{
+    await svcCol.add({ nombre, cat, precio, duracion, desc:'' });
+    document.getElementById('new-svc-nombre').value='';
+    document.getElementById('new-svc-precio').value='';
+    document.getElementById('new-svc-duracion').value='';
+    showToast('Servicio añadido');
+  }catch(e){ console.error(e); showToast('No se pudo añadir el servicio'); }
+}
+/* ============ SETTINGS (horario) ============ */
+const SCHED_DAY_ORDER = [1,2,3,4,5,6,0]; // Lunes...Domingo
+const SCHED_DAY_LABEL = { 0:'Domingo',1:'Lunes',2:'Martes',3:'Miércoles',4:'Jueves',5:'Viernes',6:'Sábado' };
+
+function renderSettingsForm(){
+  document.getElementById('set-slot').value = String(settings.slot||30);
+  const emps = settings.employees && settings.employees.length===2 ? settings.employees : ['Barbero 1','Barbero 2'];
+  document.getElementById('set-emp-0').value = emps[0];
+  document.getElementById('set-emp-1').value = emps[1];
+}
+function renderScheduleForm(){
+  const el = document.getElementById('schedule-form');
+  if(!el) return;
+  el.innerHTML = SCHED_DAY_ORDER.map(d=>{
+    const ranges = daySchedule(d);
+    const open = ranges.length>0;
+    const r0 = ranges[0] || {open:'',close:''};
+    const r1 = ranges[1] || {open:'',close:''};
+    return `
+    <div class="sched-day" data-d="${d}">
+      <div class="sched-day-name">${SCHED_DAY_LABEL[d]}</div>
+      <label class="sched-closed"><input type="checkbox" id="sched-open-${d}" ${open?'checked':''} onchange="onDayOpenToggle(${d})"> Abierto</label>
+      <div class="sched-ranges" id="sched-ranges-${d}" style="${open?'':'opacity:.35'}">
+        <div class="sched-range">
+          <input type="time" id="sched-${d}-0-open" value="${r0.open}" ${open?'':'disabled'}>
+          <span>a</span>
+          <input type="time" id="sched-${d}-0-close" value="${r0.close}" ${open?'':'disabled'}>
+        </div>
+        <div class="sched-range">
+          <input type="time" id="sched-${d}-1-open" value="${r1.open}" ${open?'':'disabled'}>
+          <span>a</span>
+          <input type="time" id="sched-${d}-1-close" value="${r1.close}" ${open?'':'disabled'}>
+          <span class="sched-hint">(turno tarde, opcional)</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function onDayOpenToggle(d){
+  const open = document.getElementById(`sched-open-${d}`).checked;
+  const wrap = document.getElementById(`sched-ranges-${d}`);
+  wrap.style.opacity = open ? '1' : '.35';
+  wrap.querySelectorAll('input').forEach(inp=>inp.disabled = !open);
+}
+async function saveSettings(){
+  const slot = Number(document.getElementById('set-slot').value || 30);
+  const schedule = {};
+  SCHED_DAY_ORDER.forEach(d=>{
+    const isOpen = document.getElementById(`sched-open-${d}`).checked;
+    if(!isOpen){ schedule[d] = []; return; }
+    const ranges = [];
+    const o0 = document.getElementById(`sched-${d}-0-open`).value;
+    const c0 = document.getElementById(`sched-${d}-0-close`).value;
+    const o1 = document.getElementById(`sched-${d}-1-open`).value;
+    const c1 = document.getElementById(`sched-${d}-1-close`).value;
+    if(o0 && c0) ranges.push({ open:o0, close:c0 });
+    if(o1 && c1) ranges.push({ open:o1, close:c1 });
+    schedule[d] = ranges;
+  });
+  try{
+    await setDoc.set({ slot, schedule }, { merge:true });
+    showToast('Horario guardado');
+  }catch(e){ console.error(e); showToast('No se pudo guardar el horario'); }
+}
+</script>
+
+</body>
+</html>
