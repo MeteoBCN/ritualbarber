@@ -430,11 +430,12 @@ function fmtDateLabel(d){ return d.toLocaleDateString('es-ES',{weekday:'long',da
 /* ============ INIT (Firestore en tiempo real) ============ */
 function init(){
   svcCol.onSnapshot(snap=>{
-    services = snap.docs.map(d=>({ id:d.id, ...d.data() }));
-    if(services.length===0 && !seededServices){
+    const all = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    if(all.length===0 && !seededServices){
       seededServices = true;
       SERVICIOS_DEFAULT.forEach(s=>svcCol.add(s));
     }
+    services = all.filter(s=>s.publico !== false);
     renderCatFilter();
     renderServiceCards();
     updateSvcSelectionBar();

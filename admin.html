@@ -160,8 +160,11 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .hist-item:last-child{border-bottom:none}
 
 /* SERVICES ADMIN */
-.svc-row{display:grid;grid-template-columns:1.6fr 1.3fr 0.8fr 0.8fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);margin-bottom:8px}
+.svc-row{display:grid;grid-template-columns:1.5fr 1.2fr 0.7fr 0.7fr 1fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);margin-bottom:8px}
 .svc-row input,.svc-row select{padding:8px 10px}
+.svc-visibility{display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--muted);white-space:nowrap}
+.svc-visibility input{width:auto;margin:0}
+.svc-visibility.is-interno{color:#a15c1f}
 .add-svc-card{border:1px dashed var(--border);border-radius:12px;padding:20px;margin-top:20px}
 .grid3{display:grid;grid-template-columns:1.5fr 1.2fr 0.9fr 0.9fr;gap:12px}
 
@@ -1088,7 +1091,9 @@ function renderSvcAdminList(){
     el.innerHTML = `<div class="empty"><div class="big">Todavía no has añadido servicios</div>Usa el formulario de abajo para crear el primero</div>`;
     return;
   }
-  el.innerHTML = services.map(s=>`
+  el.innerHTML = services.map(s=>{
+    const isPublic = s.publico !== false;
+    return `
     <div class="svc-row">
       <input value="${escapeHtml(s.nombre)}" onchange="updateSvcField('${s.id}','nombre',this.value)">
       <select onchange="updateSvcField('${s.id}','cat',this.value)">
@@ -1096,9 +1101,14 @@ function renderSvcAdminList(){
       </select>
       <input type="number" value="${s.precio}" step="0.5" onchange="updateSvcField('${s.id}','precio',Number(this.value))">
       <input type="number" value="${s.duracion}" step="5" onchange="updateSvcField('${s.id}','duracion',Number(this.value))">
+      <label class="svc-visibility ${isPublic?'':'is-interno'}" title="Si lo desmarcas, los clientes no verán ni podrán reservar este servicio online; solo aparecerá en el panel para uso interno">
+        <input type="checkbox" ${isPublic?'checked':''} onchange="updateSvcField('${s.id}','publico',this.checked)">
+        ${isPublic?'Visible online':'Solo interno'}
+      </label>
       <button class="icon-btn btn-danger" title="Eliminar" onclick="deleteSvc('${s.id}')">✕</button>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 async function updateSvcField(id, field, value){
   try{
@@ -1124,7 +1134,7 @@ async function addServicio(){
   const duracion = Number(document.getElementById('new-svc-duracion').value);
   if(!nombre || !precio || !duracion){ showToast('Completa nombre, precio y duración'); return; }
   try{
-    await svcCol.add({ nombre, cat, precio, duracion, desc:'' });
+    await svcCol.add({ nombre, cat, precio, duracion, desc:'', publico:true });
     document.getElementById('new-svc-nombre').value='';
     document.getElementById('new-svc-precio').value='';
     document.getElementById('new-svc-duracion').value='';
