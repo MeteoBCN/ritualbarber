@@ -723,6 +723,7 @@ function openBookingDetail(bookingId){
         <div class="row-btns" style="margin-top:18px">
           <button class="btn btn-ghost btn-sm" onclick="openAddServiceModal('${b.id}')">＋ Servicio</button>
           <button class="btn btn-ghost btn-sm" onclick="openCobroModal('${b.id}')">€ Cobrar</button>
+          ${b.paid ? `<button class="btn btn-ghost btn-sm" onclick="sendReceiptWhatsapp('${b.id}')">📱 Recibo</button>` : ''}
           ${b.status==='confirmada' ? `<button class="btn btn-gold btn-sm" onclick="setBookingStatus('${b.id}','completada');closeModal()">✓ Completada</button>` : ''}
           ${b.status!=='cancelada' ? `<button class="btn btn-ghost btn-sm btn-danger" onclick="setBookingStatus('${b.id}','cancelada');closeModal()">✕ Cancelar</button>` : ''}
         </div>
@@ -934,8 +935,48 @@ async function marcarCobrado(bookingId){
       paidAt:new Date().toISOString()
     });
     showToast('Cobro registrado: '+euros(total)+' ('+(metodo==='tarjeta'?'Tarjeta':'Efectivo')+')');
-    closeModal();
+    showReceiptOptions(bookingId);
   }catch(e){ console.error(e); showToast('No se pudo registrar el cobro'); }
+}
+
+/* ============ RECIBO POR WHATSAPP ============ */
+function buildReceiptMessage(b){
+  const svcNames = bookingServiceList(b).map(s=>s.name).join(', ');
+  const total = euros(b.paidAmount ?? b.price);
+  const metodo = b.paymentMethod==='tarjeta' ? 'Tarjeta' : 'Efectivo';
+  return `Hola ${b.clientName}! Aquí tienes tu recibo de RITUAL BARBER 💈\n\nServicio: ${svcNames}\nFecha: ${b.date} ${b.time||''}\nTotal: ${total}\nPago: ${metodo}\n\n¡Gracias por tu visita!`;
+}
+function formatPhoneForWhatsapp(phone){
+  let digits = (phone||'').replace(/[^\d+]/g,'');
+  if(digits.startsWith('+')) return digits.slice(1);
+  digits = digits.replace(/^0+/,'');
+  if(digits.length===9) return '34'+digits; // asume España si no lleva prefijo
+  return digits;
+}
+function sendReceiptWhatsapp(bookingId){
+  const b = bookings.find(x=>x.id===bookingId);
+  if(!b) return;
+  if(!b.clientPhone){ showToast('Esta reserva no tiene teléfono guardado'); return; }
+  const phone = formatPhoneForWhatsapp(b.clientPhone);
+  const msg = encodeURIComponent(buildReceiptMessage(b));
+  window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+}
+function showReceiptOptions(bookingId){
+  const b = bookings.find(x=>x.id===bookingId);
+  if(!b) return;
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box">
+        <h3>¿Enviar recibo?</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${escapeHtml(b.clientName)} · ${euros(b.paidAmount ?? b.price)}</p>
+        <div class="row-btns">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">No, gracias</button>
+          <button class="btn btn-gold btn-sm" onclick="sendReceiptWhatsapp('${b.id}');closeModal()">📱 Enviar por WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 /* ============ AUTOCOMPLETAR FICHA DE CLIENTE (reserva pública y cita manual) ============ */
 function onClientFieldInput(prefix, field){
