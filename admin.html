@@ -249,6 +249,31 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .pickable-svc{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--ivory);font-size:13px}
 .pickable-svc button{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:var(--dark);padding:7px 12px;border-radius:14px;font-weight:700}
 
+/* MÉTODO DE PAGO */
+.pay-method{display:flex;gap:10px;margin:6px 0 14px}
+.pay-method label{display:flex;align-items:center;gap:8px;flex:1;border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;text-transform:none;letter-spacing:normal;font-size:13px;color:var(--dark);font-weight:500;transition:all .2s}
+.pay-method input{width:auto;margin:0}
+.pay-method label:has(input:checked){border-color:var(--gold);background:#efe4c9}
+.pay-badge{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:9px;font-weight:700;background:#e6efe9;color:var(--charcoal)}
+.pay-badge.tarjeta{background:#e6e9f2;color:#39466e}
+
+/* FACTURACIÓN */
+.fact-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.fact-card{background:var(--ivory);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.fact-card .lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px}
+.fact-card .val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--dark)}
+.fact-card .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.fact-card.accent .val{color:var(--gold2)}
+.fact-emp-table{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.fact-emp-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);font-size:13px}
+.fact-emp-row b{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;color:var(--gold2)}
+.fact-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;background:var(--cream)}
+.fact-row .fr-date{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);width:74px;flex-shrink:0}
+.fact-row .fr-info{flex:1;min-width:0}
+.fact-row .fr-info b{display:block;font-size:14px}
+.fact-row .fr-info span{font-size:12px;color:var(--muted)}
+.fact-row .fr-amount{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--dark);white-space:nowrap}
+
 @media(max-width:640px){
   .two-col{grid-template-columns:1fr}
   .grid3{grid-template-columns:1fr}
@@ -282,6 +307,7 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
       <div class="panel-nav">
         <button class="active" data-p="agenda">Agenda</button>
         <button data-p="clientes">Clientes</button>
+        <button data-p="facturacion">Facturación</button>
         <button data-p="servicios">Servicios</button>
       </div>
 
@@ -307,6 +333,42 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
         <div class="field" style="max-width:340px"><input id="client-search" placeholder="Buscar por nombre o teléfono..." oninput="renderClientList()"></div>
         <div id="client-list" class="client-list"></div>
         <div id="client-detail-wrap"></div>
+      </div>
+
+      <!-- FACTURACIÓN -->
+      <div id="p-facturacion" class="p-view hidden">
+        <div class="card" style="margin-bottom:24px">
+          <div class="settings-row">
+            <div class="field" style="max-width:160px">
+              <label>Vista</label>
+              <select id="fact-view" onchange="onFactViewChange()">
+                <option value="day">Por día</option>
+                <option value="month">Por mes</option>
+                <option value="all">Histórico completo</option>
+              </select>
+            </div>
+            <div class="field" id="fact-day-field" style="max-width:180px">
+              <label>Fecha</label>
+              <input type="date" id="fact-date" onchange="renderFacturacion()">
+            </div>
+            <div class="field hidden" id="fact-month-field" style="max-width:180px">
+              <label>Mes</label>
+              <input type="month" id="fact-month" onchange="renderFacturacion()">
+            </div>
+            <div class="field" style="max-width:190px">
+              <label>Empleado</label>
+              <select id="fact-emp" onchange="renderFacturacion()"><option value="">Todos</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fact-summary" id="fact-summary"></div>
+
+        <h3 style="margin:28px 0 14px">Por empleado</h3>
+        <div class="fact-emp-table" id="fact-emp-table"></div>
+
+        <h3 style="margin:28px 0 14px">Detalle de cobros</h3>
+        <div id="fact-list"></div>
       </div>
 
       <!-- SERVICIOS -->
@@ -496,6 +558,7 @@ document.querySelectorAll('.panel-nav button').forEach(b=>{
     if(b.dataset.p==='clientes') renderClientList();
     if(b.dataset.p==='servicios'){ renderSvcAdminList(); populateCategorySelect(); renderSettingsForm(); renderScheduleForm(); }
     if(b.dataset.p==='agenda') renderAgenda();
+    if(b.dataset.p==='facturacion'){ initFacturacion(); }
   });
 });
 function empList(){
@@ -626,6 +689,7 @@ function openBookingDetail(bookingId){
         <div class="booking-detail-row"><span>Teléfono</span><span>${escapeHtml(b.clientPhone||'')}</span></div>
         ${b.notes ? `<div class="booking-detail-row"><span>Notas</span><span style="font-style:italic">"${escapeHtml(b.notes)}"</span></div>` : ''}
         <div class="booking-detail-row"><span>Estado</span><span class="status-badge status-${b.status}">${b.status}</span></div>
+        <div class="booking-detail-row"><span>Cobro</span><span>${b.paid ? `<span class="pay-badge ${b.paymentMethod==='tarjeta'?'tarjeta':''}">${b.paymentMethod==='tarjeta'?'💳 Tarjeta':'💶 Efectivo'} · ${euros(b.paidAmount)}</span>` : `<span style="color:var(--muted);font-style:italic">Pendiente</span>`}</span></div>
         <div class="field" style="margin-top:14px">
           <label>Barbero</label>
           <select onchange="changeBookingEmployee('${b.id}',this.value)">
@@ -810,6 +874,11 @@ function openCobroModal(bookingId){
           <div class="field"><label>Propina (€)</label><input type="number" id="cobro-tip" min="0" step="0.5" value="0" oninput="updateCobroTotal(${JSON.stringify(b.price)})"></div>
         </div>
         <div class="calc-row total"><span>Total a cobrar</span><span id="cobro-total">${euros(b.price)}</span></div>
+        <label style="margin-top:14px">Método de pago</label>
+        <div class="pay-method">
+          <label><input type="radio" name="cobro-metodo" value="efectivo" checked> 💶 Efectivo</label>
+          <label><input type="radio" name="cobro-metodo" value="tarjeta"> 💳 Tarjeta</label>
+        </div>
         <div class="row-btns" style="margin-top:16px">
           <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button>
           <button class="btn btn-gold btn-sm" onclick="marcarCobrado('${b.id}')">Marcar como cobrado</button>
@@ -830,9 +899,17 @@ async function marcarCobrado(bookingId){
   const desc = Number(document.getElementById('cobro-desc').value||0);
   const tip = Number(document.getElementById('cobro-tip').value||0);
   const total = Math.max(0, b.price * (1 - desc/100) + tip);
+  const metodo = (document.querySelector('input[name="cobro-metodo"]:checked')||{}).value || 'efectivo';
   try{
-    await bkCol.doc(bookingId).update({ paid:true, paidAmount:total });
-    showToast('Cobro registrado: '+euros(total));
+    await bkCol.doc(bookingId).update({
+      paid:true,
+      paidAmount:total,
+      paymentMethod:metodo,
+      paidDiscount:desc,
+      paidTip:tip,
+      paidAt:new Date().toISOString()
+    });
+    showToast('Cobro registrado: '+euros(total)+' ('+(metodo==='tarjeta'?'Tarjeta':'Efectivo')+')');
     closeModal();
   }catch(e){ console.error(e); showToast('No se pudo registrar el cobro'); }
 }
@@ -1077,6 +1154,107 @@ function onDayOpenToggle(d){
   wrap.style.opacity = open ? '1' : '.35';
   wrap.querySelectorAll('input').forEach(inp=>inp.disabled = !open);
 }
+/* ============ FACTURACIÓN ============ */
+let factInited = false;
+function initFacturacion(){
+  populateFactEmpSelect();
+  if(!factInited){
+    factInited = true;
+    document.getElementById('fact-date').value = fmtDate(new Date());
+    document.getElementById('fact-month').value = fmtDate(new Date()).slice(0,7);
+  }
+  renderFacturacion();
+}
+function populateFactEmpSelect(){
+  const sel = document.getElementById('fact-emp');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Todos</option>' + empList().map(e=>`<option value="${escapeHtml(e)}">${escapeHtml(e)}</option>`).join('');
+  sel.value = current;
+}
+function onFactViewChange(){
+  const view = document.getElementById('fact-view').value;
+  document.getElementById('fact-day-field').classList.toggle('hidden', view!=='day');
+  document.getElementById('fact-month-field').classList.toggle('hidden', view!=='month');
+  renderFacturacion();
+}
+function factDateInRange(dateStr){
+  const view = document.getElementById('fact-view').value;
+  if(view==='day'){
+    const d = document.getElementById('fact-date').value;
+    return !d || dateStr===d;
+  }
+  if(view==='month'){
+    const m = document.getElementById('fact-month').value;
+    return !m || dateStr.slice(0,7)===m;
+  }
+  return true;
+}
+function getPaidBookings(){
+  return bookings.filter(b=>b.paid && b.date && factDateInRange(b.date));
+}
+function renderFacturacion(){
+  const empFilter = document.getElementById('fact-emp').value;
+  const periodBookings = getPaidBookings().sort((a,b)=> (b.date+(b.time||'')).localeCompare(a.date+(a.time||'')));
+  const filtered = empFilter ? periodBookings.filter(b=>b.employee===empFilter) : periodBookings;
+
+  renderFactSummary(filtered);
+  renderFactByEmployee(periodBookings);
+  renderFactList(filtered);
+}
+function renderFactSummary(list){
+  const el = document.getElementById('fact-summary');
+  const total = list.reduce((a,b)=>a+Number(b.paidAmount ?? b.price ?? 0),0);
+  const efectivo = list.filter(b=>b.paymentMethod!=='tarjeta');
+  const tarjeta = list.filter(b=>b.paymentMethod==='tarjeta');
+  const totalEf = efectivo.reduce((a,b)=>a+Number(b.paidAmount ?? b.price ?? 0),0);
+  const totalTj = tarjeta.reduce((a,b)=>a+Number(b.paidAmount ?? b.price ?? 0),0);
+  el.innerHTML = `
+    <div class="fact-card accent"><div class="lbl">Total facturado</div><div class="val">${euros(total)}</div><div class="sub">${list.length} cobro(s)</div></div>
+    <div class="fact-card"><div class="lbl">💶 Efectivo</div><div class="val">${euros(totalEf)}</div><div class="sub">${efectivo.length} cobro(s)</div></div>
+    <div class="fact-card"><div class="lbl">💳 Tarjeta</div><div class="val">${euros(totalTj)}</div><div class="sub">${tarjeta.length} cobro(s)</div></div>
+  `;
+}
+function renderFactByEmployee(list){
+  const el = document.getElementById('fact-emp-table');
+  const emps = empList();
+  const rows = emps.map(name=>{
+    const empBookings = list.filter(b=>b.employee===name);
+    const total = empBookings.reduce((a,b)=>a+Number(b.paidAmount ?? b.price ?? 0),0);
+    return { name, total, count:empBookings.length };
+  });
+  if(rows.every(r=>r.count===0)){
+    el.innerHTML = `<div class="empty">Sin cobros registrados en este periodo</div>`;
+    return;
+  }
+  el.innerHTML = rows.map(r=>`
+    <div class="fact-emp-row">
+      <span>${escapeHtml(r.name)} <span style="color:var(--muted);font-size:11px">· ${r.count} cobro(s)</span></span>
+      <b>${euros(r.total)}</b>
+    </div>
+  `).join('');
+}
+function renderFactList(list){
+  const el = document.getElementById('fact-list');
+  if(list.length===0){
+    el.innerHTML = `<div class="empty"><div class="big">No hay cobros en este periodo</div>Ajusta los filtros de fecha o empleado</div>`;
+    return;
+  }
+  el.innerHTML = list.map(b=>{
+    const svcNames = bookingServiceList(b).map(s=>s.name).join(' + ');
+    const amount = Number(b.paidAmount ?? b.price ?? 0);
+    return `
+    <div class="fact-row">
+      <div class="fr-date">${b.date}<br>${b.time||''}</div>
+      <div class="fr-info">
+        <b>${escapeHtml(b.clientName||'')}</b>
+        <span>${escapeHtml(svcNames)} · ${escapeHtml(b.employee||'')}</span>
+      </div>
+      <span class="pay-badge ${b.paymentMethod==='tarjeta'?'tarjeta':''}">${b.paymentMethod==='tarjeta'?'💳 Tarjeta':'💶 Efectivo'}</span>
+      <div class="fr-amount">${euros(amount)}</div>
+    </div>`;
+  }).join('');
+}
+
 async function saveSettings(){
   const slot = Number(document.getElementById('set-slot').value || 30);
   const schedule = {};
