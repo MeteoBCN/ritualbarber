@@ -548,7 +548,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
   <div class="logo" onclick="showSection('inicio-publica');cerrarMenu()">RITUAL BARBER</div>
   <div class="nav-links" id="nav-links">
     <button onclick="showSection('inicio-publica');cerrarMenu()" id="nav-inicio-publica" class="active">Inicio</button>
-    <button onclick="window.location.href='revervar.html'" id="nav-reservar">Reservar Cita</button>
+    <button onclick="window.location.href='reservar.html'" id="nav-reservar">Reservar Cita</button>
     <button onclick="showSection('contacto');cerrarMenu()" id="nav-contacto">Contacto</button>
     <button onclick="showSection('otros');cerrarMenu()" id="nav-otros">Otros</button>
     <div class="nav-sep"></div>
@@ -639,17 +639,17 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <!-- Info rápida -->
     <div class="info-grid" style="margin-bottom:2rem;">
       <div class="info-card">
-        <h3>📍 Ubicación</h3>
+        <h3>Ubicación</h3>
         <p>Mossèn Jacint Verdaguer 205</p>
         <p style="font-size:0.8rem;margin-top:0.4rem;">Sant Vicenç dels Horts · Barcelona</p>
       </div>
       <div class="info-card">
-        <h3>🕐 Horario</h3>
+        <h3>Horario</h3>
         <p>Lunes a Sábado</p>
-        <p style="font-size:0.8rem;margin-top:0.4rem;">10:00 – 21:00 h</p>
+        <p style="font-size:0.8rem;margin-top:0.4rem;">10:00 – 14:00 y 15:00 - 21:00 h</p>
       </div>
       <div class="info-card">
-        <h3>📞 Contacto</h3>
+        <h3>Contacto</h3>
         <p><a href="tel:+34600000000" style="color:var(--oro);text-decoration:none;">+34 600 000 000</a></p>
         <p style="font-size:0.8rem;margin-top:0.4rem;">Llamadas y WhatsApp</p>
       </div>
@@ -763,7 +763,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
   <!-- ── SERVICIOS Y PRECIOS ── -->
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;">
-    <h2 style="margin-bottom:0;">✂ Servicios y Precios</h2>
+    <h2 style="margin-bottom:0;">Servicios y Precios</h2>
     <button class="btn btn-oro" onclick="abrirModalServicio()">+ Añadir Servicio</button>
   </div>
 
@@ -1026,11 +1026,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // SERVICIOS Y PRECIOS
 // ════════════════════════════════════════
 const CATS = {
-  corte:        { label: '✂ Cortes',        color: '#ccb57f' },
-  barberia:     { label: '🪒 Barbería',      color: '#5B8DD9' },
-  combos:       { label: '⭐ Combos',        color: '#9B59B6' },
-  tratamientos: { label: '🌿 Tratamientos',  color: '#38a16e' },
-  otros:        { label: '➕ Otros',          color: '#e67e22' },
+  corte:        { label: 'Cortes',        color: '#ccb57f' },
+  barberia:     { label: 'Barbería',      color: '#5B8DD9' },
+  combos:       { label: 'Combos',        color: '#9B59B6' },
+  tratamientos: { label: 'Tratamientos',  color: '#38a16e' },
+  otros:        { label: 'Otros',          color: '#e67e22' },
 };
 
 const SERVICIOS_DEFAULT = [
