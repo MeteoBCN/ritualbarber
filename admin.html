@@ -297,18 +297,22 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 
     <div id="panel-gate" class="pin-box">
       <h2>Acceso al panel</h2>
-      <p style="color:var(--muted);font-style:italic;margin-bottom:20px">Introduce el PIN de la barbería</p>
-      <div class="field"><input id="pin-input" type="password" inputmode="numeric" placeholder="····" maxlength="6" style="text-align:center;letter-spacing:.3em;font-size:20px"></div>
-      <button class="btn btn-gold" style="width:100%" onclick="checkPin()">Entrar</button>
-      <p id="pin-error" style="color:var(--warn);font-size:12px;margin-top:10px;display:none">PIN incorrecto</p>
+      <p style="color:var(--muted);font-style:italic;margin-bottom:20px">Inicia sesión para gestionar la barbería</p>
+      <div class="field"><label>Email</label><input id="login-email" type="email" placeholder="tu@email.com" autocomplete="username"></div>
+      <div class="field"><label>Contraseña</label><input id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="doLogin()">Entrar</button>
+      <p id="login-error" style="color:var(--warn);font-size:12px;margin-top:10px;display:none"></p>
     </div>
 
     <div id="panel-content" class="hidden">
-      <div class="panel-nav">
-        <button class="active" data-p="agenda">Agenda</button>
-        <button data-p="clientes">Clientes</button>
-        <button data-p="facturacion">Facturación</button>
-        <button data-p="servicios">Servicios</button>
+      <div class="panel-nav" style="justify-content:space-between;display:flex;flex-wrap:wrap">
+        <div class="panel-tabs" style="display:flex;gap:8px">
+          <button class="active" data-p="agenda">Agenda</button>
+          <button data-p="clientes">Clientes</button>
+          <button data-p="facturacion">Facturación</button>
+          <button data-p="servicios">Servicios</button>
+        </div>
+        <button class="btn-ghost btn-sm" style="border:1px solid var(--border);border-radius:20px;padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px" onclick="doLogout()">Cerrar sesión</button>
       </div>
 
       <!-- AGENDA -->
@@ -419,6 +423,7 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 /* ============ FIREBASE ============ */
 const firebaseConfig = {
@@ -431,6 +436,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const auth = firebase.auth();
 const svcCol = db.collection('services');
 const cliCol = db.collection('clients');
 const bkCol = db.collection('bookings');
@@ -466,7 +472,6 @@ const SERVICIOS_DEFAULT = [
   { nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento' },
 ];
 
-const ADMIN_PIN = '1234';
 const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 
 /* ============ ESTADO ============ */
@@ -535,21 +540,37 @@ function init(){
     renderAgenda();
   }, err=>{ console.error(err); showToast('Error al leer horario'); });
 }
-init();
 populateCategorySelect();
 
-/* ============ ACCESO POR PIN ============ */
-function checkPin(){
-  const val = document.getElementById('pin-input').value;
-  if(val === ADMIN_PIN){
+/* ============ ACCESO: FIREBASE AUTH (email + contraseña) ============ */
+let authReady = false;
+auth.onAuthStateChanged(user=>{
+  if(user){
     document.getElementById('panel-gate').classList.add('hidden');
     document.getElementById('panel-content').classList.remove('hidden');
-    document.getElementById('pin-error').style.display='none';
+    document.getElementById('login-error').style.display='none';
+    if(!authReady){ authReady = true; init(); }
   } else {
-    document.getElementById('pin-error').style.display='block';
+    authReady = false;
+    document.getElementById('panel-gate').classList.remove('hidden');
+    document.getElementById('panel-content').classList.add('hidden');
   }
+});
+function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  if(!email || !pass){ errEl.textContent='Introduce email y contraseña'; errEl.style.display='block'; return; }
+  auth.signInWithEmailAndPassword(email, pass).catch(e=>{
+    console.error(e);
+    errEl.textContent = 'Email o contraseña incorrectos';
+    errEl.style.display='block';
+  });
 }
-document.querySelectorAll('.panel-nav button').forEach(b=>{
+function doLogout(){
+  auth.signOut();
+}
+document.querySelectorAll('.panel-tabs button').forEach(b=>{
   b.addEventListener('click', ()=>{
     document.querySelectorAll('.panel-nav button').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
