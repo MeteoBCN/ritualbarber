@@ -811,10 +811,12 @@ async function saveEmployees(){
 }
 
 /* ============ NUEVA CITA MANUAL (panel privado) ============ */
+let mbCatFilter = 'todas';
 function openManualBookingModal(prefillTime, prefillEmployee){
+  mbCatFilter = 'todas';
   const root = document.getElementById('modal-root');
   const svcOptions = services.map(s=>`
-    <label class="pickable-svc" style="cursor:pointer">
+    <label class="pickable-svc" data-cat="${s.cat}" style="cursor:pointer">
       <input type="checkbox" class="manual-svc-chk" value="${s.id}" style="width:auto;margin-right:8px">
       <span style="flex:1">${escapeHtml(s.nombre)} · ${euros(s.precio)} · ${s.duracion}min</span>
     </label>
@@ -827,7 +829,10 @@ function openManualBookingModal(prefillTime, prefillEmployee){
         <div class="field" style="position:relative"><label>Nombre del cliente</label><input id="mb-nombre" placeholder="Ej. Marc Puig" autocomplete="off" oninput="onClientFieldInput('mb','nombre')" onblur="hideSuggestSoon('mb','nombre')"><div id="mb-suggest-nombre" class="client-suggest hidden"></div></div>
         <div class="field" style="position:relative"><label>Teléfono</label><input id="mb-telefono" placeholder="Ej. 600 123 456" autocomplete="off" oninput="onClientFieldInput('mb','telefono')" onblur="hideSuggestSoon('mb','telefono')"><div id="mb-suggest-telefono" class="client-suggest hidden"></div></div>
         <div class="field"><label>Servicios</label>
-          ${svcOptions || '<p style="color:var(--muted);font-style:italic;font-size:13px">No hay servicios cargados</p>'}
+          <div id="mb-svc-tabs" class="cat-filter" style="justify-content:flex-start;margin-bottom:12px"></div>
+          <div id="mb-svc-list">
+            ${svcOptions || '<p style="color:var(--muted);font-style:italic;font-size:13px">No hay servicios cargados</p>'}
+          </div>
         </div>
         <div class="two-col" style="margin-top:10px">
           <div class="field"><label>Fecha</label><input type="date" id="mb-fecha" value="${fmtDate(agendaDate)}"></div>
@@ -844,6 +849,25 @@ function openManualBookingModal(prefillTime, prefillEmployee){
       </div>
     </div>
   `;
+  renderMbSvcTabs();
+}
+function renderMbSvcTabs(){
+  const el = document.getElementById('mb-svc-tabs');
+  if(!el) return;
+  const counts = {};
+  services.forEach(s=>{ counts[s.cat] = (counts[s.cat]||0)+1; });
+  const chips = [{ key:'todas', label:'Todas', n:services.length }]
+    .concat(CATEGORY_ORDER.map(c=>({ key:c, label:CATS[c].label, n:counts[c]||0 })));
+  el.innerHTML = chips.map(ch=>`
+    <button type="button" class="cat-chip ${mbCatFilter===ch.key?'sel':''}" onclick="selectMbCat('${ch.key}')">${escapeHtml(ch.label)} (${ch.n})</button>
+  `).join('');
+}
+function selectMbCat(cat){
+  mbCatFilter = cat;
+  renderMbSvcTabs();
+  document.querySelectorAll('#mb-svc-list .pickable-svc').forEach(row=>{
+    row.style.display = (cat==='todas' || row.dataset.cat===cat) ? 'flex' : 'none';
+  });
 }
 async function submitManualBooking(){
   const nombre = document.getElementById('mb-nombre').value.trim();
