@@ -578,20 +578,64 @@ function doLogin(){
   });
 }
 function doLogout(){
+  factUnlocked = false;
   auth.signOut();
 }
+const FACT_PIN = "2580"; // <-- Cambia aquí el PIN de acceso a Facturación
+let factUnlocked = false;
+let pendingFactTabBtn = null;
 document.querySelectorAll('.panel-tabs button').forEach(b=>{
   b.addEventListener('click', ()=>{
-    document.querySelectorAll('.panel-nav button').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    document.querySelectorAll('.p-view').forEach(v=>v.classList.add('hidden'));
-    document.getElementById('p-'+b.dataset.p).classList.remove('hidden');
-    if(b.dataset.p==='clientes') renderClientList();
-    if(b.dataset.p==='servicios'){ renderSvcAdminList(); populateCategorySelect(); renderSettingsForm(); renderScheduleForm(); }
-    if(b.dataset.p==='agenda') renderAgenda();
-    if(b.dataset.p==='facturacion'){ initFacturacion(); }
+    if(b.dataset.p==='facturacion' && !factUnlocked){
+      openFactPinModal(b);
+      return;
+    }
+    activatePanelTab(b);
   });
 });
+function activatePanelTab(b){
+  document.querySelectorAll('.panel-nav button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('.p-view').forEach(v=>v.classList.add('hidden'));
+  document.getElementById('p-'+b.dataset.p).classList.remove('hidden');
+  if(b.dataset.p==='clientes') renderClientList();
+  if(b.dataset.p==='servicios'){ renderSvcAdminList(); populateCategorySelect(); renderSettingsForm(); renderScheduleForm(); }
+  if(b.dataset.p==='agenda') renderAgenda();
+  if(b.dataset.p==='facturacion'){ initFacturacion(); }
+}
+function openFactPinModal(btn){
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box" style="max-width:320px;text-align:center">
+        <h3>Acceso a Facturación</h3>
+        <p style="color:var(--muted);font-style:italic;font-size:13px;margin-bottom:18px">Introduce el PIN para continuar</p>
+        <div class="field">
+          <input type="password" id="fact-pin-input" inputmode="numeric" maxlength="8" placeholder="••••" autofocus onkeydown="if(event.key==='Enter') checkFactPin()">
+        </div>
+        <p id="fact-pin-error" style="color:var(--warn);font-size:12px;margin-bottom:14px;display:none">PIN incorrecto</p>
+        <div class="row-btns" style="margin-top:8px">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-gold btn-sm" onclick="checkFactPin()">Entrar</button>
+        </div>
+      </div>
+    </div>`;
+  pendingFactTabBtn = btn;
+  setTimeout(()=>{ const inp=document.getElementById('fact-pin-input'); if(inp) inp.focus(); }, 50);
+}
+function checkFactPin(){
+  const val = document.getElementById('fact-pin-input').value;
+  if(val === FACT_PIN){
+    factUnlocked = true;
+    closeModal();
+    if(pendingFactTabBtn) activatePanelTab(pendingFactTabBtn);
+    pendingFactTabBtn = null;
+  } else {
+    document.getElementById('fact-pin-error').style.display = 'block';
+    document.getElementById('fact-pin-input').value = '';
+    document.getElementById('fact-pin-input').focus();
+  }
+}
 function empList(){
   const emps = settings.employees && settings.employees.filter(Boolean).length===2 ? settings.employees : ['Barbero 1','Barbero 2'];
   return emps;
