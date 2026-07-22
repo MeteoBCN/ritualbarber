@@ -581,7 +581,7 @@ function doLogout(){
   factUnlocked = false;
   auth.signOut();
 }
-const FACT_PIN = "1977"; // <-- Cambia aquí el PIN de acceso a Facturación
+const FACT_PIN = "2580"; // <-- Cambia aquí el PIN de acceso a Facturación
 let factUnlocked = false;
 let pendingFactTabBtn = null;
 document.querySelectorAll('.panel-tabs button').forEach(b=>{
@@ -700,11 +700,6 @@ function renderAgenda(){
     return;
   }
 
-  if(dayBookings.length===0){
-    el.style.display='none';
-    outer.insertAdjacentHTML('beforeend', `<div class="empty tl-empty"><div class="big">Sin reservas este día</div>Las nuevas reservas online aparecerán aquí. Usa "+ Nueva cita" para añadir una manualmente.</div>`);
-    return;
-  }
   el.style.display='grid';
 
   const SLOT_MIN = 15;
