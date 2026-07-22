@@ -225,6 +225,8 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .tl-hourlabel{grid-column:1;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);text-align:right;padding-right:8px;transform:translateY(-6px);border-right:1px solid var(--border)}
 .tl-hourline{grid-column:2 / -1;border-top:1px solid var(--border);opacity:.4;pointer-events:none}
 .tl-hourline.tl-hourline-solid{opacity:.9}
+.tl-slot-cell{cursor:pointer}
+.tl-slot-cell:hover{background:rgba(204,181,127,0.16)}
 .tl-card{background:var(--cream);border:1px solid var(--border);border-left:4px solid var(--gold2);border-radius:8px;padding:6px 9px;margin:1px 4px;overflow:hidden;font-size:11.5px;cursor:pointer;box-shadow:0 1px 3px rgba(26,45,39,.08);transition:all .15s;line-height:1.3}
 .tl-card:hover{border-color:var(--gold);transform:translateY(-1px)}
 .tl-card b{display:block;font-size:12.5px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -337,7 +339,10 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 
       <!-- CLIENTES -->
       <div id="p-clientes" class="p-view hidden">
-        <div class="field" style="max-width:340px"><input id="client-search" placeholder="Buscar por nombre o teléfono..." oninput="renderClientList()"></div>
+        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
+          <div class="field" style="max-width:340px;margin-bottom:0"><input id="client-search" placeholder="Buscar por nombre o teléfono..." oninput="renderClientList()"></div>
+          <button class="btn btn-dark btn-sm" onclick="downloadClientsCsv()">⬇ Descargar fichas (CSV)</button>
+        </div>
         <div id="client-list" class="client-list"></div>
         <div id="client-detail-wrap"></div>
       </div>
@@ -403,6 +408,7 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
         </div>
 
         <h3 style="margin-bottom:14px">Servicios y precios</h3>
+        <div id="svc-admin-tabs" class="cat-filter" style="justify-content:flex-start;margin-bottom:16px"></div>
         <div id="svc-admin-list"></div>
         <div class="add-svc-card">
           <div class="grid3">
@@ -498,6 +504,7 @@ function dayRangeSpan(dow){
   return { start: ranges[0].open, end: ranges[ranges.length-1].close };
 }
 let categoryFilter = 'todas';
+let svcAdminCatFilter = 'todas';
 let bookingState = { serviceIds:[], date:null, time:null, employee:'cualquiera' };
 let agendaDate = new Date();
 let openClientId = null;
@@ -679,6 +686,15 @@ function renderAgenda(){
   }
 
   emps.forEach((emp,i)=>{
+    for(let r=0; r<totalRows; r++){
+      const minutes = openMinutes + r*SLOT_MIN;
+      const hh = String(Math.floor(minutes/60)).padStart(2,'0');
+      const mm = String(minutes%60).padStart(2,'0');
+      html += `<div class="tl-slot-cell" style="grid-row:${r+1};grid-column:${i+2}" onclick="openManualBookingModal('${hh}:${mm}','${escapeHtml(emp).replace(/'/g,"\\'")}')" title="Nueva cita a las ${hh}:${mm} con ${escapeHtml(emp)}"></div>`;
+    }
+  });
+
+  emps.forEach((emp,i)=>{
     const empBookings = dayBookings.filter(b=>(b.employee||emps[0])===emp);
     empBookings.forEach(b=>{
       const [bh,bm] = (b.time||'00:00').split(':').map(Number);
@@ -756,7 +772,7 @@ async function saveEmployees(){
 }
 
 /* ============ NUEVA CITA MANUAL (panel privado) ============ */
-function openManualBookingModal(){
+function openManualBookingModal(prefillTime, prefillEmployee){
   const root = document.getElementById('modal-root');
   const svcOptions = services.map(s=>`
     <label class="pickable-svc" style="cursor:pointer">
@@ -776,10 +792,10 @@ function openManualBookingModal(){
         </div>
         <div class="two-col" style="margin-top:10px">
           <div class="field"><label>Fecha</label><input type="date" id="mb-fecha" value="${fmtDate(agendaDate)}"></div>
-          <div class="field"><label>Hora</label><input type="time" id="mb-hora"></div>
+          <div class="field"><label>Hora</label><input type="time" id="mb-hora" value="${prefillTime||''}"></div>
         </div>
         <div class="field"><label>Barbero</label>
-          <select id="mb-barbero">${empList().map(e=>`<option value="${escapeHtml(e)}">${escapeHtml(e)}</option>`).join('')}</select>
+          <select id="mb-barbero">${empList().map(e=>`<option value="${escapeHtml(e)}" ${e===prefillEmployee?'selected':''}>${escapeHtml(e)}</option>`).join('')}</select>
         </div>
         <div class="field"><label>Notas (opcional)</label><textarea id="mb-notas" rows="2"></textarea></div>
         <div class="row-btns" style="margin-top:16px">
@@ -1123,16 +1139,84 @@ function closeClientDetail(){
   openClientId = null;
   document.getElementById('client-detail-wrap').innerHTML = '';
 }
+function csvEscape(v){
+  const s = (v===undefined || v===null) ? '' : String(v);
+  if(/[",;\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+  return s;
+}
+function downloadClientsCsv(){
+  if(clients.length===0){ showToast('No hay clientes para exportar'); return; }
+  const rows = [];
+  rows.push(['Cliente','Teléfono','Email','Notas internas','Nº de citas','Total facturado (€)','Fecha cita','Hora','Servicios','Precio (€)','Barbero','Estado','Cobrado']);
+  const sortedClients = [...clients].sort((a,b)=>a.name.localeCompare(b.name));
+  sortedClients.forEach(c=>{
+    const history = bookings.filter(b=>b.clientId===c.id).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+    const totalFacturado = history.filter(h=>h.paid).reduce((a,h)=>a+Number(h.price||0),0);
+    if(history.length===0){
+      rows.push([c.name, c.phone, c.email||'', c.notes||'', 0, totalFacturado.toFixed(2), '', '', '', '', '', '', '']);
+    } else {
+      history.forEach((h,i)=>{
+        rows.push([
+          i===0 ? c.name : '',
+          i===0 ? c.phone : '',
+          i===0 ? (c.email||'') : '',
+          i===0 ? (c.notes||'') : '',
+          i===0 ? history.length : '',
+          i===0 ? totalFacturado.toFixed(2) : '',
+          h.date, h.time,
+          bookingServiceList(h).map(s=>s.name).join(' + '),
+          Number(h.price||0).toFixed(2),
+          h.employee||'',
+          h.status||'',
+          h.paid ? 'Sí' : 'No'
+        ]);
+      });
+    }
+  });
+  const csvContent = '\uFEFF' + rows.map(r=>r.map(csvEscape).join(';')).join('\r\n');
+  const blob = new Blob([csvContent], { type:'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `clientes_ritual_barber_${fmtDate(new Date())}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Descarga de fichas iniciada');
+}
 
 /* ============ SERVICIOS (panel) ============ */
+function renderSvcAdminTabs(){
+  const el = document.getElementById('svc-admin-tabs');
+  if(!el) return;
+  const counts = {};
+  services.forEach(s=>{ counts[s.cat] = (counts[s.cat]||0)+1; });
+  const chips = [{ key:'todas', label:'Todas', n:services.length }]
+    .concat(CATEGORY_ORDER.map(c=>({ key:c, label:CATS[c].label, n:counts[c]||0 })));
+  el.innerHTML = chips.map(ch=>`
+    <button class="cat-chip ${svcAdminCatFilter===ch.key?'sel':''}" onclick="selectSvcAdminCat('${ch.key}')">${escapeHtml(ch.label)} (${ch.n})</button>
+  `).join('');
+}
+function selectSvcAdminCat(cat){
+  svcAdminCatFilter = cat;
+  renderSvcAdminTabs();
+  renderSvcAdminList();
+}
 function renderSvcAdminList(){
   const el = document.getElementById('svc-admin-list');
   if(!el) return;
+  renderSvcAdminTabs();
   if(services.length===0){
     el.innerHTML = `<div class="empty"><div class="big">Todavía no has añadido servicios</div>Usa el formulario de abajo para crear el primero</div>`;
     return;
   }
-  el.innerHTML = services.map(s=>{
+  const filtered = svcAdminCatFilter==='todas' ? services : services.filter(s=>s.cat===svcAdminCatFilter);
+  if(filtered.length===0){
+    el.innerHTML = `<div class="empty"><div class="big">No hay servicios en esta categoría</div>Elige otra pestaña o añade uno nuevo abajo</div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(s=>{
     const isPublic = s.publico !== false;
     return `
     <div class="svc-row">
