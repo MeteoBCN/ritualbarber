@@ -406,11 +406,27 @@ const DEFAULT_SCHEDULE = {
   5: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
   6: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
 };
-let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:['Barbero 1','Barbero 2'] };
-function daySchedule(dow){ return (settings.schedule && settings.schedule[dow]) || []; }
-function isDayClosed(dow){ return daySchedule(dow).length===0; }
-function dayRangeSpan(dow){
-  const ranges = daySchedule(dow);
+let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:[{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}] };
+function normalizedEmployees(){
+  let emps = settings.employees;
+  if(!Array.isArray(emps) || emps.filter(Boolean).length===0){
+    emps = [{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}];
+  }
+  return emps
+    .map(e => typeof e === 'string' ? {name:e, active:true, schedule:null} : {name:(e&&e.name)||'', active: !(e&&e.active===false), schedule:(e&&e.schedule)||null})
+    .filter(e => e.name && e.name.trim());
+}
+function employeeSchedule(employeeName){
+  if(employeeName){
+    const emp = normalizedEmployees().find(e=>e.name===employeeName);
+    if(emp && emp.schedule && Object.keys(emp.schedule).length) return emp.schedule;
+  }
+  return settings.schedule;
+}
+function daySchedule(dow, employeeName){ const s = employeeSchedule(employeeName); return (s && s[dow]) || []; }
+function isDayClosed(dow){ return !empList().some(e=>daySchedule(dow, e).length>0); }
+function dayRangeSpan(dow, employeeName){
+  const ranges = daySchedule(dow, employeeName);
   if(!ranges.length) return null;
   return { start: ranges[0].open, end: ranges[ranges.length-1].close };
 }
@@ -559,8 +575,8 @@ function goToStep2(){
 
 /* ============ BARBEROS (público) ============ */
 function empList(){
-  const emps = settings.employees && settings.employees.filter(Boolean).length===2 ? settings.employees : ['Barbero 1','Barbero 2'];
-  return emps;
+  const active = normalizedEmployees().filter(e=>e.active).map(e=>e.name);
+  return active.length ? active : normalizedEmployees().map(e=>e.name);
 }
 function renderEmpFilter(){
   const el = document.getElementById('emp-filter');
@@ -606,6 +622,12 @@ function toMinutes(hhmm){ const [h,m]=hhmm.split(':').map(Number); return h*60+m
 function toHHMM(mins){ const h=Math.floor(mins/60), m=mins%60; return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'); }
 
 function chosenServices(){ return services.filter(s=>bookingState.serviceIds.includes(s.id)); }
+function isEmployeeWorkingAt(name, dow, t, dur){
+  return daySchedule(dow, name).some(r=>{
+    const s = toMinutes(r.open), e = toMinutes(r.close);
+    return t>=s && (t+dur)<=e;
+  });
+}
 function employeeFreeAt(empName, t, dur, dayBookings){
   return !dayBookings.some(b=>{
     if((b.employee||empList()[0]) !== empName) return false;
@@ -620,7 +642,6 @@ function renderSlots(){
   const chosen = chosenServices();
   if(chosen.length===0 || !bookingState.date){ el.innerHTML=''; return; }
   const dow = new Date(bookingState.date+'T00:00:00').getDay();
-  const ranges = daySchedule(dow);
   const step = Number(settings.slot||30);
   const dur = chosen.reduce((a,s)=>a+Number(s.duracion||30),0);
   const now = new Date();
@@ -629,19 +650,30 @@ function renderSlots(){
 
   const dayBookings = bookings.filter(b=>b.date===bookingState.date && b.status!=='cancelada');
   const emps = empList();
+  const selectedEmployee = (bookingState.employee && bookingState.employee!=='cualquiera') ? bookingState.employee : null;
+  const candidateEmps = selectedEmployee ? [selectedEmployee] : emps;
+
+  // Ventana horaria a mostrar: unión de los horarios de los empleados candidatos ese día
+  let ranges = [];
+  candidateEmps.forEach(e=>{ ranges = ranges.concat(daySchedule(dow, e)); });
+  ranges = ranges.map(r=>({start:toMinutes(r.open), end:toMinutes(r.close)})).sort((a,b)=>a.start-b.start);
+  const merged = [];
+  ranges.forEach(r=>{
+    const last = merged[merged.length-1];
+    if(last && r.start<=last.end) last.end = Math.max(last.end, r.end);
+    else merged.push({...r});
+  });
 
   let html = '';
   let any = false;
-  ranges.forEach(r=>{
-    const start = toMinutes(r.open);
-    const end = toMinutes(r.close);
-    for(let t=start; t+dur<=end; t+=step){
+  merged.forEach(r=>{
+    for(let t=r.start; t+dur<=r.end; t+=step){
       const hhmm = toHHMM(t);
       let free;
-      if(bookingState.employee && bookingState.employee!=='cualquiera'){
-        free = employeeFreeAt(bookingState.employee, t, dur, dayBookings);
+      if(selectedEmployee){
+        free = isEmployeeWorkingAt(selectedEmployee, dow, t, dur) && employeeFreeAt(selectedEmployee, t, dur, dayBookings);
       } else {
-        free = emps.some(e=>employeeFreeAt(e, t, dur, dayBookings));
+        free = emps.some(e=>isEmployeeWorkingAt(e, dow, t, dur) && employeeFreeAt(e, t, dur, dayBookings));
       }
       const past = isToday && t <= nowMins;
       const disabled = !free || past;
@@ -691,9 +723,10 @@ async function confirmarReserva(){
     const serviceNames = chosen.map(s=>s.nombre).join(', ');
     const dayBookings = bookings.filter(b=>b.date===bookingState.date && b.status!=='cancelada');
     const t = toMinutes(bookingState.time);
+    const dow = new Date(bookingState.date+'T00:00:00').getDay();
     let employee = bookingState.employee;
     if(!employee || employee==='cualquiera'){
-      employee = empList().find(e=>employeeFreeAt(e, t, totalDuration, dayBookings)) || empList()[0];
+      employee = empList().find(e=>isEmployeeWorkingAt(e, dow, t, totalDuration) && employeeFreeAt(e, t, totalDuration, dayBookings)) || empList()[0];
     }
 
     await bkCol.add({
