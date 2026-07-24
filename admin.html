@@ -137,10 +137,21 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 
 /* CLIENTS */
 .client-list{display:flex;flex-direction:column;gap:8px}
-.client-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);transition:all .2s}
+.client-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);transition:all .2s;gap:12px}
 .client-row:hover{border-color:var(--gold)}
 .client-row b{font-size:14px}
 .client-row span{font-size:12px;color:var(--muted)}
+.client-row.is-selected{border-color:var(--gold);background:#fff}
+.client-row-chk{flex:0 0 auto;width:18px;height:18px;cursor:pointer}
+.client-row-main{flex:1;display:flex;justify-content:space-between;align-items:center;gap:12px;background:none;border:none;padding:0;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.client-bulk-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;border:1px solid var(--border);border-radius:12px;background:var(--ivory)}
+.client-select-all{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
+.client-select-count{font-size:12px;color:var(--muted)}
+.wa-broadcast-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;margin:14px 0}
+.wa-broadcast-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--ivory)}
+.wa-broadcast-row b{font-size:13px}
+.wa-broadcast-row span{font-size:11px;color:var(--muted)}
+.wa-broadcast-row.sent{opacity:.5}
 .client-detail{margin-top:10px}
 
 /* CLIENT AUTOCOMPLETE */
@@ -354,6 +365,14 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
           <div class="field" style="max-width:340px;margin-bottom:0"><input id="client-search" placeholder="Buscar por nombre o teléfono..." oninput="renderClientList()"></div>
           <button class="btn btn-dark btn-sm" onclick="downloadClientsCsv()">⬇ Descargar fichas (CSV)</button>
         </div>
+        <div class="client-bulk-bar">
+          <label class="client-select-all">
+            <input type="checkbox" id="client-select-all-chk" onchange="toggleSelectAllClients(this.checked)">
+            Seleccionar todos
+          </label>
+          <span id="client-select-count" class="client-select-count">0 seleccionados</span>
+          <button class="btn btn-gold btn-sm" id="client-whatsapp-btn" onclick="openWhatsappBroadcastModal()" disabled>📱 Enviar WhatsApp</button>
+        </div>
         <div id="client-list" class="client-list"></div>
         <div id="client-detail-wrap"></div>
       </div>
@@ -527,6 +546,7 @@ let svcAdminCatFilter = 'todas';
 let bookingState = { serviceIds:[], date:null, time:null, employee:'cualquiera' };
 let agendaDate = new Date();
 let openClientId = null;
+let selectedClientIds = new Set();
 let seededServices = false;
 
 function fmtDate(d){
@@ -1268,6 +1288,7 @@ function clearClientPreview(prefix){
 }
 
 /* ============ CLIENTES (panel) ============ */
+let clientListLastIds = [];
 function renderClientList(){
   const searchEl = document.getElementById('client-search');
   const q = (searchEl ? searchEl.value : '').toLowerCase().trim();
@@ -1275,20 +1296,92 @@ function renderClientList(){
   if(!el) return;
   let list = [...clients].sort((a,b)=>a.name.localeCompare(b.name));
   if(q) list = list.filter(c=>c.name.toLowerCase().includes(q) || c.phone.includes(q));
+  clientListLastIds = list.map(c=>c.id);
+  // Descartamos selecciones de clientes que ya no existen (p.ej. eliminados)
+  const validIds = new Set(clients.map(c=>c.id));
+  selectedClientIds.forEach(id=>{ if(!validIds.has(id)) selectedClientIds.delete(id); });
 
   if(list.length===0){
     el.innerHTML = `<div class="empty"><div class="big">No hay clientes todavía</div>Las fichas se crean solas cuando alguien reserva</div>`;
     document.getElementById('client-detail-wrap').innerHTML='';
+    updateClientSelectUI();
     return;
   }
   el.innerHTML = list.map(c=>{
     const visits = bookings.filter(b=>b.clientId===c.id).length;
-    return `<button class="client-row" onclick="openClient('${c.id}')">
-      <div><b>${escapeHtml(c.name)}</b><br><span>${escapeHtml(c.phone)}</span></div>
-      <span>${visits} cita${visits===1?'':'s'}</span>
-    </button>`;
+    const checked = selectedClientIds.has(c.id);
+    return `<div class="client-row ${checked?'is-selected':''}">
+      <input type="checkbox" class="client-row-chk" ${checked?'checked':''} onclick="event.stopPropagation()" onchange="toggleClientSelection('${c.id}', this.checked)">
+      <button class="client-row-main" onclick="openClient('${c.id}')">
+        <div><b>${escapeHtml(c.name)}</b><br><span>${escapeHtml(c.phone)}</span></div>
+        <span>${visits} cita${visits===1?'':'s'}</span>
+      </button>
+    </div>`;
   }).join('');
   if(openClientId) renderClientDetail(openClientId);
+  updateClientSelectUI();
+}
+function toggleClientSelection(id, checked){
+  if(checked) selectedClientIds.add(id); else selectedClientIds.delete(id);
+  const row = document.getElementById('client-list');
+  if(row){
+    const idx = clientListLastIds.indexOf(id);
+    if(idx>-1) row.children[idx]?.classList.toggle('is-selected', checked);
+  }
+  updateClientSelectUI();
+}
+function toggleSelectAllClients(checked){
+  if(checked) clientListLastIds.forEach(id=>selectedClientIds.add(id));
+  else clientListLastIds.forEach(id=>selectedClientIds.delete(id));
+  renderClientList();
+}
+function updateClientSelectUI(){
+  const count = selectedClientIds.size;
+  const countEl = document.getElementById('client-select-count');
+  if(countEl) countEl.textContent = `${count} seleccionado${count===1?'':'s'}`;
+  const btn = document.getElementById('client-whatsapp-btn');
+  if(btn) btn.disabled = count===0;
+  const allChk = document.getElementById('client-select-all-chk');
+  if(allChk) allChk.checked = clientListLastIds.length>0 && clientListLastIds.every(id=>selectedClientIds.has(id));
+}
+function openWhatsappBroadcastModal(){
+  const selected = clients.filter(c=>selectedClientIds.has(c.id));
+  if(selected.length===0){ showToast('Selecciona al menos un cliente'); return; }
+  const root = document.getElementById('modal-root');
+  const rows = selected.map(c=>`
+    <div class="wa-broadcast-row" id="wa-row-${c.id}">
+      <div><b>${escapeHtml(c.name)}</b><br><span>${escapeHtml(c.phone)}</span></div>
+      <button class="btn btn-gold btn-sm" onclick="sendBroadcastToClient('${c.id}')">📱 Abrir chat</button>
+    </div>
+  `).join('');
+  root.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-box" style="max-width:480px">
+        <h3>Enviar WhatsApp a ${selected.length} cliente${selected.length===1?'':'s'}</h3>
+        <div class="field">
+          <label>Mensaje (puedes usar {nombre} para el nombre del cliente)</label>
+          <textarea id="wa-broadcast-msg" rows="5">¡Hola {nombre}! 👋 Desde RITUAL BARBER tenemos una promoción especial para ti. ¡Te esperamos!</textarea>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin:8px 0 4px">WhatsApp no permite el envío masivo automático: se abrirá un chat por cliente con el mensaje ya escrito, y solo tienes que pulsar enviar en cada uno.</p>
+        <div class="wa-broadcast-list">${rows}</div>
+        <div class="row-btns" style="justify-content:flex-end;margin-top:10px">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function sendBroadcastToClient(id){
+  const c = clients.find(x=>x.id===id);
+  if(!c) return;
+  if(!c.phone){ showToast(`${c.name} no tiene teléfono guardado`); return; }
+  const template = document.getElementById('wa-broadcast-msg')?.value || '';
+  const firstName = (c.name||'').split(' ')[0];
+  const text = template.replace(/\{nombre\}/gi, firstName);
+  const phone = formatPhoneForWhatsapp(c.phone);
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+  const row = document.getElementById(`wa-row-${id}`);
+  if(row) row.classList.add('sent');
 }
 function openClient(id){
   openClientId = id;
