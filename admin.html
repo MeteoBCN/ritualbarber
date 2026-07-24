@@ -710,6 +710,7 @@ function renderAgenda(){
     .sort((a,b)=>a.time.localeCompare(b.time));
 
   const emps = empListForAgendaDay(dayBookings);
+  const outer = document.getElementById('tl-outer');
   const headEl = document.getElementById('tl-head');
   const el = document.getElementById('agenda-list');
 
