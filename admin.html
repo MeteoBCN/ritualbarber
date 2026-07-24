@@ -927,17 +927,28 @@ function removeEmpDraft(rowId){
 }
 async function saveEmployees(){
   const cleaned = [];
+  const keptDraft = [];
   empDraft.forEach(e=>{
     const nameEl = document.getElementById(`emp-name-${e.rowId}`);
     const name = (nameEl ? nameEl.value : e.name || '').trim();
     if(!name) return;
     const active = document.getElementById(`emp-active-${e.rowId}`)?.checked !== false;
     const useCustom = document.getElementById(`emp-custom-${e.rowId}`)?.checked === true;
+    const schedule = useCustom ? readScheduleFromForm(`emp-sched-${e.rowId}`) : null;
     const entry = { name, active };
-    if(useCustom) entry.schedule = readScheduleFromForm(`emp-sched-${e.rowId}`);
+    if(useCustom) entry.schedule = schedule;
     cleaned.push(entry);
+    // Mantenemos empDraft sincronizado con lo que realmente se guarda,
+    // para que un repintado posterior (p.ej. por el onSnapshot de settings)
+    // no vuelva a mostrar el horario general en vez del personalizado.
+    e.name = name;
+    e.active = active;
+    e.useCustom = useCustom;
+    e.schedule = schedule;
+    keptDraft.push(e);
   });
   if(!cleaned.length){ showToast('Añade al menos un empleado'); return; }
+  empDraft = keptDraft;
   try{
     await setDoc.set({ employees: cleaned }, { merge:true });
     showToast('Empleados guardados');
