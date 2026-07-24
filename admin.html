@@ -206,11 +206,13 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .emp-chip.sel{background:var(--gold);border-color:var(--gold);color:var(--dark)}
 
 /* EMPLOYEE MANAGEMENT (admin) */
-.emp-manage-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--cream);margin-bottom:8px;transition:opacity .2s}
+.emp-manage-row{padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--cream);margin-bottom:10px;transition:opacity .2s}
 .emp-manage-row.inactive{opacity:.5}
-.emp-manage-row input[type="text"]{flex:1}
+.emp-row-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.emp-row-main input[type="text"]{flex:1;min-width:140px}
 .emp-active-toggle{display:flex;align-items:center;gap:6px;white-space:nowrap;margin:0;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer}
 .emp-active-toggle input[type="checkbox"]{width:auto;accent-color:var(--gold2);cursor:pointer}
+.emp-sched-wrap{margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)}
 
 /* AGENDA 2 EMPLOYEES */
 .agenda-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -234,6 +236,8 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .tl-hourline.tl-hourline-solid{opacity:.9}
 .tl-slot-cell{cursor:pointer}
 .tl-slot-cell:hover{background:rgba(204,181,127,0.16)}
+.tl-slot-off{background:repeating-linear-gradient(45deg, rgba(0,0,0,0.035), rgba(0,0,0,0.035) 6px, transparent 6px, transparent 12px);pointer-events:none}
+.tl-closed-tag{font-family:'Barlow',sans-serif;font-size:9px;letter-spacing:.04em;text-transform:none;font-weight:600;color:var(--muted);background:var(--ivory);border:1px solid var(--border);border-radius:8px;padding:1px 7px}
 .tl-card{background:var(--cream);border:1px solid var(--border);border-left:4px solid var(--gold2);border-radius:8px;padding:6px 9px;margin:1px 4px;overflow:hidden;font-size:11.5px;cursor:pointer;box-shadow:0 1px 3px rgba(26,45,39,.08);transition:all .15s;line-height:1.3}
 .tl-card:hover{border-color:var(--gold);transform:translateY(-1px)}
 .tl-card b{display:block;font-size:12.5px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -504,10 +508,17 @@ const DEFAULT_SCHEDULE = {
   6: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
 };
 let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:[{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}] };
-function daySchedule(dow){ return (settings.schedule && settings.schedule[dow]) || []; }
-function isDayClosed(dow){ return daySchedule(dow).length===0; }
-function dayRangeSpan(dow){
-  const ranges = daySchedule(dow);
+function employeeSchedule(employeeName){
+  if(employeeName){
+    const emp = normalizedEmployees().find(e=>e.name===employeeName);
+    if(emp && emp.schedule && Object.keys(emp.schedule).length) return emp.schedule;
+  }
+  return settings.schedule;
+}
+function daySchedule(dow, employeeName){ const s = employeeSchedule(employeeName); return (s && s[dow]) || []; }
+function isDayClosed(dow, employeeName){ return daySchedule(dow, employeeName).length===0; }
+function dayRangeSpan(dow, employeeName){
+  const ranges = daySchedule(dow, employeeName);
   if(!ranges.length) return null;
   return { start: ranges[0].open, end: ranges[ranges.length-1].close };
 }
@@ -650,7 +661,7 @@ function normalizedEmployees(){
     emps = [{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}];
   }
   return emps
-    .map(e => typeof e === 'string' ? {name:e, active:true} : {name:(e&&e.name)||'', active: !(e&&e.active===false)})
+    .map(e => typeof e === 'string' ? {name:e, active:true, schedule:null} : {name:(e&&e.name)||'', active: !(e&&e.active===false), schedule:(e&&e.schedule)||null})
     .filter(e => e.name && e.name.trim());
 }
 function empListAll(){
@@ -714,19 +725,21 @@ function renderAgenda(){
   const headEl = document.getElementById('tl-head');
   const el = document.getElementById('agenda-list');
 
+  const dow = agendaDate.getDay();
+  const toMin = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+  const empSpans = emps.map(emp => dayRangeSpan(dow, emp));
+  const validSpans = empSpans.filter(Boolean);
+
   outer.style.setProperty('--emp-count', emps.length);
   headEl.style.setProperty('--emp-count', emps.length);
-  headEl.innerHTML = `<div class="tl-head-gutter"></div>` + emps.map(emp=>`
-    <div class="tl-head-emp"><span class="tl-avatar">${escapeHtml((emp||'?').trim().charAt(0).toUpperCase())}</span>${escapeHtml(emp)}</div>
+  headEl.innerHTML = `<div class="tl-head-gutter"></div>` + emps.map((emp,i)=>`
+    <div class="tl-head-emp"><span class="tl-avatar">${escapeHtml((emp||'?').trim().charAt(0).toUpperCase())}</span>${escapeHtml(emp)}${empSpans[i]?'':'<span class="tl-closed-tag">Cerrado hoy</span>'}</div>
   `).join('');
 
   const existingEmpty = outer.querySelector('.tl-empty');
   if(existingEmpty) existingEmpty.remove();
 
-  const dow = agendaDate.getDay();
-  const span = dayRangeSpan(dow);
-
-  if(!span){
+  if(!validSpans.length){
     el.style.display='none';
     outer.insertAdjacentHTML('beforeend', `<div class="empty tl-empty"><div class="big">Cerrado este día</div>La barbería no abre este día según el horario configurado</div>`);
     return;
@@ -736,10 +749,8 @@ function renderAgenda(){
 
   const SLOT_MIN = 15;
   const ROW_H = 22; // px por cada 15 minutos
-  const [openH,openM] = span.start.split(':').map(Number);
-  const [closeH,closeM] = span.end.split(':').map(Number);
-  const openMinutes = openH*60+openM;
-  const closeMinutes = closeH*60+closeM;
+  const openMinutes = Math.min(...validSpans.map(s=>toMin(s.start)));
+  const closeMinutes = Math.max(...validSpans.map(s=>toMin(s.end)));
   const totalRows = Math.max(1, Math.ceil((closeMinutes-openMinutes)/SLOT_MIN));
 
   el.style.gridTemplateRows = `repeat(${totalRows}, ${ROW_H}px)`;
@@ -757,11 +768,19 @@ function renderAgenda(){
   }
 
   emps.forEach((emp,i)=>{
+    const span = empSpans[i];
+    const empOpenMin = span ? toMin(span.start) : null;
+    const empCloseMin = span ? toMin(span.end) : null;
     for(let r=0; r<totalRows; r++){
       const minutes = openMinutes + r*SLOT_MIN;
       const hh = String(Math.floor(minutes/60)).padStart(2,'0');
       const mm = String(minutes%60).padStart(2,'0');
-      html += `<div class="tl-slot-cell" style="grid-row:${r+1};grid-column:${i+2}" onclick="openManualBookingModal('${hh}:${mm}','${escapeHtml(emp).replace(/'/g,"\\'")}')" title="Nueva cita a las ${hh}:${mm} con ${escapeHtml(emp)}"></div>`;
+      const working = span && minutes>=empOpenMin && minutes<empCloseMin;
+      if(working){
+        html += `<div class="tl-slot-cell" style="grid-row:${r+1};grid-column:${i+2}" onclick="openManualBookingModal('${hh}:${mm}','${escapeHtml(emp).replace(/'/g,"\\'")}')" title="Nueva cita a las ${hh}:${mm} con ${escapeHtml(emp)}"></div>`;
+      } else {
+        html += `<div class="tl-slot-off" style="grid-row:${r+1};grid-column:${i+2}" title="${escapeHtml(emp)} no trabaja a esta hora"></div>`;
+      }
     }
   });
 
@@ -834,9 +853,34 @@ async function changeBookingEmployee(id, employee){
   }catch(e){ console.error(e); showToast('No se pudo reasignar'); }
 }
 let empDraft = [];
+let empRowSeq = 0;
 function renderEmployeesForm(){
-  if(!empDraft.length) empDraft = normalizedEmployees().map(e=>({...e}));
+  if(!empDraft.length){
+    empDraft = normalizedEmployees().map(e=>({ rowId: empRowSeq++, name:e.name, active:e.active, useCustom: !!(e.schedule && Object.keys(e.schedule).length), schedule: e.schedule||null }));
+  }
   renderEmpManageList();
+}
+function renderEmpRowHTML(e){
+  const schedForInit = (e.schedule && Object.keys(e.schedule).length) ? e.schedule : settings.schedule;
+  return `
+    <div class="emp-manage-row ${e.active?'':'inactive'}" id="emp-row-${e.rowId}">
+      <div class="emp-row-main">
+        <input type="text" id="emp-name-${e.rowId}" value="${escapeHtml(e.name)}" placeholder="Nombre del empleado" oninput="updateEmpDraftName(${e.rowId}, this.value)">
+        <label class="emp-active-toggle">
+          <input type="checkbox" id="emp-active-${e.rowId}" ${e.active?'checked':''} onchange="onEmpActiveToggle(${e.rowId}, this.checked)">
+          Activo
+        </label>
+        <label class="emp-active-toggle">
+          <input type="checkbox" id="emp-custom-${e.rowId}" ${e.useCustom?'checked':''} onchange="onEmpCustomToggle(${e.rowId}, this.checked)">
+          Horario propio
+        </label>
+        <button class="icon-btn btn-danger" onclick="removeEmpDraft(${e.rowId})" title="Eliminar empleado">✕</button>
+      </div>
+      <div class="emp-sched-wrap ${e.useCustom?'':'hidden'}" id="emp-sched-wrap-${e.rowId}">
+        <div class="sched-hint" style="margin-bottom:10px">Horario específico para este empleado (sustituye al horario general de la barbería)</div>
+        ${buildScheduleEditorHTML(schedForInit, `emp-sched-${e.rowId}`)}
+      </div>
+    </div>`;
 }
 function renderEmpManageList(){
   const el = document.getElementById('emp-manage-list');
@@ -845,34 +889,54 @@ function renderEmpManageList(){
     el.innerHTML = `<div class="empty">No hay empleados. Añade al menos uno.</div>`;
     return;
   }
-  el.innerHTML = empDraft.map((e,i)=>`
-    <div class="emp-manage-row ${e.active?'':'inactive'}">
-      <input type="text" value="${escapeHtml(e.name)}" placeholder="Nombre del empleado" oninput="updateEmpDraftName(${i}, this.value)">
-      <label class="emp-active-toggle">
-        <input type="checkbox" ${e.active?'checked':''} onchange="toggleEmpDraftActive(${i}, this.checked)">
-        Activo
-      </label>
-      <button class="icon-btn btn-danger" onclick="removeEmpDraft(${i})" title="Eliminar empleado">✕</button>
-    </div>
-  `).join('');
+  el.innerHTML = empDraft.map(e=>renderEmpRowHTML(e)).join('');
 }
 function addEmployeeRow(){
-  empDraft.push({name:'', active:true});
-  renderEmpManageList();
+  const e = { rowId: empRowSeq++, name:'', active:true, useCustom:false, schedule:null };
+  empDraft.push(e);
+  const el = document.getElementById('emp-manage-list');
+  if(el){
+    if(el.querySelector('.empty')) el.innerHTML = '';
+    el.insertAdjacentHTML('beforeend', renderEmpRowHTML(e));
+  } else {
+    renderEmpManageList();
+  }
 }
-function updateEmpDraftName(i, val){ if(empDraft[i]) empDraft[i].name = val; }
-function toggleEmpDraftActive(i, val){
-  if(!empDraft[i]) return;
-  empDraft[i].active = val;
-  renderEmpManageList();
+function updateEmpDraftName(rowId, val){
+  const e = empDraft.find(x=>x.rowId===rowId);
+  if(e) e.name = val;
 }
-function removeEmpDraft(i){
+function onEmpActiveToggle(rowId, checked){
+  const e = empDraft.find(x=>x.rowId===rowId);
+  if(e) e.active = checked;
+  const row = document.getElementById(`emp-row-${rowId}`);
+  if(row) row.classList.toggle('inactive', !checked);
+}
+function onEmpCustomToggle(rowId, checked){
+  const e = empDraft.find(x=>x.rowId===rowId);
+  if(e) e.useCustom = checked;
+  const wrap = document.getElementById(`emp-sched-wrap-${rowId}`);
+  if(wrap) wrap.classList.toggle('hidden', !checked);
+}
+function removeEmpDraft(rowId){
   if(!confirm('¿Eliminar este empleado? Las citas ya registradas conservarán su nombre.')) return;
-  empDraft.splice(i,1);
-  renderEmpManageList();
+  empDraft = empDraft.filter(x=>x.rowId!==rowId);
+  const row = document.getElementById(`emp-row-${rowId}`);
+  if(row) row.remove();
+  if(!empDraft.length) renderEmpManageList();
 }
 async function saveEmployees(){
-  const cleaned = empDraft.map(e=>({name:(e.name||'').trim(), active: e.active!==false})).filter(e=>e.name);
+  const cleaned = [];
+  empDraft.forEach(e=>{
+    const nameEl = document.getElementById(`emp-name-${e.rowId}`);
+    const name = (nameEl ? nameEl.value : e.name || '').trim();
+    if(!name) return;
+    const active = document.getElementById(`emp-active-${e.rowId}`)?.checked !== false;
+    const useCustom = document.getElementById(`emp-custom-${e.rowId}`)?.checked === true;
+    const entry = { name, active };
+    if(useCustom) entry.schedule = readScheduleFromForm(`emp-sched-${e.rowId}`);
+    cleaned.push(entry);
+  });
   if(!cleaned.length){ showToast('Añade al menos un empleado'); return; }
   try{
     await setDoc.set({ employees: cleaned }, { merge:true });
@@ -1407,39 +1471,58 @@ function renderSettingsForm(){
   document.getElementById('set-slot').value = String(settings.slot||30);
   renderEmployeesForm();
 }
-function renderScheduleForm(){
-  const el = document.getElementById('schedule-form');
-  if(!el) return;
-  el.innerHTML = SCHED_DAY_ORDER.map(d=>{
-    const ranges = daySchedule(d);
+function buildScheduleEditorHTML(scheduleObj, idPrefix){
+  return SCHED_DAY_ORDER.map(d=>{
+    const ranges = (scheduleObj && scheduleObj[d]) || [];
     const open = ranges.length>0;
     const r0 = ranges[0] || {open:'',close:''};
     const r1 = ranges[1] || {open:'',close:''};
     return `
     <div class="sched-day" data-d="${d}">
       <div class="sched-day-name">${SCHED_DAY_LABEL[d]}</div>
-      <label class="sched-closed"><input type="checkbox" id="sched-open-${d}" ${open?'checked':''} onchange="onDayOpenToggle(${d})"> Abierto</label>
-      <div class="sched-ranges" id="sched-ranges-${d}" style="${open?'':'opacity:.35'}">
+      <label class="sched-closed"><input type="checkbox" id="${idPrefix}-open-${d}" ${open?'checked':''} onchange="onDayOpenToggle('${idPrefix}',${d})"> Abierto</label>
+      <div class="sched-ranges" id="${idPrefix}-ranges-${d}" style="${open?'':'opacity:.35'}">
         <div class="sched-range">
-          <input type="time" id="sched-${d}-0-open" value="${r0.open}" ${open?'':'disabled'}>
+          <input type="time" id="${idPrefix}-${d}-0-open" value="${r0.open}" ${open?'':'disabled'}>
           <span>a</span>
-          <input type="time" id="sched-${d}-0-close" value="${r0.close}" ${open?'':'disabled'}>
+          <input type="time" id="${idPrefix}-${d}-0-close" value="${r0.close}" ${open?'':'disabled'}>
         </div>
         <div class="sched-range">
-          <input type="time" id="sched-${d}-1-open" value="${r1.open}" ${open?'':'disabled'}>
+          <input type="time" id="${idPrefix}-${d}-1-open" value="${r1.open}" ${open?'':'disabled'}>
           <span>a</span>
-          <input type="time" id="sched-${d}-1-close" value="${r1.close}" ${open?'':'disabled'}>
+          <input type="time" id="${idPrefix}-${d}-1-close" value="${r1.close}" ${open?'':'disabled'}>
           <span class="sched-hint">(turno tarde, opcional)</span>
         </div>
       </div>
     </div>`;
   }).join('');
 }
-function onDayOpenToggle(d){
-  const open = document.getElementById(`sched-open-${d}`).checked;
-  const wrap = document.getElementById(`sched-ranges-${d}`);
+function onDayOpenToggle(idPrefix, d){
+  const open = document.getElementById(`${idPrefix}-open-${d}`).checked;
+  const wrap = document.getElementById(`${idPrefix}-ranges-${d}`);
   wrap.style.opacity = open ? '1' : '.35';
   wrap.querySelectorAll('input').forEach(inp=>inp.disabled = !open);
+}
+function readScheduleFromForm(idPrefix){
+  const schedule = {};
+  SCHED_DAY_ORDER.forEach(d=>{
+    const isOpen = document.getElementById(`${idPrefix}-open-${d}`).checked;
+    if(!isOpen){ schedule[d] = []; return; }
+    const ranges = [];
+    const o0 = document.getElementById(`${idPrefix}-${d}-0-open`).value;
+    const c0 = document.getElementById(`${idPrefix}-${d}-0-close`).value;
+    const o1 = document.getElementById(`${idPrefix}-${d}-1-open`).value;
+    const c1 = document.getElementById(`${idPrefix}-${d}-1-close`).value;
+    if(o0 && c0) ranges.push({ open:o0, close:c0 });
+    if(o1 && c1) ranges.push({ open:o1, close:c1 });
+    schedule[d] = ranges;
+  });
+  return schedule;
+}
+function renderScheduleForm(){
+  const el = document.getElementById('schedule-form');
+  if(!el) return;
+  el.innerHTML = buildScheduleEditorHTML(settings.schedule, 'sched');
 }
 /* ============ FACTURACIÓN ============ */
 let factInited = false;
@@ -1544,19 +1627,7 @@ function renderFactList(list){
 
 async function saveSettings(){
   const slot = Number(document.getElementById('set-slot').value || 30);
-  const schedule = {};
-  SCHED_DAY_ORDER.forEach(d=>{
-    const isOpen = document.getElementById(`sched-open-${d}`).checked;
-    if(!isOpen){ schedule[d] = []; return; }
-    const ranges = [];
-    const o0 = document.getElementById(`sched-${d}-0-open`).value;
-    const c0 = document.getElementById(`sched-${d}-0-close`).value;
-    const o1 = document.getElementById(`sched-${d}-1-open`).value;
-    const c1 = document.getElementById(`sched-${d}-1-close`).value;
-    if(o0 && c0) ranges.push({ open:o0, close:c0 });
-    if(o1 && c1) ranges.push({ open:o1, close:c1 });
-    schedule[d] = ranges;
-  });
+  const schedule = readScheduleFromForm('sched');
   try{
     await setDoc.set({ slot, schedule }, { merge:true });
     showToast('Horario guardado');
