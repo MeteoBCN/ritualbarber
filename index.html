@@ -431,7 +431,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .info-grid { grid-template-columns:1fr; }
 
   .inicio-hero { padding:4rem 1rem 3rem; }
-  .hero-acordeon { width:90vw; margin-left:auto; margin-right:auto; }
+  .hero-info-plana { width:90vw; margin-left:auto; margin-right:auto; }
 }
 
 @media(max-width:400px) {
@@ -445,60 +445,29 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 .sep { height:1px; background:linear-gradient(to right,transparent,var(--borde),transparent); margin:1.1rem 0; }
 .empty-state { text-align:center; color:var(--suave); padding:2.5rem 0; }
 
-/* ── HERO ACORDEÓN ── */
-.hero-acordeon {
+/* ── HERO INFO (texto plano) ── */
+.hero-info-plana {
   margin: 1.6rem auto 0;
   width: min(420px, 88vw);
   text-align: center;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
-.hero-drop-item {
+.hero-info-item {
   padding: 0.75rem 0.2rem;
-  cursor: pointer;
 }
-.hero-drop-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-.hero-drop-item .drop-titulo {
+.hero-info-titulo {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: var(--suave);
-  transition: color 0.2s;
-}
-.hero-drop-item:hover .drop-titulo,
-.hero-drop-item.open .drop-titulo {
   color: var(--oro);
 }
-.hero-drop-item .drop-arrow {
-  font-size: 0.55rem;
-  color: var(--suave);
-  transition: transform 0.25s, color 0.2s;
-  flex-shrink: 0;
-}
-.hero-drop-item.open .drop-arrow {
-  transform: rotate(180deg);
-  color: var(--oro);
-}
-.hero-drop-item .drop-desc {
+.hero-info-desc {
   font-family: 'Barlow', sans-serif;
   font-size: 0.8rem;
   color: var(--oro);
   letter-spacing: 0.3px;
   line-height: 1.6;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-}
-.hero-drop-item.open .drop-desc {
-  max-height: 80px;
   padding-top: 0.4rem;
 }
 .hero-drop-divider {
@@ -611,38 +580,26 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <img src="barberia2.jpg" alt="Ritual Barber" style="width:100%;height:100%;object-fit:cover;display:block;">
     </div>
 
-    <!-- Acordeón hero -->
-    <div class="hero-acordeon">
-      <div class="hero-drop-item open" onclick="this.classList.toggle('open')">
-        <div class="hero-drop-header">
-          <span class="drop-titulo">Servicios y Tratamientos</span>
-          
-        </div>
-        <div class="drop-desc">Cortes clásicos y modernos, barbería profesional y tratamientos capilares a medida.</div>
+    <!-- Info hero (texto plano) -->
+    <div class="hero-info-plana">
+      <div class="hero-info-item">
+        <div class="hero-info-titulo">Servicios y Tratamientos</div>
+        <div class="hero-info-desc">Cortes clásicos y modernos, barbería profesional y tratamientos capilares a medida.</div>
       </div>
       <div class="hero-drop-divider"></div>
-      <div class="hero-drop-item open" onclick="this.classList.toggle('open')">
-        <div class="hero-drop-header">
-          <span class="drop-titulo">Profesionales Expertos</span>
-          
-        </div>
-        <div class="drop-desc">Nuestro equipo está aquí para ti. Especialistas formados en las últimas técnicas de barbería y cuidado del cabello.</div>
+      <div class="hero-info-item">
+        <div class="hero-info-titulo">Profesionales Expertos</div>
+        <div class="hero-info-desc">Nuestro equipo está aquí para ti. Especialistas formados en las últimas técnicas de barbería y cuidado del cabello.</div>
       </div>
       <div class="hero-drop-divider"></div>
-      <div class="hero-drop-item open" onclick="this.classList.toggle('open')">
-        <div class="hero-drop-header">
-          <span class="drop-titulo">Horario</span>
-          
-        </div>
-        <div class="drop-desc">Lunes a Sábado de 10:00 a 21:00 h.</div>
+      <div class="hero-info-item">
+        <div class="hero-info-titulo">Horario</div>
+        <div class="hero-info-desc">Lunes de 16:00 a 21:00<br>Martes a Sábado de 10:00 a 14:00 y 15:00 a 21:00</div>
       </div>
       <div class="hero-drop-divider"></div>
-      <div class="hero-drop-item open" onclick="this.classList.toggle('open')">
-        <div class="hero-drop-header">
-          <span class="drop-titulo">Nos encontrará en...</span>
-          
-        </div>
-        <div class="drop-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
+      <div class="hero-info-item">
+        <div class="hero-info-titulo">Nos encontrará en...</div>
+        <div class="hero-info-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
       </div>
     </div>
 
