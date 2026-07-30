@@ -855,6 +855,7 @@ function openBookingDetail(bookingId){
         </div>
         <div class="row-btns" style="margin-top:10px">
           <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cerrar</button>
+          <button class="btn btn-ghost btn-sm btn-danger" onclick="deleteBooking('${b.id}')">🗑 Eliminar cita</button>
         </div>
       </div>
     </div>
@@ -865,6 +866,14 @@ async function setBookingStatus(id, status){
     await bkCol.doc(id).update({ status });
     showToast('Reserva actualizada');
   }catch(e){ console.error(e); showToast('No se pudo actualizar'); }
+}
+async function deleteBooking(id){
+  if(!confirm('¿Seguro que quieres eliminar esta cita? Esta acción no se puede deshacer.')) return;
+  try{
+    await bkCol.doc(id).delete();
+    closeModal();
+    showToast('Cita eliminada');
+  }catch(e){ console.error(e); showToast('No se pudo eliminar la cita'); }
 }
 async function changeBookingEmployee(id, employee){
   try{
