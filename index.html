@@ -32,7 +32,7 @@ nav {
   border-bottom:1px solid var(--borde);
   padding:0 1.8rem;
   display:flex; flex-direction:row; align-items:center;
-  justify-content:space-between;
+  justify-content:flex-end;
   position:sticky; top:0; z-index:200;
   box-shadow:0 2px 24px rgba(0,0,0,0.4);
   min-height:42px;
@@ -105,7 +105,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 
 .inicio-hero {
   background:linear-gradient(160deg, #1a2d27 0%, #26413a 60%);
-  padding:6rem 2rem 4rem;
+  padding:6rem 2rem 7rem;
   text-align:center;
   position:relative; overflow:hidden;
   min-height: calc(100vh - 42px);
@@ -263,6 +263,10 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .wa-float { width:52px; height:52px; bottom:1.2rem; right:1.2rem; }
   .wa-float svg { width:26px; height:26px; }
 }
+#sec-inicio-publica.active ~ .wa-float { bottom:6rem; }
+@media (max-width:600px) {
+  #sec-inicio-publica.active ~ .wa-float { bottom:5.2rem; }
+}
 
 /* ── MODAL ── */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:300; align-items:center; justify-content:center; }
@@ -393,11 +397,21 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 .tabla-ventas td { padding:0.62rem 0.88rem; border-bottom:1px solid var(--fondo2); font-size:0.84rem; color:var(--oro); }
 
 /* ── RESPONSIVE ── */
-.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:0.6rem; margin-left:auto; }
-.hamburger span { display:block; width:22px; height:2px; background:var(--oro); border-radius:2px; transition:all 0.3s; }
-.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger {
+  display:none; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  background:rgba(204,181,127,0.14);
+  border:1px solid var(--oro);
+  border-radius:9px;
+  cursor:pointer;
+  width:46px; height:46px;
+  padding:0; margin-left:auto;
+  transition:background 0.2s;
+}
+.hamburger:hover, .hamburger:active { background:rgba(204,181,127,0.24); }
+.hamburger span { display:block; width:24px; height:3px; background:var(--oro); border-radius:2px; transition:all 0.3s; }
+.hamburger.open span:nth-child(1) { transform:translateY(9px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity:0; }
-.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.hamburger.open span:nth-child(3) { transform:translateY(-9px) rotate(-45deg); }
 
 .nav-links { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:0; }
 .nav-sep { width:1px; background:var(--borde); height:1.4rem; margin:0 0.4rem; align-self:center; }
@@ -430,7 +444,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 
   .info-grid { grid-template-columns:1fr; }
 
-  .inicio-hero { padding:4rem 1rem 3rem; }
+  .inicio-hero { padding:4rem 1rem 6.5rem; }
   .hero-info-plana { width:90vw; margin-left:auto; margin-right:auto; }
 }
 
@@ -476,31 +490,40 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   opacity: 0.4;
 }
 
-/* ── RESERVA CARD EN HERO ── */
+/* ── RESERVA CARD EN HERO (fija abajo al hacer scroll) ── */
 .hero-reserva-wrap {
-  margin: 2rem auto 0;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  margin: 0;
   display: flex;
   justify-content: center;
+  padding: 0.9rem 1.2rem calc(0.9rem + env(safe-area-inset-bottom));
+  background: #1a2d27;
+  border-top: 1px solid var(--borde);
+  box-shadow: 0 -6px 24px rgba(0,0,0,0.35);
+  z-index: 150;
 }
 .hero-reserva-card {
-  border: 1px solid var(--oro);
+  border: none;
   border-radius: 12px;
   padding: 1.1rem 2.5rem;
   cursor: pointer;
   text-align: center;
   transition: all 0.25s;
-  background: transparent;
+  background: var(--oro);
+  width: 100%; max-width: 420px;
+  box-shadow: 0 4px 16px rgba(204,181,127,0.35);
 }
 .hero-reserva-card:hover {
-  background: rgba(204,181,127,0.08);
+  background: var(--oro2);
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(204,181,127,0.15);
+  box-shadow: 0 8px 28px rgba(204,181,127,0.45);
 }
 .hero-reserva-titulo {
   font-family: 'Cormorant Garamond', serif;
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--oro);
+  color: var(--texto);
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -538,7 +561,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ NAV ════════════ -->
 <nav>
-  <div class="logo" onclick="showSection('inicio-publica');cerrarMenu()">RITUAL BARBER</div>
   <div class="nav-links" id="nav-links">
     <button onclick="showSection('inicio-publica');cerrarMenu()" id="nav-inicio-publica" class="active">Inicio</button>
     <button onclick="window.location.href='reservar.html'" id="nav-reservar">Reservar Cita</button>
@@ -554,7 +576,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Logo RB -->
     <div style="margin:0 auto 1.2rem;display:flex;justify-content:center;">
-      <img src="logo.png" alt="Ritual Barber Logo"
+      <img src="logo__1_.png" alt="Ritual Barber Logo"
            style="width:120px;height:120px;border-radius:18px;border:2px solid #ccb57f;box-shadow:0 0 18px rgba(204,181,127,0.25);display:block;">
     </div>
 
@@ -583,13 +605,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <!-- Info hero (texto plano) -->
     <div class="hero-info-plana">
       <div class="hero-info-item">
-        <div class="hero-info-titulo">Barbería</div>
+        <div class="hero-info-titulo">Servicios y Tratamientos</div>
         <div class="hero-info-desc">Cortes clásicos y modernos, barbería profesional y tratamientos capilares a medida.</div>
-      </div>
-       <div class="hero-info-plana">
-      <div class="hero-info-item">
-        <div class="hero-info-titulo">Colorimetría y tratamientos faciales</div>
-        <div class="hero-info-desc">Mechas, tratamientos faciales, depilación cera facial.</div>
       </div>
       <div class="hero-drop-divider"></div>
       <div class="hero-info-item">
@@ -599,12 +616,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="hero-drop-divider"></div>
       <div class="hero-info-item">
         <div class="hero-info-titulo">Horario</div>
-        <div class="hero-info-desc">Lunes de 16:00 a 21:00<br>Martes a Sábado de 09:00 a 14:00 y 15:00 a 21:00</div>
-         <div class="hero-info-plana">
-      <div class="hero-info-item">
-        <div class="hero-info-titulo">Teléfonos</div>
-        <div class="hero-info-desc">Barbería 936271991 & Whatsapp 641424152 (dejar mensaje)</div>
-      </div>
+        <div class="hero-info-desc">Lunes de 16:00 a 21:00<br>Martes a Sábado de 10:00 a 14:00 y 15:00 a 21:00</div>
       </div>
       <div class="hero-drop-divider"></div>
       <div class="hero-info-item">
@@ -631,25 +643,25 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ RESERVAR CITA ════════════ -->
 <div class="section" id="sec-reservar">
-  <h2>Reservar Cita</h2>
+  <h2>✂ Reservar Cita</h2>
 
   <div style="max-width:680px;margin:0 auto;">
 
     <!-- Info rápida -->
     <div class="info-grid" style="margin-bottom:2rem;">
       <div class="info-card">
-        <h3>Ubicación</h3>
+        <h3>📍 Ubicación</h3>
         <p>Mossèn Jacint Verdaguer 205</p>
         <p style="font-size:0.8rem;margin-top:0.4rem;">Sant Vicenç dels Horts · Barcelona</p>
       </div>
       <div class="info-card">
-        <h3>Horario</h3>
+        <h3>🕐 Horario</h3>
         <p>Lunes a Sábado</p>
-        <p style="font-size:0.8rem;margin-top:0.4rem;">09:00 - 14:00 y 15:00 a 21:00 h</p>
+        <p style="font-size:0.8rem;margin-top:0.4rem;">10:00 – 21:00 h</p>
       </div>
       <div class="info-card">
-        <h3>Contacto</h3>
-        <p><a href="tel:+34641424152" style="color:var(--oro);text-decoration:none;">+34 641424152</a></p>
+        <h3>📞 Contacto</h3>
+        <p><a href="tel:+34600000000" style="color:var(--oro);text-decoration:none;">+34 600 000 000</a></p>
         <p style="font-size:0.8rem;margin-top:0.4rem;">Llamadas y WhatsApp</p>
       </div>
     </div>
@@ -680,7 +692,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     </div>
     <div class="info-card">
       <h3>Horario</h3>
-      <p>L-S: 09:00 - 21:00</p>
+      <p>L-S: 10:00 - 21:00</p>
       <p style="font-size:0.8rem;margin-top:0.5rem;">Sábado y domingo disponible</p>
     </div>
   </div>
