@@ -17,7 +17,7 @@
   --oro2:     #a8914a;
   --oro3:     #8a7339;
   --texto:    #26413a;
-  --suave:    #4a7068;
+  --suave:    #d8d2c2;
   --rojo:     #c0392b;
   --verde:    #2e7d5a;
   --verde2:   #38a16e;
@@ -490,6 +490,117 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   opacity: 0.4;
 }
 
+/* ── HORARIO (tabla de bloques) ── */
+.horario-tabla {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  text-align: left;
+}
+.horario-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0.85rem;
+  background: rgba(0,0,0,0.16);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+}
+.horario-dia {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--oro);
+}
+.horario-horas {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  color: var(--suave);
+  white-space: nowrap;
+}
+.horario-cerrado {
+  border-color: rgba(192,57,43,0.4);
+  background: rgba(192,57,43,0.08);
+}
+.horario-cerrado .horario-horas {
+  color: #e08a7d;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+/* ── MAPA (misma estética que las fotos) ── */
+.hero-mapa-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 220px;
+  margin: 1.6rem auto 2rem;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--borde);
+  transform: translateZ(0);
+}
+
+/* ── FOOTER ── */
+.hero-footer {
+  width: 100%;
+  max-width: 420px;
+  margin: 1rem auto 0;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--borde);
+  text-align: center;
+}
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--oro);
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--oro3);
+  border-radius: 30px;
+  transition: all 0.2s;
+}
+.footer-social:hover {
+  background: var(--oro);
+  color: var(--fondo3);
+  border-color: var(--oro);
+}
+.footer-legal {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+}
+.footer-legal a {
+  color: var(--suave);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+.footer-legal a:hover { color: var(--oro); }
+.footer-dot { color: var(--borde); }
+.footer-copy {
+  margin-top: 0.7rem;
+  font-size: 0.68rem;
+  color: var(--suave);
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+}
+
 /* ── RESERVA CARD EN HERO (fija abajo al hacer scroll) ── */
 .hero-reserva-wrap {
   position: fixed;
@@ -616,27 +727,60 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="hero-drop-divider"></div>
       <div class="hero-info-item">
         <div class="hero-info-titulo">Horario</div>
-        <div class="hero-info-desc">Lunes de 16:00 a 21:00<br>Martes a Sábado de 10:00 a 14:00 y 15:00 a 21:00</div>
+        <div class="horario-tabla">
+          <div class="horario-fila">
+            <span class="horario-dia">Lunes</span>
+            <span class="horario-horas">16:00 – 21:00</span>
+          </div>
+          <div class="horario-fila">
+            <span class="horario-dia">Martes a Sábado</span>
+            <span class="horario-horas">10:00–14:00 · 15:00–21:00</span>
+          </div>
+          <div class="horario-fila horario-cerrado">
+            <span class="horario-dia">Domingo</span>
+            <span class="horario-horas">Cerrado</span>
+          </div>
+        </div>
       </div>
       <div class="hero-drop-divider"></div>
       <div class="hero-info-item">
-        <div class="hero-info-titulo">Nos encontrará en...</div>
+        <div class="hero-info-titulo">Dónde Estamos</div>
         <div class="hero-info-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
       </div>
     </div>
 
     <!-- Mapa Google -->
-    <div style="width:min(420px,88vw);margin:1.2rem auto 0;border-radius:12px;overflow:hidden;border:1px solid var(--borde);">
+    <div class="hero-mapa-wrap">
       <iframe
         src="https://www.google.com/maps?q=Moss%C3%A8n+Jacint+Verdaguer+205,+Sant+Vicen%C3%A7+dels+Horts,+Barcelona&output=embed"
         width="100%"
         height="220"
-        style="border:0;display:block;"
+        style="border:0;display:block;border-radius:16px;"
         allowfullscreen=""
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
       </iframe>
     </div>
+
+    <!-- Footer -->
+    <footer class="hero-footer">
+      <a href="https://instagram.com/ritualbarbersvh" target="_blank" rel="noopener" class="footer-social" aria-label="Instagram Ritual Barber">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+          <path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.24 2.23.41.56.21.96.47 1.38.89.42.42.68.82.89 1.38.17.42.36 1.05.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.8-.41 2.23-.21.56-.47.96-.89 1.38-.42.42-.82.68-1.38.89-.42.17-1.05.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.24-2.23-.41a3.72 3.72 0 0 1-1.38-.89 3.72 3.72 0 0 1-.89-1.38c-.17-.42-.36-1.05-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.24-1.8.41-2.23.21-.56.47-.96.89-1.38.42-.42.82-.68 1.38-.89.42-.17 1.05-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56a5.9 5.9 0 0 0-2.14 1.39A5.9 5.9 0 0 0 .61 4.16C.31 4.92.11 5.79.05 7.07.01 8.35 0 8.76 0 12s.01 3.65.07 4.93c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.39 2.14a5.9 5.9 0 0 0 2.14 1.39c.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.65-.01 4.93-.07c1.28-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.14-1.39 5.9 5.9 0 0 0 1.39-2.14c.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.93s-.01-3.65-.07-4.93c-.06-1.28-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.39-2.14A5.9 5.9 0 0 0 19.84.63c-.76-.3-1.63-.5-2.91-.56C15.65.01 15.24 0 12 0Z"/>
+          <path d="M12 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84Zm0 10.16A4 4 0 1 1 16 12a4 4 0 0 1-4 4Z"/>
+          <circle cx="18.41" cy="5.59" r="1.44"/>
+        </svg>
+        <span>ritualbarbersvh</span>
+      </a>
+      <div class="footer-legal">
+        <a href="privacidad.html">Política de Privacidad</a>
+        <span class="footer-dot">·</span>
+        <a href="aviso-legal.html">Aviso Legal</a>
+        <span class="footer-dot">·</span>
+        <a href="cookies.html">Política de Cookies</a>
+      </div>
+      <div class="footer-copy">© 2026 Ritual Barber</div>
+    </footer>
 
   </div>
 </div>
