@@ -44,56 +44,57 @@ label{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1
 .tab-btn{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:10px 20px;border-radius:20px;color:var(--gold-bright);opacity:.55;font-weight:600;transition:all .25s}
 .tab-btn.active{background:var(--gold2);color:var(--cream);opacity:1}
 
-main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
+main{max-width:820px;margin:0 auto;padding:28px 24px 80px}
 .view{display:none}
 .view.active{display:block}
 .hidden{display:none !important}
 
-.page-head{margin-bottom:36px;text-align:center}
-.page-head h1{font-size:clamp(28px,4vw,42px);margin-bottom:8px;color:var(--dark)}
-.page-head p{color:var(--muted);font-style:italic;font-size:14px}
+.page-head{margin-bottom:26px;text-align:center}
+.page-head h1{font-size:clamp(24px,3.6vw,34px);margin-bottom:6px;color:var(--dark)}
+.page-head p{color:var(--muted);font-style:italic;font-size:13px}
 
 /* STEPS */
-.steps{display:flex;justify-content:center;gap:28px;margin-bottom:40px}
-.step-dot{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--border);font-weight:600}
-.step-dot .n{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px}
+.steps{display:flex;justify-content:center;gap:22px;margin-bottom:28px}
+.step-dot{display:flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--border);font-weight:600}
+.step-dot .n{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px}
 .step-dot.active{color:var(--dark)}
 .step-dot.active .n{background:var(--gold);border-color:var(--gold);color:var(--dark)}
 .step-dot.done .n{background:var(--charcoal);border-color:var(--charcoal);color:var(--cream)}
 
 /* CATEGORY FILTER */
-.cat-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;justify-content:center}
-.cat-chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border-radius:18px;border:1px solid var(--border);color:var(--muted);font-weight:600;background:var(--ivory);transition:all .2s}
+.cat-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;justify-content:center}
+.cat-chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:16px;border:1px solid var(--border);color:var(--muted);font-weight:600;background:var(--ivory);transition:all .2s}
 .cat-chip:hover{border-color:var(--gold)}
 .cat-chip.sel{background:var(--gold);border-color:var(--gold);color:var(--dark)}
-.cat-group{margin-bottom:32px}
-.cat-group h3{font-size:16px;letter-spacing:.06em;color:var(--gold2);margin-bottom:12px;text-transform:uppercase;font-weight:700;font-family:'Barlow Condensed',sans-serif}
-.svc-card .cat-tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);font-weight:700;margin-bottom:4px}
+.cat-group{margin-bottom:20px}
+.cat-group h3{font-size:13px;letter-spacing:.08em;color:var(--gold2);margin-bottom:8px;text-transform:uppercase;font-weight:700;font-family:'Barlow Condensed',sans-serif}
 
-/* SERVICE CARDS */
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.svc-card{background:var(--ivory);border:1px solid var(--border);border-radius:14px;padding:22px;text-align:left;transition:all .25s;position:relative}
-.svc-card:hover{border-color:var(--gold);transform:translateY(-2px)}
-.svc-card.sel{border-color:var(--gold);background:var(--sel-bg);box-shadow:0 0 0 1px var(--gold)}
-.svc-card h4{font-size:18px;margin-bottom:6px;color:var(--dark)}
-.svc-card .dur{font-size:11px;color:var(--muted);margin-bottom:10px}
-.svc-card .price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold2)}
+/* SERVICE ROWS (lista compacta) */
+.svc-list{display:flex;flex-direction:column;gap:7px}
+.svc-row-public{display:flex;align-items:center;gap:14px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--ivory);text-align:left;transition:all .18s;width:100%}
+.svc-row-public:hover{border-color:var(--gold)}
+.svc-row-public.sel{border-color:var(--gold);background:var(--sel-bg);box-shadow:0 0 0 1px var(--gold)}
+.svc-row-public .srp-check{flex-shrink:0;width:19px;height:19px;border-radius:50%;border:1px solid var(--border);background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .18s}
+.svc-row-public.sel .srp-check{background:var(--gold);border-color:var(--gold);color:var(--dark)}
+.svc-row-public .srp-name{flex:1;min-width:0;font-size:14.5px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.svc-row-public .srp-dur{flex-shrink:0;font-size:11px;color:var(--muted);width:58px}
+.svc-row-public .srp-price{flex-shrink:0;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--gold2);width:64px;text-align:right}
 
 .empty{text-align:center;padding:60px 20px;color:var(--muted);font-style:italic}
 .empty .big{font-size:15px;margin-bottom:6px;color:var(--dark);font-style:normal;font-weight:600}
 
 /* DATE STRIP */
-.date-strip{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 16px}
-.date-chip{flex-shrink:0;width:64px;padding:12px 4px;border:1px solid var(--border);border-radius:12px;text-align:center;background:var(--ivory);transition:all .2s}
-.date-chip .dow{font-family:'Barlow Condensed',sans-serif;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:.08em}
-.date-chip .num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;margin:2px 0}
+.date-strip{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 14px}
+.date-chip{flex-shrink:0;width:58px;padding:10px 4px;border:1px solid var(--border);border-radius:11px;text-align:center;background:var(--ivory);transition:all .2s}
+.date-chip .dow{font-family:'Barlow Condensed',sans-serif;font-size:9px;text-transform:uppercase;color:var(--muted);letter-spacing:.08em}
+.date-chip .num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin:2px 0}
 .date-chip.sel{background:var(--gold);border-color:var(--gold)}
 .date-chip.sel .dow,.date-chip.sel .num{color:var(--dark)}
 .date-chip.closed{opacity:.35;pointer-events:none}
 
 /* TIME SLOTS */
-.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
-.slot-btn{padding:11px 4px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--cream);transition:all .2s}
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.slot-btn{padding:10px 4px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;background:var(--cream);transition:all .2s}
 .slot-btn:hover{border-color:var(--gold)}
 .slot-btn.sel{background:var(--gold);color:var(--dark);border-color:var(--gold)}
 .slot-btn:disabled{opacity:.3;pointer-events:none;text-decoration:line-through}
@@ -192,9 +193,7 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .confirm-box .mark{width:56px;height:56px;border-radius:50%;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 22px}
 
 /* MULTI-SERVICE SELECTION */
-.svc-card .check{position:absolute;top:14px;right:14px;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent}
-.svc-card.sel .check{background:var(--gold);border-color:var(--gold);color:var(--dark)}
-.selection-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:14px 0;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.selection-bar{position:sticky;bottom:0;background:var(--cream);border-top:1px solid var(--border);padding:12px 0;margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .selection-bar .sum{font-size:13px;color:var(--muted)}
 .selection-bar .sum b{color:var(--dark);font-family:'Cormorant Garamond',serif;font-size:17px}
 
@@ -254,8 +253,12 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
   .two-col{grid-template-columns:1fr}
   .grid3{grid-template-columns:1fr}
   .svc-row{grid-template-columns:1fr 1fr}
+  .svc-row-public{gap:10px;padding:11px 13px}
+  .svc-row-public .srp-name{font-size:13.5px}
+  .svc-row-public .srp-dur{width:44px;font-size:10px}
+  .svc-row-public .srp-price{width:54px;font-size:15px}
   .topbar{padding:14px 16px}
-  main{padding:24px 14px 90px}
+  main{padding:22px 14px 70px}
 }
 </style>
 <body>
@@ -532,16 +535,15 @@ function renderServiceCards(){
   const el = document.getElementById('svc-cards');
   if(!el) return;
   if(services.length===0){
-    el.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="big">Aún no hay servicios cargados</div>Añádelos desde el Panel → Servicios</div>`;
+    el.innerHTML = `<div class="empty"><div class="big">Aún no hay servicios cargados</div>Añádelos desde el Panel → Servicios</div>`;
     return;
   }
-  const cardHtml = s => `
-    <button class="svc-card ${bookingState.serviceIds.includes(s.id)?'sel':''}" onclick="selectService('${s.id}')">
-      <span class="check">✓</span>
-      <div class="cat-tag">${escapeHtml(catLabel(s.cat))}</div>
-      <h4>${escapeHtml(s.nombre)}</h4>
-      <div class="dur">${s.duracion} min</div>
-      <div class="price">${euros(s.precio)}</div>
+  const rowHtml = s => `
+    <button class="svc-row-public ${bookingState.serviceIds.includes(s.id)?'sel':''}" onclick="selectService('${s.id}')">
+      <span class="srp-check">✓</span>
+      <span class="srp-name">${escapeHtml(s.nombre)}</span>
+      <span class="srp-dur">${s.duracion} min</span>
+      <span class="srp-price">${euros(s.precio)}</span>
     </button>
   `;
 
@@ -550,8 +552,8 @@ function renderServiceCards(){
   if(categoryFilter !== 'todas'){
     const filtered = ordered.filter(s=>(s.cat||'otros')===categoryFilter);
     el.innerHTML = filtered.length
-      ? `<div class="card-grid">${filtered.map(cardHtml).join('')}</div>`
-      : `<div class="empty" style="grid-column:1/-1">No hay servicios en esta categoría</div>`;
+      ? `<div class="svc-list">${filtered.map(rowHtml).join('')}</div>`
+      : `<div class="empty">No hay servicios en esta categoría</div>`;
     return;
   }
 
@@ -564,7 +566,7 @@ function renderServiceCards(){
   el.innerHTML = cats.map(c => `
     <div class="cat-group">
       <h3>${c.emoji?escapeHtml(c.emoji)+' ':''}${escapeHtml(c.label)}</h3>
-      <div class="card-grid">${grouped[c.key].map(cardHtml).join('')}</div>
+      <div class="svc-list">${grouped[c.key].map(rowHtml).join('')}</div>
     </div>
   `).join('');
 }
