@@ -471,6 +471,17 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
           </div>
         </div>
 
+        <div class="card" style="margin-bottom:24px">
+          <h3 style="margin-bottom:8px">⭐ Servicio destacado</h3>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Aparece como una galleta destacada encima de las categorías en la página de reservas online.</p>
+          <div class="field" style="max-width:340px">
+            <label>Servicio a destacar</label>
+            <select id="set-featured-svc" onchange="updateFeaturedService(this.value)">
+              <option value="">— Ninguno —</option>
+            </select>
+          </div>
+        </div>
+
         <h3 style="margin-bottom:14px">Servicios y precios</h3>
         <div id="svc-admin-tabs" class="cat-filter" style="justify-content:flex-start;margin-bottom:16px"></div>
         <div id="svc-admin-list"></div>
@@ -1600,11 +1611,27 @@ function selectSvcAdminCat(cat){
   renderSvcAdminTabs();
   renderSvcAdminList();
 }
+function renderFeaturedServiceSelect(){
+  const sel = document.getElementById('set-featured-svc');
+  if(!sel) return;
+  const current = settings.featuredServiceId || '';
+  sel.innerHTML = '<option value="">— Ninguno —</option>' +
+    sortedServices().map(s=>`<option value="${s.id}" ${current===s.id?'selected':''}>${escapeHtml(s.nombre)}</option>`).join('');
+  sel.value = current;
+}
+async function updateFeaturedService(id){
+  try{
+    settings.featuredServiceId = id;
+    await setDoc.set({ featuredServiceId: id }, { merge:true });
+    showToast(id ? 'Servicio destacado actualizado' : 'Servicio destacado desactivado');
+  }catch(e){ console.error(e); showToast('No se pudo actualizar el servicio destacado'); }
+}
 function renderSvcAdminList(){
   const el = document.getElementById('svc-admin-list');
   if(!el) return;
   renderSvcAdminTabs();
   renderCategoriesAdmin();
+  renderFeaturedServiceSelect();
   if(services.length===0){
     el.innerHTML = `<div class="empty"><div class="big">Todavía no has añadido servicios</div>Usa el formulario de abajo para crear el primero</div>`;
     return;

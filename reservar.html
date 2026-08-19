@@ -61,6 +61,19 @@ main{max-width:820px;margin:0 auto;padding:28px 24px 80px}
 .step-dot.active .n{background:var(--gold);border-color:var(--gold);color:var(--dark)}
 .step-dot.done .n{background:var(--charcoal);border-color:var(--charcoal);color:var(--cream)}
 
+/* FEATURED SERVICE (galleta destacada) */
+.featured-svc-wrap{margin-bottom:18px}
+.featured-svc{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 18px;border-radius:14px;border:1px solid var(--gold);background:linear-gradient(135deg, var(--sel-bg), var(--ivory));cursor:pointer;transition:all .2s}
+.featured-svc:hover{box-shadow:0 0 0 1px var(--gold)}
+.featured-svc.sel{background:var(--gold);border-color:var(--gold)}
+.featured-svc .fs-badge{flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--gold2);background:var(--cream);border:1px solid var(--gold);border-radius:12px;padding:5px 10px;display:flex;align-items:center;gap:4px}
+.featured-svc.sel .fs-badge{color:var(--dark);background:var(--cream)}
+.featured-svc .fs-name{flex:1;min-width:0}
+.featured-svc .fs-name b{display:block;font-size:15.5px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--dark)}
+.featured-svc .fs-name span{font-size:12px;color:var(--muted);font-style:italic}
+.featured-svc .fs-price{flex-shrink:0;font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:var(--gold2)}
+.featured-svc .fs-dur{flex-shrink:0;font-size:11px;color:var(--muted);margin-right:2px}
+
 /* CATEGORY FILTER */
 .cat-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;justify-content:center}
 .cat-chip{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:16px;border:1px solid var(--border);color:var(--muted);font-weight:600;background:var(--ivory);transition:all .2s}
@@ -293,6 +306,7 @@ main{max-width:820px;margin:0 auto;padding:28px 24px 80px}
     </div>
 
     <div id="book-step-1">
+      <div id="featured-svc-wrap" class="featured-svc-wrap hidden"></div>
       <div id="cat-filter" class="cat-filter"></div>
       <div id="svc-cards"></div>
       <div class="selection-bar">
@@ -482,6 +496,7 @@ function init(){
       SERVICIOS_DEFAULT.forEach(s=>svcCol.add(s));
     }
     services = all.filter(s=>s.publico !== false);
+    renderFeaturedService();
     renderCatFilter();
     renderServiceCards();
     updateSvcSelectionBar();
@@ -506,6 +521,7 @@ function init(){
     }
     renderDateStrip();
     renderSlots();
+    renderFeaturedService();
     renderCatFilter();
     renderServiceCards();
   }, err=>{ console.error(err); showToast('Error al leer horario'); });
@@ -524,6 +540,23 @@ function goStep(n){
   });
 }
 
+/* ============ SERVICIO DESTACADO (galleta) ============ */
+function renderFeaturedService(){
+  const wrap = document.getElementById('featured-svc-wrap');
+  if(!wrap) return;
+  const s = services.find(x=>x.id===settings.featuredServiceId);
+  if(!s){ wrap.classList.add('hidden'); wrap.innerHTML=''; return; }
+  wrap.classList.remove('hidden');
+  const isSel = bookingState.serviceIds.includes(s.id);
+  wrap.innerHTML = `
+    <div class="featured-svc ${isSel?'sel':''}" role="button" tabindex="0" onclick="selectService('${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectService('${s.id}');}">
+      <span class="fs-badge">⭐ Destacado</span>
+      <span class="fs-name"><b>${escapeHtml(s.nombre)}</b>${s.desc ? `<span>${escapeHtml(s.desc)}</span>` : ''}</span>
+      <span class="fs-dur">${s.duracion} min</span>
+      <span class="fs-price">${euros(s.precio)}</span>
+    </div>
+  `;
+}
 /* ============ SERVICE CARDS (público) ============ */
 function renderCatFilter(){
   const el = document.getElementById('cat-filter');
@@ -595,6 +628,7 @@ function selectService(id){
   const i = bookingState.serviceIds.indexOf(id);
   if(i>-1) bookingState.serviceIds.splice(i,1);
   else bookingState.serviceIds.push(id);
+  renderFeaturedService();
   renderServiceCards();
   updateSvcSelectionBar();
 }
@@ -818,6 +852,7 @@ function resetBooking(){
   document.getElementById('f-email').value='';
   document.getElementById('f-notas').value='';
   clearClientPreview('f');
+  renderFeaturedService();
   renderCatFilter();
   renderServiceCards();
   updateSvcSelectionBar();
