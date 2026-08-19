@@ -296,9 +296,8 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .calc-adjust .field{flex:1;margin-bottom:0}
 .pickable-svc-wrap{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--ivory);overflow:hidden}
 .pickable-svc-wrap .svc-desc-panel{margin-bottom:0}
+.pickable-svc-wrap .svc-desc-toggle{padding:0 12px 10px}
 .pickable-svc{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:13px}
-.srp-desc-toggle{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--cream);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:10px;font-style:italic;font-family:'Cormorant Garamond',serif;font-weight:700;transition:all .2s;margin-left:8px}
-.srp-desc-toggle:hover,.srp-desc-toggle.open{border-color:var(--gold2);color:var(--gold2)}
 .pickable-svc button{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:var(--dark);padding:7px 12px;border-radius:14px;font-weight:700}
 
 /* MÉTODO DE PAGO */
@@ -603,6 +602,8 @@ function dayRangeSpan(dow, employeeName){
 }
 let categoryFilter = 'todas';
 let svcAdminCatFilter = 'todas';
+const svcDescOpen = new Set();
+const mbDescOpen = new Set();
 let bookingState = { serviceIds:[], date:null, time:null, employee:'cualquiera' };
 let agendaDate = new Date();
 let openClientId = null;
@@ -1063,9 +1064,13 @@ function openManualBookingModal(prefillTime, prefillEmployee){
       <label class="pickable-svc" style="cursor:pointer">
         <input type="checkbox" class="manual-svc-chk" value="${s.id}" style="width:auto;margin-right:8px">
         <span style="flex:1">${escapeHtml(s.nombre)} · ${euros(s.precio)} · ${s.duracion}min</span>
-        ${hasDesc ? `<button type="button" class="srp-desc-toggle ${isOpen?'open':''}" onclick="event.preventDefault();event.stopPropagation();toggleMbDesc('${s.id}')" title="Ver descripción del servicio">${isOpen?'▴':'i'}</button>` : ''}
       </label>
-      ${hasDesc ? `<div class="svc-desc-panel ${isOpen?'open':''}" id="mb-desc-${s.id}"><p style="padding:2px 14px 12px;font-size:12px;color:var(--muted);font-style:italic;line-height:1.5">${escapeHtml(s.desc)}</p></div>` : ''}
+      ${hasDesc ? `
+      <button type="button" class="svc-desc-toggle ${isOpen?'open':''}" onclick="toggleMbDesc('${s.id}')">
+        <span class="chev">▾</span> Detalles del servicio
+      </button>
+      <div class="svc-desc-panel ${isOpen?'open':''}" id="mb-desc-${s.id}"><p style="padding:0 16px 12px;font-size:12px;color:var(--muted);font-style:italic;line-height:1.5">${escapeHtml(s.desc)}</p></div>
+      ` : ''}
     </div>
   `;
   }).join('');
@@ -1117,14 +1122,13 @@ function selectMbCat(cat){
     row.style.display = (cat==='todas' || row.dataset.cat===cat) ? 'block' : 'none';
   });
 }
-const mbDescOpen = new Set();
 function toggleMbDesc(id){
   if(mbDescOpen.has(id)) mbDescOpen.delete(id);
   else mbDescOpen.add(id);
   const panel = document.getElementById(`mb-desc-${id}`);
+  const btn = panel && panel.previousElementSibling;
   if(panel) panel.classList.toggle('open', mbDescOpen.has(id));
-  const btn = panel && panel.previousElementSibling && panel.previousElementSibling.querySelector('.srp-desc-toggle');
-  if(btn){ btn.classList.toggle('open', mbDescOpen.has(id)); btn.textContent = mbDescOpen.has(id) ? '▴' : 'i'; }
+  if(btn) btn.classList.toggle('open', mbDescOpen.has(id));
 }
 async function submitManualBooking(){
   const nombre = document.getElementById('mb-nombre').value.trim();
@@ -1645,7 +1649,6 @@ function renderSvcAdminList(){
   `;
   }).join('');
 }
-const svcDescOpen = new Set();
 function toggleSvcDesc(id){
   if(svcDescOpen.has(id)) svcDescOpen.delete(id);
   else svcDescOpen.add(id);

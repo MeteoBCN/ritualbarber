@@ -71,17 +71,19 @@ main{max-width:820px;margin:0 auto;padding:28px 24px 80px}
 
 /* SERVICE ROWS (lista compacta) */
 .svc-list{display:flex;flex-direction:column;gap:7px}
-.svc-row-public{display:flex;align-items:center;gap:14px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--ivory);text-align:left;transition:all .18s;width:100%;cursor:pointer}
-.svc-row-public:hover{border-color:var(--gold)}
-.svc-row-public.sel{border-color:var(--gold);background:var(--sel-bg);box-shadow:0 0 0 1px var(--gold)}
+.svc-row-public{display:flex;align-items:center;gap:14px;padding:12px 16px;text-align:left;transition:all .18s;width:100%;cursor:pointer}
+.svc-item-public:hover{border-color:var(--gold)}
 .svc-row-public .srp-check{flex-shrink:0;width:19px;height:19px;border-radius:50%;border:1px solid var(--border);background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .18s}
-.svc-row-public.sel .srp-check{background:var(--gold);border-color:var(--gold);color:var(--dark)}
+.svc-item-public.sel .srp-check{background:var(--gold);border-color:var(--gold);color:var(--dark)}
 .svc-row-public .srp-name{flex:1;min-width:0;font-size:14.5px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .svc-row-public .srp-dur{flex-shrink:0;font-size:11px;color:var(--muted);width:58px}
 .svc-row-public .srp-price{flex-shrink:0;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--gold2);width:64px;text-align:right}
-.svc-item-public{width:100%}
-.srp-desc-toggle{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--cream);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:12px;font-style:italic;font-family:'Cormorant Garamond',serif;font-weight:700;transition:all .2s}
-.srp-desc-toggle:hover,.srp-desc-toggle.open{border-color:var(--gold2);color:var(--gold2);background:var(--sel-bg)}
+.svc-item-public{width:100%;border:1px solid var(--border);border-radius:10px;background:var(--ivory);transition:all .18s;overflow:hidden}
+.svc-item-public.sel{border-color:var(--gold);background:var(--sel-bg);box-shadow:0 0 0 1px var(--gold)}
+.srp-desc-toggle{width:100%;display:flex;align-items:center;gap:6px;padding:8px 16px 10px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--muted);transition:color .2s}
+.srp-desc-toggle:hover{color:var(--gold2)}
+.srp-desc-toggle .chev{font-size:9px;transition:transform .25s;display:inline-block}
+.srp-desc-toggle.open .chev{transform:rotate(180deg)}
 .svc-desc-panel{max-height:0;overflow:hidden;transition:max-height .3s ease}
 .svc-desc-panel.open{max-height:200px}
 .svc-desc-panel p{padding:10px 16px 12px;font-size:12.5px;line-height:1.5;color:var(--muted);font-style:italic}
@@ -458,6 +460,7 @@ function dayRangeSpan(dow, employeeName){
   return { start: ranges[0].open, end: ranges[ranges.length-1].close };
 }
 let categoryFilter = 'todas';
+const openDescIds = new Set();
 let bookingState = { serviceIds:[], date:null, time:null, employee:'cualquiera' };
 let agendaDate = new Date();
 let openClientId = null;
@@ -548,15 +551,19 @@ function renderServiceCards(){
     const hasDesc = !!(s.desc && s.desc.trim());
     const isOpen = openDescIds.has(s.id);
     return `
-    <div class="svc-item-public">
-      <div class="svc-row-public ${bookingState.serviceIds.includes(s.id)?'sel':''}" role="button" tabindex="0" onclick="selectService('${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectService('${s.id}');}">
+    <div class="svc-item-public ${bookingState.serviceIds.includes(s.id)?'sel':''}">
+      <div class="svc-row-public" role="button" tabindex="0" onclick="selectService('${s.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectService('${s.id}');}">
         <span class="srp-check">✓</span>
         <span class="srp-name">${escapeHtml(s.nombre)}</span>
         <span class="srp-dur">${s.duracion} min</span>
         <span class="srp-price">${euros(s.precio)}</span>
-        ${hasDesc ? `<button type="button" class="srp-desc-toggle ${isOpen?'open':''}" onclick="event.stopPropagation();toggleSvcDescPublic('${s.id}')" title="Ver descripción del servicio">${isOpen?'▴':'i'}</button>` : ''}
       </div>
-      ${hasDesc ? `<div class="svc-desc-panel ${isOpen?'open':''}" id="svc-desc-pub-${s.id}"><p>${escapeHtml(s.desc)}</p></div>` : ''}
+      ${hasDesc ? `
+      <button type="button" class="srp-desc-toggle ${isOpen?'open':''}" onclick="toggleSvcDescPublic('${s.id}')">
+        <span class="chev">▾</span> Detalles del servicio
+      </button>
+      <div class="svc-desc-panel ${isOpen?'open':''}" id="svc-desc-pub-${s.id}"><p>${escapeHtml(s.desc)}</p></div>
+      ` : ''}
     </div>
   `;
   };
@@ -591,7 +598,6 @@ function selectService(id){
   renderServiceCards();
   updateSvcSelectionBar();
 }
-const openDescIds = new Set();
 function toggleSvcDescPublic(id){
   if(openDescIds.has(id)) openDescIds.delete(id);
   else openDescIds.add(id);
