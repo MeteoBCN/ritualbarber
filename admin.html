@@ -171,8 +171,17 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .hist-item:last-child{border-bottom:none}
 
 /* SERVICES ADMIN */
-.svc-row{display:grid;grid-template-columns:auto 1.5fr 1.2fr 0.7fr 0.7fr 1fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);margin-bottom:8px}
+.svc-item{border:1px solid var(--border);border-radius:12px;background:var(--ivory);margin-bottom:8px;overflow:hidden}
+.svc-row{display:grid;grid-template-columns:auto 1.5fr 1.2fr 0.7fr 0.7fr 1fr auto;gap:12px;align-items:center;padding:14px 16px}
 .svc-row input,.svc-row select{padding:8px 10px}
+.svc-desc-toggle{width:100%;display:flex;align-items:center;gap:6px;padding:0 16px 12px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted);transition:color .2s}
+.svc-desc-toggle:hover{color:var(--gold2)}
+.svc-desc-toggle .chev{font-size:9px;transition:transform .25s;display:inline-block}
+.svc-desc-toggle.open .chev{transform:rotate(180deg)}
+.svc-desc-panel{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.svc-desc-panel.open{max-height:220px}
+.svc-desc-panel .field{padding:0 16px 16px;margin-bottom:0}
+.svc-desc-panel textarea{min-height:64px;resize:vertical}
 .svc-visibility{display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--muted);white-space:nowrap}
 .svc-visibility input{width:auto;margin:0}
 .svc-visibility.is-interno{color:#a15c1f}
@@ -285,7 +294,11 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .calc-row.total{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--gold2);border-bottom:none;margin-top:6px;padding-top:14px;border-top:1px solid var(--border)}
 .calc-adjust{display:flex;gap:12px;margin:14px 0}
 .calc-adjust .field{flex:1;margin-bottom:0}
-.pickable-svc{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--ivory);font-size:13px}
+.pickable-svc-wrap{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--ivory);overflow:hidden}
+.pickable-svc-wrap .svc-desc-panel{margin-bottom:0}
+.pickable-svc{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:13px}
+.srp-desc-toggle{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--cream);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:10px;font-style:italic;font-family:'Cormorant Garamond',serif;font-weight:700;transition:all .2s;margin-left:8px}
+.srp-desc-toggle:hover,.srp-desc-toggle.open{border-color:var(--gold2);color:var(--gold2)}
 .pickable-svc button{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:var(--dark);padding:7px 12px;border-radius:14px;font-weight:700}
 
 /* MÉTODO DE PAGO */
@@ -1042,12 +1055,20 @@ let mbCatFilter = 'todas';
 function openManualBookingModal(prefillTime, prefillEmployee){
   mbCatFilter = 'todas';
   const root = document.getElementById('modal-root');
-  const svcOptions = sortedServices().map(s=>`
-    <label class="pickable-svc" data-cat="${s.cat}" style="cursor:pointer">
-      <input type="checkbox" class="manual-svc-chk" value="${s.id}" style="width:auto;margin-right:8px">
-      <span style="flex:1">${escapeHtml(s.nombre)} · ${euros(s.precio)} · ${s.duracion}min</span>
-    </label>
-  `).join('');
+  const svcOptions = sortedServices().map(s=>{
+    const hasDesc = !!(s.desc && s.desc.trim());
+    const isOpen = mbDescOpen.has(s.id);
+    return `
+    <div class="pickable-svc-wrap" data-cat="${s.cat}">
+      <label class="pickable-svc" style="cursor:pointer">
+        <input type="checkbox" class="manual-svc-chk" value="${s.id}" style="width:auto;margin-right:8px">
+        <span style="flex:1">${escapeHtml(s.nombre)} · ${euros(s.precio)} · ${s.duracion}min</span>
+        ${hasDesc ? `<button type="button" class="srp-desc-toggle ${isOpen?'open':''}" onclick="event.preventDefault();event.stopPropagation();toggleMbDesc('${s.id}')" title="Ver descripción del servicio">${isOpen?'▴':'i'}</button>` : ''}
+      </label>
+      ${hasDesc ? `<div class="svc-desc-panel ${isOpen?'open':''}" id="mb-desc-${s.id}"><p style="padding:2px 14px 12px;font-size:12px;color:var(--muted);font-style:italic;line-height:1.5">${escapeHtml(s.desc)}</p></div>` : ''}
+    </div>
+  `;
+  }).join('');
   root.innerHTML = `
     <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
       <div class="modal-box">
@@ -1092,9 +1113,18 @@ function renderMbSvcTabs(){
 function selectMbCat(cat){
   mbCatFilter = cat;
   renderMbSvcTabs();
-  document.querySelectorAll('#mb-svc-list .pickable-svc').forEach(row=>{
-    row.style.display = (cat==='todas' || row.dataset.cat===cat) ? 'flex' : 'none';
+  document.querySelectorAll('#mb-svc-list .pickable-svc-wrap').forEach(row=>{
+    row.style.display = (cat==='todas' || row.dataset.cat===cat) ? 'block' : 'none';
   });
+}
+const mbDescOpen = new Set();
+function toggleMbDesc(id){
+  if(mbDescOpen.has(id)) mbDescOpen.delete(id);
+  else mbDescOpen.add(id);
+  const panel = document.getElementById(`mb-desc-${id}`);
+  if(panel) panel.classList.toggle('open', mbDescOpen.has(id));
+  const btn = panel && panel.previousElementSibling && panel.previousElementSibling.querySelector('.srp-desc-toggle');
+  if(btn){ btn.classList.toggle('open', mbDescOpen.has(id)); btn.textContent = mbDescOpen.has(id) ? '▴' : 'i'; }
 }
 async function submitManualBooking(){
   const nombre = document.getElementById('mb-nombre').value.trim();
@@ -1583,26 +1613,46 @@ function renderSvcAdminList(){
   }
   el.innerHTML = filtered.map((s,i)=>{
     const isPublic = s.publico !== false;
+    const isOpen = svcDescOpen.has(s.id);
     return `
-    <div class="svc-row">
-      <div class="order-btns">
-        <button title="Subir" ${i===0?'disabled':''} onclick="moveSvc('${s.id}',-1)">▲</button>
-        <button title="Bajar" ${i===filtered.length-1?'disabled':''} onclick="moveSvc('${s.id}',1)">▼</button>
+    <div class="svc-item">
+      <div class="svc-row">
+        <div class="order-btns">
+          <button title="Subir" ${i===0?'disabled':''} onclick="moveSvc('${s.id}',-1)">▲</button>
+          <button title="Bajar" ${i===filtered.length-1?'disabled':''} onclick="moveSvc('${s.id}',1)">▼</button>
+        </div>
+        <input value="${escapeHtml(s.nombre)}" onchange="updateSvcField('${s.id}','nombre',this.value)">
+        <select onchange="updateSvcField('${s.id}','cat',this.value)">
+          ${getCategories().map(c=>`<option value="${c.key}" ${s.cat===c.key?'selected':''}>${escapeHtml(c.label)}</option>`).join('')}
+        </select>
+        <input type="number" value="${s.precio}" step="0.5" onchange="updateSvcField('${s.id}','precio',Number(this.value))">
+        <input type="number" value="${s.duracion}" step="5" onchange="updateSvcField('${s.id}','duracion',Number(this.value))">
+        <label class="svc-visibility ${isPublic?'':'is-interno'}" title="Si lo desmarcas, los clientes no verán ni podrán reservar este servicio online; solo aparecerá en el panel para uso interno">
+          <input type="checkbox" ${isPublic?'checked':''} onchange="updateSvcField('${s.id}','publico',this.checked)">
+          ${isPublic?'Visible online':'Solo interno'}
+        </label>
+        <button class="icon-btn btn-danger" title="Eliminar" onclick="deleteSvc('${s.id}')">✕</button>
       </div>
-      <input value="${escapeHtml(s.nombre)}" onchange="updateSvcField('${s.id}','nombre',this.value)">
-      <select onchange="updateSvcField('${s.id}','cat',this.value)">
-        ${getCategories().map(c=>`<option value="${c.key}" ${s.cat===c.key?'selected':''}>${escapeHtml(c.label)}</option>`).join('')}
-      </select>
-      <input type="number" value="${s.precio}" step="0.5" onchange="updateSvcField('${s.id}','precio',Number(this.value))">
-      <input type="number" value="${s.duracion}" step="5" onchange="updateSvcField('${s.id}','duracion',Number(this.value))">
-      <label class="svc-visibility ${isPublic?'':'is-interno'}" title="Si lo desmarcas, los clientes no verán ni podrán reservar este servicio online; solo aparecerá en el panel para uso interno">
-        <input type="checkbox" ${isPublic?'checked':''} onchange="updateSvcField('${s.id}','publico',this.checked)">
-        ${isPublic?'Visible online':'Solo interno'}
-      </label>
-      <button class="icon-btn btn-danger" title="Eliminar" onclick="deleteSvc('${s.id}')">✕</button>
+      <button type="button" class="svc-desc-toggle ${isOpen?'open':''}" onclick="toggleSvcDesc('${s.id}')">
+        <span class="chev">▾</span> Descripción del servicio ${s.desc ? '' : '<span style="opacity:.6">(vacía)</span>'}
+      </button>
+      <div class="svc-desc-panel ${isOpen?'open':''}" id="svc-desc-panel-${s.id}">
+        <div class="field">
+          <textarea rows="3" placeholder="Describe este servicio, se mostrará a los clientes al agendar y al reservar online..." onchange="updateSvcField('${s.id}','desc',this.value)">${escapeHtml(s.desc||'')}</textarea>
+        </div>
+      </div>
     </div>
   `;
   }).join('');
+}
+const svcDescOpen = new Set();
+function toggleSvcDesc(id){
+  if(svcDescOpen.has(id)) svcDescOpen.delete(id);
+  else svcDescOpen.add(id);
+  const panel = document.getElementById(`svc-desc-panel-${id}`);
+  const btn = panel && panel.previousElementSibling;
+  if(panel) panel.classList.toggle('open', svcDescOpen.has(id));
+  if(btn) btn.classList.toggle('open', svcDescOpen.has(id));
 }
 async function updateSvcField(id, field, value){
   try{
