@@ -371,27 +371,43 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'), 2600);
 }
 function euros(n){ return Number(n).toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2})+' €'; }
+function sortedServices(){
+  return [...services].sort((a,b)=> (Number(a.orden)||0) - (Number(b.orden)||0) || (a.nombre||'').localeCompare(b.nombre||''));
+}
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 /* ============ CATEGORÍAS Y DATOS POR DEFECTO ============ */
-const CATS = {
-  corte:        { label:'Cortes',        emoji:'✂' },
-  barberia:     { label:'Barbería',      emoji:'🪒' },
-  combos:       { label:'Combos',        emoji:'⭐' },
-  tratamientos: { label:'Tratamientos',  emoji:'🌿' },
-  otros:        { label:'Otros',         emoji:'➕' },
-};
-const CATEGORY_ORDER = ['corte','barberia','combos','tratamientos','otros'];
+/* Las categorías se gestionan ahora desde el panel de administración (settings.categories).
+   Este array solo se usa como valor de respaldo si aún no hay categorías guardadas. */
+const DEFAULT_CATEGORIES = [
+  { key:'corte',        label:'Cortes',        emoji:'✂' },
+  { key:'barberia',     label:'Barbería',      emoji:'🪒' },
+  { key:'combos',       label:'Combos',        emoji:'⭐' },
+  { key:'tratamientos', label:'Tratamientos',  emoji:'🌿' },
+  { key:'otros',        label:'Extras',        emoji:'➕' },
+  { key:'productos',    label:'Productos',     emoji:'🧴' },
+];
+function getCategories(){
+  return (settings.categories && settings.categories.length) ? settings.categories : DEFAULT_CATEGORIES;
+}
+function catLabel(key){
+  const c = getCategories().find(c=>c.key===key);
+  return c ? c.label : (key || 'Otros');
+}
+function catEmoji(key){
+  const c = getCategories().find(c=>c.key===key);
+  return c ? (c.emoji||'') : '';
+}
 
 const SERVICIOS_DEFAULT = [
-  { nombre:'Corte de cabello',    cat:'corte',        precio:12, duracion:30, desc:'Corte clásico o moderno' },
-  { nombre:'Corte + Barba',       cat:'corte',        precio:18, duracion:45, desc:'Corte y arreglo de barba' },
-  { nombre:'Afeitado clásico',    cat:'barberia',     precio:10, duracion:20, desc:'Afeitado con navaja y toalla caliente' },
-  { nombre:'Arreglo de barba',    cat:'barberia',     precio:8,  duracion:15, desc:'Perfilado y definición' },
-  { nombre:'Tratamiento capilar', cat:'tratamientos', precio:20, duracion:30, desc:'Hidratación y nutrición' },
-  { nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento' },
+  { nombre:'Corte de cabello',    cat:'corte',        precio:12, duracion:30, desc:'Corte clásico o moderno', orden:0 },
+  { nombre:'Corte + Barba',       cat:'corte',        precio:18, duracion:45, desc:'Corte y arreglo de barba', orden:1 },
+  { nombre:'Afeitado clásico',    cat:'barberia',     precio:10, duracion:20, desc:'Afeitado con navaja y toalla caliente', orden:2 },
+  { nombre:'Arreglo de barba',    cat:'barberia',     precio:8,  duracion:15, desc:'Perfilado y definición', orden:3 },
+  { nombre:'Tratamiento capilar', cat:'tratamientos', precio:20, duracion:30, desc:'Hidratación y nutrición', orden:4 },
+  { nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento', orden:5 },
 ];
 
 const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -408,7 +424,7 @@ const DEFAULT_SCHEDULE = {
   5: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
   6: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
 };
-let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:[{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}] };
+let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:[{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}], categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)) };
 function normalizedEmployees(){
   let emps = settings.employees;
   if(!Array.isArray(emps) || emps.filter(Boolean).length===0){
@@ -474,9 +490,12 @@ function init(){
       const data = doc.data();
       settings = { ...settings, ...data };
       if(!data.schedule) settings.schedule = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+      if(!data.categories || !data.categories.length) settings.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
     }
     renderDateStrip();
     renderSlots();
+    renderCatFilter();
+    renderServiceCards();
   }, err=>{ console.error(err); showToast('Error al leer horario'); });
 }
 init();
@@ -497,11 +516,11 @@ function goStep(n){
 function renderCatFilter(){
   const el = document.getElementById('cat-filter');
   if(!el) return;
-  const present = CATEGORY_ORDER.filter(c=>services.some(s=>(s.cat||'otros')===c));
+  const present = getCategories().filter(c=>services.some(s=>(s.cat||'otros')===c.key));
   if(present.length===0){ el.innerHTML=''; return; }
-  const chips = ['todas', ...present];
+  const chips = [{key:'todas', label:'Todas', emoji:''}, ...present];
   el.innerHTML = chips.map(c=>`
-    <button class="cat-chip ${categoryFilter===c?'sel':''}" onclick="setCategoryFilter('${c}')">${c==='todas'?'Todas':(CATS[c]?CATS[c].emoji+' '+CATS[c].label:c)}</button>
+    <button class="cat-chip ${categoryFilter===c.key?'sel':''}" onclick="setCategoryFilter('${c.key}')">${c.key==='todas'?'Todas':escapeHtml((c.emoji?c.emoji+' ':'')+c.label)}</button>
   `).join('');
 }
 function setCategoryFilter(c){
@@ -511,6 +530,7 @@ function setCategoryFilter(c){
 }
 function renderServiceCards(){
   const el = document.getElementById('svc-cards');
+  if(!el) return;
   if(services.length===0){
     el.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="big">Aún no hay servicios cargados</div>Añádelos desde el Panel → Servicios</div>`;
     return;
@@ -518,15 +538,17 @@ function renderServiceCards(){
   const cardHtml = s => `
     <button class="svc-card ${bookingState.serviceIds.includes(s.id)?'sel':''}" onclick="selectService('${s.id}')">
       <span class="check">✓</span>
-      <div class="cat-tag">${CATS[s.cat]?CATS[s.cat].label:'Otros'}</div>
+      <div class="cat-tag">${escapeHtml(catLabel(s.cat))}</div>
       <h4>${escapeHtml(s.nombre)}</h4>
       <div class="dur">${s.duracion} min</div>
       <div class="price">${euros(s.precio)}</div>
     </button>
   `;
 
+  const ordered = sortedServices();
+
   if(categoryFilter !== 'todas'){
-    const filtered = services.filter(s=>(s.cat||'otros')===categoryFilter);
+    const filtered = ordered.filter(s=>(s.cat||'otros')===categoryFilter);
     el.innerHTML = filtered.length
       ? `<div class="card-grid">${filtered.map(cardHtml).join('')}</div>`
       : `<div class="empty" style="grid-column:1/-1">No hay servicios en esta categoría</div>`;
@@ -534,15 +556,15 @@ function renderServiceCards(){
   }
 
   const grouped = {};
-  services.forEach(s=>{
+  ordered.forEach(s=>{
     const cat = s.cat || 'otros';
     (grouped[cat] = grouped[cat] || []).push(s);
   });
-  const cats = CATEGORY_ORDER.filter(c=>grouped[c] && grouped[c].length);
-  el.innerHTML = cats.map(cat => `
+  const cats = getCategories().filter(c=>grouped[c.key] && grouped[c.key].length);
+  el.innerHTML = cats.map(c => `
     <div class="cat-group">
-      <h3>${CATS[cat].emoji} ${CATS[cat].label}</h3>
-      <div class="card-grid">${grouped[cat].map(cardHtml).join('')}</div>
+      <h3>${c.emoji?escapeHtml(c.emoji)+' ':''}${escapeHtml(c.label)}</h3>
+      <div class="card-grid">${grouped[c.key].map(cardHtml).join('')}</div>
     </div>
   `).join('');
 }
