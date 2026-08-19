@@ -171,13 +171,25 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 .hist-item:last-child{border-bottom:none}
 
 /* SERVICES ADMIN */
-.svc-row{display:grid;grid-template-columns:1.5fr 1.2fr 0.7fr 0.7fr 1fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);margin-bottom:8px}
+.svc-row{display:grid;grid-template-columns:auto 1.5fr 1.2fr 0.7fr 0.7fr 1fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--ivory);margin-bottom:8px}
 .svc-row input,.svc-row select{padding:8px 10px}
 .svc-visibility{display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--muted);white-space:nowrap}
 .svc-visibility input{width:auto;margin:0}
 .svc-visibility.is-interno{color:#a15c1f}
 .add-svc-card{border:1px dashed var(--border);border-radius:12px;padding:20px;margin-top:20px}
 .grid3{display:grid;grid-template-columns:1.5fr 1.2fr 0.9fr 0.9fr;gap:12px}
+.order-btns{display:flex;flex-direction:column;gap:2px}
+.order-btns button{width:24px;height:20px;border:1px solid var(--border);border-radius:5px;font-size:10px;line-height:1;color:var(--muted);background:var(--cream);display:flex;align-items:center;justify-content:center}
+.order-btns button:hover{border-color:var(--gold);color:var(--gold2)}
+.order-btns button:disabled{opacity:.3;pointer-events:none}
+.cat-manage-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.cat-manage-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--ivory)}
+.cat-manage-row .cmr-order{display:flex;gap:2px}
+.cat-manage-row .cmr-label{flex:1;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.cat-manage-row .cmr-count{font-size:11px;color:var(--muted);font-weight:400}
+.add-cat-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.add-cat-row .field{margin-bottom:0}
+.add-cat-row input#new-cat-emoji{max-width:70px;text-align:center}
 
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .settings-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
@@ -304,7 +316,7 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
 @media(max-width:640px){
   .two-col{grid-template-columns:1fr}
   .grid3{grid-template-columns:1fr}
-  .svc-row{grid-template-columns:1fr 1fr}
+  .svc-row{grid-template-columns:auto 1fr 1fr}
   .topbar{padding:14px 16px}
   main{padding:24px 14px 90px}
 }
@@ -437,6 +449,16 @@ main{max-width:1000px;margin:0 auto;padding:40px 24px 100px}
           <button class="btn btn-dark btn-sm" onclick="saveSettings()">Guardar horario</button>
         </div>
 
+        <div class="card" style="margin-bottom:24px">
+          <h3 style="margin-bottom:16px">Categorías de servicios</h3>
+          <div id="cat-manage-list" class="cat-manage-list"></div>
+          <div class="add-cat-row">
+            <div class="field" style="flex:1;min-width:160px"><label>Nombre de la categoría</label><input id="new-cat-label" placeholder="Ej. Cejas"></div>
+            <div class="field"><label>Icono</label><input id="new-cat-emoji" placeholder="🏷" maxlength="4"></div>
+            <button class="btn btn-gold btn-sm" onclick="addCategory()">＋ Añadir categoría</button>
+          </div>
+        </div>
+
         <h3 style="margin-bottom:14px">Servicios y precios</h3>
         <div id="svc-admin-tabs" class="cat-filter" style="justify-content:flex-start;margin-bottom:16px"></div>
         <div id="svc-admin-list"></div>
@@ -488,28 +510,53 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'), 2600);
 }
 function euros(n){ return Number(n).toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2})+' €'; }
+function sortedServices(){
+  return [...services].sort((a,b)=> (Number(a.orden)||0) - (Number(b.orden)||0) || (a.nombre||'').localeCompare(b.nombre||''));
+}
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 /* ============ CATEGORÍAS Y DATOS POR DEFECTO ============ */
-const CATS = {
-  corte:        { label:'Cortes',        emoji:'✂' },
-  barberia:     { label:'Barbería',      emoji:'🪒' },
-  combos:       { label:'Combos',        emoji:'⭐' },
-  tratamientos: { label:'Tratamientos',  emoji:'🌿' },
-  otros:        { label:'Extras',        emoji:'➕' },
-  productos:    { label:'Productos',     emoji:'🧴' },
-};
-const CATEGORY_ORDER = ['corte','barberia','combos','tratamientos','otros','productos'];
+/* Las categorías ("galletas") son ahora editables desde el panel: se guardan en
+   settings.categories como una lista ordenada de {key,label,emoji}. Este array
+   solo se usa para sembrar los valores por defecto la primera vez. */
+const DEFAULT_CATEGORIES = [
+  { key:'corte',        label:'Cortes',        emoji:'✂' },
+  { key:'barberia',     label:'Barbería',      emoji:'🪒' },
+  { key:'combos',       label:'Combos',        emoji:'⭐' },
+  { key:'tratamientos', label:'Tratamientos',  emoji:'🌿' },
+  { key:'otros',        label:'Extras',        emoji:'➕' },
+  { key:'productos',    label:'Productos',     emoji:'🧴' },
+];
+function getCategories(){
+  return (settings.categories && settings.categories.length) ? settings.categories : DEFAULT_CATEGORIES;
+}
+function catLabel(key){
+  const c = getCategories().find(c=>c.key===key);
+  return c ? c.label : (key || 'Sin categoría');
+}
+function catEmoji(key){
+  const c = getCategories().find(c=>c.key===key);
+  return c ? (c.emoji||'') : '';
+}
+function slugifyCatKey(label){
+  const base = String(label).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'cat';
+  let key = base, i = 2;
+  const existing = getCategories().map(c=>c.key);
+  while(existing.includes(key)){ key = `${base}-${i++}`; }
+  return key;
+}
 
 const SERVICIOS_DEFAULT = [
-  { nombre:'Corte de cabello',    cat:'corte',        precio:12, duracion:30, desc:'Corte clásico o moderno' },
-  { nombre:'Corte + Barba',       cat:'corte',        precio:18, duracion:45, desc:'Corte y arreglo de barba' },
-  { nombre:'Afeitado clásico',    cat:'barberia',     precio:10, duracion:20, desc:'Afeitado con navaja y toalla caliente' },
-  { nombre:'Arreglo de barba',    cat:'barberia',     precio:8,  duracion:15, desc:'Perfilado y definición' },
-  { nombre:'Tratamiento capilar', cat:'tratamientos', precio:20, duracion:30, desc:'Hidratación y nutrición' },
-  { nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento' },
+  { nombre:'Corte de cabello',    cat:'corte',        precio:12, duracion:30, desc:'Corte clásico o moderno', orden:0 },
+  { nombre:'Corte + Barba',       cat:'corte',        precio:18, duracion:45, desc:'Corte y arreglo de barba', orden:1 },
+  { nombre:'Afeitado clásico',    cat:'barberia',     precio:10, duracion:20, desc:'Afeitado con navaja y toalla caliente', orden:2 },
+  { nombre:'Arreglo de barba',    cat:'barberia',     precio:8,  duracion:15, desc:'Perfilado y definición', orden:3 },
+  { nombre:'Tratamiento capilar', cat:'tratamientos', precio:20, duracion:30, desc:'Hidratación y nutrición', orden:4 },
+  { nombre:'Combo completo',      cat:'combos',       precio:25, duracion:60, desc:'Corte + Barba + Tratamiento', orden:5 },
 ];
 
 const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -526,7 +573,7 @@ const DEFAULT_SCHEDULE = {
   5: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
   6: [{open:'10:00',close:'14:00'},{open:'15:00',close:'21:00'}],
 };
-let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:[{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}] };
+let settings = { schedule: JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)), slot:30, employees:[{name:'Barbero 1',active:true},{name:'Barbero 2',active:true}], categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)) };
 function employeeSchedule(employeeName){
   if(employeeName){
     const emp = normalizedEmployees().find(e=>e.name===employeeName);
@@ -583,9 +630,15 @@ function init(){
       const data = doc.data();
       settings = { ...settings, ...data };
       if(!data.schedule) settings.schedule = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+      if(!data.categories || !data.categories.length){
+        settings.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+        setDoc.set({ categories: settings.categories }, { merge:true }).catch(()=>{});
+      }
     }
     renderSettingsForm();
     renderScheduleForm();
+    renderSvcAdminList();
+    populateCategorySelect(true);
     renderAgenda();
   }, err=>{ console.error(err); showToast('Error al leer horario'); });
 }
@@ -638,7 +691,7 @@ function activatePanelTab(b){
   document.querySelectorAll('.p-view').forEach(v=>v.classList.add('hidden'));
   document.getElementById('p-'+b.dataset.p).classList.remove('hidden');
   if(b.dataset.p==='clientes') renderClientList();
-  if(b.dataset.p==='servicios'){ renderSvcAdminList(); populateCategorySelect(); renderSettingsForm(); renderScheduleForm(); }
+  if(b.dataset.p==='servicios'){ renderSvcAdminList(); populateCategorySelect(true); renderSettingsForm(); renderScheduleForm(); }
   if(b.dataset.p==='agenda') renderAgenda();
   if(b.dataset.p==='facturacion'){ initFacturacion(); }
 }
@@ -989,7 +1042,7 @@ let mbCatFilter = 'todas';
 function openManualBookingModal(prefillTime, prefillEmployee){
   mbCatFilter = 'todas';
   const root = document.getElementById('modal-root');
-  const svcOptions = services.map(s=>`
+  const svcOptions = sortedServices().map(s=>`
     <label class="pickable-svc" data-cat="${s.cat}" style="cursor:pointer">
       <input type="checkbox" class="manual-svc-chk" value="${s.id}" style="width:auto;margin-right:8px">
       <span style="flex:1">${escapeHtml(s.nombre)} · ${euros(s.precio)} · ${s.duracion}min</span>
@@ -1031,7 +1084,7 @@ function renderMbSvcTabs(){
   const counts = {};
   services.forEach(s=>{ counts[s.cat] = (counts[s.cat]||0)+1; });
   const chips = [{ key:'todas', label:'Todas', n:services.length }]
-    .concat(CATEGORY_ORDER.map(c=>({ key:c, label:CATS[c].label, n:counts[c]||0 })));
+    .concat(getCategories().map(c=>({ key:c.key, label:c.label, n:counts[c.key]||0 })));
   el.innerHTML = chips.map(ch=>`
     <button type="button" class="cat-chip ${mbCatFilter===ch.key?'sel':''}" onclick="selectMbCat('${ch.key}')">${escapeHtml(ch.label)} (${ch.n})</button>
   `).join('');
@@ -1100,7 +1153,7 @@ async function submitManualBooking(){
 function closeModal(){ document.getElementById('modal-root').innerHTML=''; }
 function openAddServiceModal(bookingId){
   const root = document.getElementById('modal-root');
-  const options = services.map(s=>`
+  const options = sortedServices().map(s=>`
     <div class="pickable-svc">
       <span>${escapeHtml(s.nombre)} · ${euros(s.precio)}</span>
       <button onclick="addServiceToBooking('${bookingId}','${s.id}')">Añadir</button>
@@ -1503,7 +1556,7 @@ function renderSvcAdminTabs(){
   const counts = {};
   services.forEach(s=>{ counts[s.cat] = (counts[s.cat]||0)+1; });
   const chips = [{ key:'todas', label:'Todas', n:services.length }]
-    .concat(CATEGORY_ORDER.map(c=>({ key:c, label:CATS[c].label, n:counts[c]||0 })));
+    .concat(getCategories().map(c=>({ key:c.key, label:c.label, n:counts[c.key]||0 })));
   el.innerHTML = chips.map(ch=>`
     <button class="cat-chip ${svcAdminCatFilter===ch.key?'sel':''}" onclick="selectSvcAdminCat('${ch.key}')">${escapeHtml(ch.label)} (${ch.n})</button>
   `).join('');
@@ -1517,22 +1570,28 @@ function renderSvcAdminList(){
   const el = document.getElementById('svc-admin-list');
   if(!el) return;
   renderSvcAdminTabs();
+  renderCategoriesAdmin();
   if(services.length===0){
     el.innerHTML = `<div class="empty"><div class="big">Todavía no has añadido servicios</div>Usa el formulario de abajo para crear el primero</div>`;
     return;
   }
-  const filtered = svcAdminCatFilter==='todas' ? services : services.filter(s=>s.cat===svcAdminCatFilter);
+  const all = sortedServices();
+  const filtered = svcAdminCatFilter==='todas' ? all : all.filter(s=>s.cat===svcAdminCatFilter);
   if(filtered.length===0){
     el.innerHTML = `<div class="empty"><div class="big">No hay servicios en esta categoría</div>Elige otra pestaña o añade uno nuevo abajo</div>`;
     return;
   }
-  el.innerHTML = filtered.map(s=>{
+  el.innerHTML = filtered.map((s,i)=>{
     const isPublic = s.publico !== false;
     return `
     <div class="svc-row">
+      <div class="order-btns">
+        <button title="Subir" ${i===0?'disabled':''} onclick="moveSvc('${s.id}',-1)">▲</button>
+        <button title="Bajar" ${i===filtered.length-1?'disabled':''} onclick="moveSvc('${s.id}',1)">▼</button>
+      </div>
       <input value="${escapeHtml(s.nombre)}" onchange="updateSvcField('${s.id}','nombre',this.value)">
       <select onchange="updateSvcField('${s.id}','cat',this.value)">
-        ${CATEGORY_ORDER.map(c=>`<option value="${c}" ${s.cat===c?'selected':''}>${CATS[c].label}</option>`).join('')}
+        ${getCategories().map(c=>`<option value="${c.key}" ${s.cat===c.key?'selected':''}>${escapeHtml(c.label)}</option>`).join('')}
       </select>
       <input type="number" value="${s.precio}" step="0.5" onchange="updateSvcField('${s.id}','precio',Number(this.value))">
       <input type="number" value="${s.duracion}" step="5" onchange="updateSvcField('${s.id}','duracion',Number(this.value))">
@@ -1557,10 +1616,29 @@ async function deleteSvc(id){
     showToast('Servicio eliminado');
   }catch(e){ console.error(e); showToast('No se pudo eliminar'); }
 }
-function populateCategorySelect(){
+/* Mover un servicio arriba/abajo dentro de la lista visible actualmente (respeta el filtro de categoría) */
+async function moveSvc(id, dir){
+  const all = sortedServices();
+  const filtered = svcAdminCatFilter==='todas' ? all : all.filter(s=>s.cat===svcAdminCatFilter);
+  const idx = filtered.findIndex(s=>s.id===id);
+  const swapIdx = idx + dir;
+  if(idx===-1 || swapIdx<0 || swapIdx>=filtered.length) return;
+  const a = filtered[idx], b = filtered[swapIdx];
+  const ordenA = Number(a.orden)||0, ordenB = Number(b.orden)||0;
+  try{
+    const batch = db.batch();
+    batch.update(svcCol.doc(a.id), { orden: ordenB });
+    batch.update(svcCol.doc(b.id), { orden: ordenA });
+    await batch.commit();
+  }catch(e){ console.error(e); showToast('No se pudo reordenar'); }
+}
+function populateCategorySelect(force){
   const sel = document.getElementById('new-svc-categoria');
-  if(!sel || sel.options.length) return;
-  sel.innerHTML = CATEGORY_ORDER.map(c=>`<option value="${c}">${CATS[c].label}</option>`).join('');
+  if(!sel) return;
+  if(!force && sel.options.length) return;
+  const current = sel.value;
+  sel.innerHTML = getCategories().map(c=>`<option value="${c.key}">${escapeHtml(c.label)}</option>`).join('');
+  if(current && getCategories().some(c=>c.key===current)) sel.value = current;
 }
 async function addServicio(){
   const nombre = document.getElementById('new-svc-nombre').value.trim();
@@ -1568,13 +1646,84 @@ async function addServicio(){
   const precio = Number(document.getElementById('new-svc-precio').value);
   const duracion = Number(document.getElementById('new-svc-duracion').value);
   if(!nombre || !precio || !duracion){ showToast('Completa nombre, precio y duración'); return; }
+  const maxOrden = services.reduce((m,s)=>Math.max(m, Number(s.orden)||0), -1);
   try{
-    await svcCol.add({ nombre, cat, precio, duracion, desc:'', publico:true });
+    await svcCol.add({ nombre, cat, precio, duracion, desc:'', publico:true, orden: maxOrden+1 });
     document.getElementById('new-svc-nombre').value='';
     document.getElementById('new-svc-precio').value='';
     document.getElementById('new-svc-duracion').value='';
     showToast('Servicio añadido');
   }catch(e){ console.error(e); showToast('No se pudo añadir el servicio'); }
+}
+
+/* ============ CATEGORÍAS / "GALLETAS" (panel) ============ */
+function renderCategoriesAdmin(){
+  const el = document.getElementById('cat-manage-list');
+  if(!el) return;
+  const counts = {};
+  services.forEach(s=>{ counts[s.cat] = (counts[s.cat]||0)+1; });
+  const cats = getCategories();
+  if(cats.length===0){
+    el.innerHTML = `<div class="empty" style="padding:24px"><div class="big">No hay categorías</div>Añade la primera abajo</div>`;
+    return;
+  }
+  el.innerHTML = cats.map((c,i)=>`
+    <div class="cat-manage-row">
+      <div class="cmr-order">
+        <div class="order-btns">
+          <button title="Subir" ${i===0?'disabled':''} onclick="moveCategory('${c.key}',-1)">▲</button>
+          <button title="Bajar" ${i===cats.length-1?'disabled':''} onclick="moveCategory('${c.key}',1)">▼</button>
+        </div>
+      </div>
+      <div class="cmr-label">${c.emoji?escapeHtml(c.emoji)+' ':''}${escapeHtml(c.label)} <span class="cmr-count">(${counts[c.key]||0} servicio${counts[c.key]===1?'':'s'})</span></div>
+      <button class="icon-btn btn-danger" title="Eliminar categoría" onclick="deleteCategory('${c.key}')">✕</button>
+    </div>
+  `).join('');
+}
+async function persistCategories(){
+  try{
+    await setDoc.set({ categories: settings.categories }, { merge:true });
+  }catch(e){ console.error(e); showToast('No se pudieron guardar las categorías'); }
+}
+async function addCategory(){
+  const labelInput = document.getElementById('new-cat-label');
+  const emojiInput = document.getElementById('new-cat-emoji');
+  const label = labelInput.value.trim();
+  const emoji = emojiInput.value.trim();
+  if(!label){ showToast('Escribe un nombre para la categoría'); return; }
+  const key = slugifyCatKey(label);
+  settings.categories = [...getCategories(), { key, label, emoji }];
+  labelInput.value = ''; emojiInput.value = '';
+  await persistCategories();
+  populateCategorySelect(true);
+  renderSvcAdminList();
+  showToast('Categoría añadida');
+}
+async function deleteCategory(key){
+  const inUse = services.filter(s=>s.cat===key).length;
+  if(inUse>0){
+    showToast(`No se puede eliminar: ${inUse} servicio(s) usan esta categoría`);
+    return;
+  }
+  if(getCategories().length<=1){
+    showToast('Debe quedar al menos una categoría');
+    return;
+  }
+  settings.categories = getCategories().filter(c=>c.key!==key);
+  await persistCategories();
+  populateCategorySelect(true);
+  renderSvcAdminList();
+  showToast('Categoría eliminada');
+}
+async function moveCategory(key, dir){
+  const cats = [...getCategories()];
+  const idx = cats.findIndex(c=>c.key===key);
+  const swapIdx = idx + dir;
+  if(idx===-1 || swapIdx<0 || swapIdx>=cats.length) return;
+  [cats[idx], cats[swapIdx]] = [cats[swapIdx], cats[idx]];
+  settings.categories = cats;
+  await persistCategories();
+  renderSvcAdminList();
 }
 /* ============ SETTINGS (horario) ============ */
 const SCHED_DAY_ORDER = [1,2,3,4,5,6,0]; // Lunes...Domingo
