@@ -1616,19 +1616,23 @@ async function deleteSvc(id){
     showToast('Servicio eliminado');
   }catch(e){ console.error(e); showToast('No se pudo eliminar'); }
 }
-/* Mover un servicio arriba/abajo dentro de la lista visible actualmente (respeta el filtro de categoría) */
+/* Mover un servicio arriba/abajo dentro de la lista visible actualmente (respeta el filtro de categoría).
+   Reasigna el orden completo de todos los servicios para autocorregir cualquier servicio antiguo sin campo "orden". */
 async function moveSvc(id, dir){
   const all = sortedServices();
-  const filtered = svcAdminCatFilter==='todas' ? all : all.filter(s=>s.cat===svcAdminCatFilter);
+  const positions = [];
+  const filtered = [];
+  all.forEach((s,i)=>{
+    if(svcAdminCatFilter==='todas' || s.cat===svcAdminCatFilter){ positions.push(i); filtered.push(s); }
+  });
   const idx = filtered.findIndex(s=>s.id===id);
   const swapIdx = idx + dir;
   if(idx===-1 || swapIdx<0 || swapIdx>=filtered.length) return;
-  const a = filtered[idx], b = filtered[swapIdx];
-  const ordenA = Number(a.orden)||0, ordenB = Number(b.orden)||0;
+  [filtered[idx], filtered[swapIdx]] = [filtered[swapIdx], filtered[idx]];
+  positions.forEach((pos,k)=>{ all[pos] = filtered[k]; });
   try{
     const batch = db.batch();
-    batch.update(svcCol.doc(a.id), { orden: ordenB });
-    batch.update(svcCol.doc(b.id), { orden: ordenA });
+    all.forEach((s,i)=> batch.update(svcCol.doc(s.id), { orden: i*10 }));
     await batch.commit();
   }catch(e){ console.error(e); showToast('No se pudo reordenar'); }
 }
