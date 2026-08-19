@@ -1675,10 +1675,20 @@ function renderCategoriesAdmin(){
           <button title="Bajar" ${i===cats.length-1?'disabled':''} onclick="moveCategory('${c.key}',1)">▼</button>
         </div>
       </div>
-      <div class="cmr-label">${c.emoji?escapeHtml(c.emoji)+' ':''}${escapeHtml(c.label)} <span class="cmr-count">(${counts[c.key]||0} servicio${counts[c.key]===1?'':'s'})</span></div>
+      <input class="cmr-emoji-input" value="${escapeHtml(c.emoji||'')}" maxlength="4" style="width:56px;text-align:center;flex:0 0 auto" onchange="updateCategoryField('${c.key}','emoji',this.value.trim())">
+      <input class="cmr-label-input" value="${escapeHtml(c.label)}" style="flex:1" onchange="updateCategoryField('${c.key}','label',this.value.trim())">
+      <span class="cmr-count">${counts[c.key]||0} servicio${counts[c.key]===1?'':'s'}</span>
       <button class="icon-btn btn-danger" title="Eliminar categoría" onclick="deleteCategory('${c.key}')">✕</button>
     </div>
   `).join('');
+}
+async function updateCategoryField(key, field, value){
+  if(field==='label' && !value){ showToast('El nombre no puede quedar vacío'); renderCategoriesAdmin(); return; }
+  settings.categories = getCategories().map(c=> c.key===key ? { ...c, [field]: value } : c);
+  await persistCategories();
+  populateCategorySelect(true);
+  renderSvcAdminList();
+  showToast('Categoría actualizada');
 }
 async function persistCategories(){
   try{
