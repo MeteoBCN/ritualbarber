@@ -575,6 +575,70 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   line-height:1.5;
 }
 
+/* ── RESEÑAS GOOGLE (carrusel) ── */
+.reseñas-wrap {
+  width:100%; max-width:420px;
+  margin:0 auto 2rem;
+}
+.reseñas-cabecera {
+  display:flex; align-items:center; justify-content:center;
+  gap:0.5rem; margin-bottom:0.3rem;
+}
+.reseñas-google-icon { width:20px; height:20px; flex-shrink:0; }
+.reseñas-titulo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem; font-weight:700;
+  color:var(--oro); letter-spacing:1px;
+}
+.reseñas-subtitulo {
+  text-align:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.74rem; font-weight:600; letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--suave); margin-bottom:1.1rem;
+}
+.reseñas-subtitulo .reseñas-estrellas-mini { color:var(--oro); letter-spacing:1px; margin-right:0.35rem; }
+.reseñas-track {
+  display:flex; gap:0.9rem;
+  overflow-x:auto; scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  padding:0.2rem 0.2rem 0.9rem;
+  scrollbar-width:none;
+}
+.reseñas-track::-webkit-scrollbar { display:none; }
+.reseña-card {
+  scroll-snap-align:center;
+  flex:0 0 82%;
+  background:var(--card);
+  border:1px solid var(--borde);
+  border-radius:14px;
+  padding:1.3rem 1.2rem;
+  display:flex; flex-direction:column;
+  transition:border-color 0.2s;
+}
+.reseña-card:hover { border-color:var(--oro3); }
+.reseña-estrellas { color:var(--oro); font-size:0.95rem; letter-spacing:2px; margin-bottom:0.55rem; }
+.reseña-texto {
+  font-family:'Barlow',sans-serif;
+  font-size:0.86rem; line-height:1.55;
+  color:var(--suave);
+  flex:1;
+}
+.reseña-pie {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:0.6rem; margin-top:1rem; padding-top:0.8rem;
+  border-top:1px solid var(--borde);
+}
+.reseña-autor {
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.98rem; font-weight:700;
+  color:var(--oro);
+}
+.reseñas-dots { display:flex; justify-content:center; gap:0.4rem; margin-top:0.2rem; }
+.reseñas-dot { width:6px; height:6px; border-radius:50%; background:var(--borde); }
+.reseñas-dot.activo { background:var(--oro); }
+.reseñas-ver-mas { text-align:center; margin-top:1rem; }
+
 /* ── MAPA (misma estética que las fotos) ── */
 .hero-mapa-wrap {
   position: relative;
@@ -822,6 +886,64 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="hero-info-item">
         <div class="hero-info-titulo">VÍSITANOS EN</div>
         <div class="hero-info-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
+      </div>
+    </div>
+
+    <!-- Reseñas de Google -->
+    <div class="reseñas-wrap">
+      <div class="reseñas-cabecera">
+        <svg class="reseñas-google-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#FFC107" d="M43.6 20.5H42V20.4H24v7.2h11.3c-1.6 4.6-6 7.9-11.3 7.9-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.6 6 29 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l5.9 4.3C13.9 15.6 18.6 12.4 24 12.4c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.6 6 29 4 24 4c-7.6 0-14.2 4.3-17.7 10.7z"/>
+          <path fill="#4CAF50" d="M24 44c5 0 9.4-1.9 12.8-5.1l-5.9-5c-2 1.5-4.5 2.4-6.9 2.4-5.2 0-9.7-3.3-11.3-7.9l-5.9 4.6C10 39.6 16.5 44 24 44z"/>
+          <path fill="#1976D2" d="M43.6 20.5H42V20.4H24v7.2h11.3c-.8 2.3-2.2 4.2-4.1 5.6l5.9 5C40.6 35.7 44 30.4 44 24c0-1.2-.1-2.4-.4-3.5z"/>
+        </svg>
+        <span class="reseñas-titulo">Reseñas de Clientes</span>
+      </div>
+      <div class="reseñas-subtitulo"><span class="reseñas-estrellas-mini">★★★★★</span>Google Reviews</div>
+
+      <div class="reseñas-track" id="reseñas-track">
+        <div class="reseña-card">
+          <div class="reseña-estrellas">★★★★★</div>
+          <div class="reseña-texto">Excelentes profesionales, tanto en corte de cabello como la atención al cliente, muy contenta con su trabajo y un excelente trato.</div>
+          <div class="reseña-pie"><span class="reseña-autor">Karen Duque</span></div>
+        </div>
+        <div class="reseña-card">
+          <div class="reseña-estrellas">★★★★★</div>
+          <div class="reseña-texto">Local limpio y con buen ambiente, le ponen ganas y se nota el resultado.. corte perfecto y trato de 10. 100% recomendable.</div>
+          <div class="reseña-pie"><span class="reseña-autor">Kty Gimenez</span></div>
+        </div>
+        <div class="reseña-card">
+          <div class="reseña-estrellas">★★★★★</div>
+          <div class="reseña-texto">Buena atención, muy limpios y muy profesionales. Calidad y buen precio. Volveré.</div>
+          <div class="reseña-pie"><span class="reseña-autor">Sabino Rodriguez</span></div>
+        </div>
+        <div class="reseña-card">
+          <div class="reseña-estrellas">★★★★★</div>
+          <div class="reseña-texto">Muy buen ambiente, la atención al máximo y el lugar super limpio y muy bien acogedor.</div>
+          <div class="reseña-pie"><span class="reseña-autor">Ismael Burgos</span></div>
+        </div>
+        <div class="reseña-card">
+          <div class="reseña-estrellas">★★★★★</div>
+          <div class="reseña-texto">Personal super amable y profesional. Hacen sentir a uno muy cómodo. Y cortaron mi pelo y degradaron mi barba justo como a mí me gusta. ¡Gracias!</div>
+          <div class="reseña-pie"><span class="reseña-autor">Paul Mosqueira</span></div>
+        </div>
+        <div class="reseña-card">
+          <div class="reseña-estrellas">★★★★★</div>
+          <div class="reseña-texto">¡Increíble lugar! ¡Genial atención! Super contento con mi corte de pelo y arreglo de barba. ¡Ha sido un gran descubrimiento!</div>
+          <div class="reseña-pie"><span class="reseña-autor">Ivi</span></div>
+        </div>
+        <div class="reseña-card">
+          <div class="reseña-estrellas">★★★★★</div>
+          <div class="reseña-texto">Muy agradables y profesionales, repetiré sin duda, ya se lo estoy aconsejando a los amigos del barrio.</div>
+          <div class="reseña-pie"><span class="reseña-autor">Pol Frías</span></div>
+        </div>
+      </div>
+
+      <div class="reseñas-dots" id="reseñas-dots"></div>
+
+      <div class="reseñas-ver-mas">
+        <a href="https://share.google/RH9bpuSTZfnUTxG6W" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ver todas en Google</a>
       </div>
     </div>
 
@@ -1258,10 +1380,34 @@ function toast(mensaje) {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+// ════════════════════════════════════════
+// CARRUSEL DE RESEÑAS
+// ════════════════════════════════════════
+function initReseñasCarrusel() {
+  const track = document.getElementById('reseñas-track');
+  const dotsCont = document.getElementById('reseñas-dots');
+  if (!track || !dotsCont) return;
+  const cards = track.querySelectorAll('.reseña-card');
+  dotsCont.innerHTML = Array.from(cards).map((_, i) => `<span class="reseñas-dot${i===0?' activo':''}"></span>`).join('');
+  const dots = dotsCont.querySelectorAll('.reseñas-dot');
+
+  let ticking = false;
+  track.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const idx = Math.round(track.scrollLeft / (cards[0].offsetWidth + 14));
+      dots.forEach((d, i) => d.classList.toggle('activo', i === idx));
+      ticking = false;
+    });
+  });
+}
+
 // Inicializar
 document.addEventListener('DOMContentLoaded', () => {
   showSection('inicio-publica');
   cargarServicios();
+  initReseñasCarrusel();
 });
 
 // ════════════════════════════════════════
