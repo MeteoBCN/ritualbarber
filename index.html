@@ -501,6 +501,81 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   opacity: 0.4;
 }
 
+/* ── ¿POR QUÉ ELEGIRNOS? ── */
+.porque-wrap {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: 2.6rem;
+  padding: 3.2rem 1.5rem 3.4rem;
+  background: linear-gradient(160deg, #101d19 0%, #16271f 100%);
+  border-top: 1px solid rgba(204,181,127,0.18);
+  border-bottom: 1px solid rgba(204,181,127,0.18);
+  text-align: center;
+}
+.porque-titulo {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--oro);
+  letter-spacing: 0.5px;
+  margin-bottom: 2.6rem;
+}
+.porque-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.8rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.porque-item {
+  padding: 0 0.6rem;
+}
+.porque-icono {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+.porque-icono svg {
+  width: 27px;
+  height: 27px;
+  stroke: var(--oro2);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.porque-item h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #f3efe4;
+  margin-bottom: 0.6rem;
+}
+.porque-item p {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--suave);
+  max-width: 340px;
+  margin: 0 auto;
+}
+@media(max-width:700px) {
+  .porque-wrap { padding: 2.4rem 1.1rem 2.6rem; margin-top: 2rem; }
+  .porque-titulo { font-size: 1.85rem; margin-bottom: 1.9rem; }
+  .porque-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .porque-item h3 { font-size: 1.25rem; }
+  .porque-item p { font-size: 0.83rem; }
+}
+
 /* ── HORARIO (tabla de bloques) ── */
 .horario-tabla {
   display: flex;
@@ -852,6 +927,57 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         <div class="foto-desc">Completa tu experiencia con nuestros servicios esenciales de cuidado personal. Ofrecemos tratamientos faciales revitalizantes, manicura profesional y depilación con cera eficaz, diseñados para mejorar tu imagen y darte un momento de relax.</div>
       </div>
     </div>
+
+    <!-- ¿Por qué elegirnos? -->
+    <section class="porque-wrap">
+      <h2 class="porque-titulo">¿Por qué elegirnos?</h2>
+      <div class="porque-grid">
+
+        <div class="porque-item">
+          <div class="porque-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <h3>Estilo masculino</h3>
+          <p>Especialistas en imagen masculina con cortes y barbas que reflejan personalidad, precisión y carácter.</p>
+        </div>
+
+        <div class="porque-item">
+          <div class="porque-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v5l3 2"/>
+            </svg>
+          </div>
+          <h3>Reserva rápida</h3>
+          <p>Agenda tu cita online sin complicaciones ni esperas. Atención puntual y exclusiva desde el primer minuto.</p>
+        </div>
+
+        <div class="porque-item">
+          <div class="porque-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l2.9 5.9 6.1.9-4.5 4.3 1.1 6.4-5.6-3-5.6 3 1.1-6.4L3 9.8l6.1-.9L12 3z"/>
+            </svg>
+          </div>
+          <h3>Productos premium</h3>
+          <p>Trabajamos con mascarillas, aceites y tratamientos de alta gama que cuidan tu piel y barba.</p>
+        </div>
+
+        <div class="porque-item">
+          <div class="porque-icono">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="9" r="5"/>
+              <path d="M8.5 13.2L7 22l5-2.6L17 22l-1.5-8.8"/>
+            </svg>
+          </div>
+          <h3>Técnica experta</h3>
+          <p>Barberos con formación, visión estética y dominio de las últimas tendencias en estilo masculino.</p>
+        </div>
+
+      </div>
+    </section>
 
     <!-- Info hero (texto plano) -->
     <div class="hero-info-plana">
