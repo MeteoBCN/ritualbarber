@@ -170,20 +170,31 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   height: 420px;
   overflow: hidden;
 }
+.hero-carrusel-track {
+  display: flex;
+  width: 600%;
+  height: 100%;
+  animation: heroCarruselSlide 20s infinite;
+}
 .hero-carrusel-slide {
-  position: absolute;
-  inset: 0;
+  width: calc(100% / 6);
+  height: 100%;
+  flex-shrink: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0;
-  animation: heroCarruselFade 20s infinite;
 }
-@keyframes heroCarruselFade {
-  0%   { opacity: 0; }
-  3%   { opacity: 1; }
-  18%  { opacity: 1; }
-  23%  { opacity: 0; }
-  100% { opacity: 0; }
+@keyframes heroCarruselSlide {
+  0%   { transform: translateX(0%); }
+  18%  { transform: translateX(0%); }
+  20%  { transform: translateX(-16.6667%); }
+  38%  { transform: translateX(-16.6667%); }
+  40%  { transform: translateX(-33.3333%); }
+  58%  { transform: translateX(-33.3333%); }
+  60%  { transform: translateX(-50%); }
+  78%  { transform: translateX(-50%); }
+  80%  { transform: translateX(-66.6667%); }
+  98%  { transform: translateX(-66.6667%); }
+  100% { transform: translateX(-83.3333%); }
 }
 .hero-carrusel-overlay {
   position: absolute;
@@ -1032,11 +1043,14 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Carrusel hero -->
     <div class="hero-carrusel">
-      <div class="hero-carrusel-slide" style="background-image:url('barberia.jpg'); animation-delay:0s;"></div>
-      <div class="hero-carrusel-slide" style="background-image:url('barberia2.jpg'); animation-delay:4s;"></div>
-      <div class="hero-carrusel-slide" style="background-image:url('barberia3.jpg'); animation-delay:8s;"></div>
-      <div class="hero-carrusel-slide" style="background-image:url('barberia4.jpg'); animation-delay:12s;"></div>
-      <div class="hero-carrusel-slide" style="background-image:url('barberia5.jpg'); animation-delay:16s;"></div>
+      <div class="hero-carrusel-track">
+        <div class="hero-carrusel-slide" style="background-image:url('barberia.jpg');"></div>
+        <div class="hero-carrusel-slide" style="background-image:url('barberia2.jpg');"></div>
+        <div class="hero-carrusel-slide" style="background-image:url('barberia3.jpg');"></div>
+        <div class="hero-carrusel-slide" style="background-image:url('barberia4.jpg');"></div>
+        <div class="hero-carrusel-slide" style="background-image:url('barberia5.jpg');"></div>
+        <div class="hero-carrusel-slide" style="background-image:url('barberia.jpg');"></div>
+      </div>
       <div class="hero-carrusel-overlay"></div>
       <div class="hero-carrusel-contenido">
         <img src="logo.png" alt="Ritual Barber Logo" class="hero-carrusel-logo">
