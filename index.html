@@ -809,7 +809,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   font-family: 'Montserrat', sans-serif;
   font-size: 2.1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--suave);
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 0.6rem;
@@ -1121,13 +1121,51 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   transform: translateZ(0);
 }
 
+/* ── INSTAGRAM ── */
+.instagram-wrap {
+  align-self: stretch;
+  flex-shrink: 0;
+  width: auto;
+  margin-left: calc(-1 * var(--hero-px, 2rem));
+  margin-right: calc(-1 * var(--hero-px, 2rem));
+  margin-top: 2rem;
+  padding: 3rem 1.5rem 3.2rem;
+  background: linear-gradient(160deg, #101d19 0%, #16271f 100%);
+  border-top: 1px solid rgba(204,181,127,0.18);
+  border-bottom: 1px solid rgba(204,181,127,0.18);
+  text-align: center;
+}
+.instagram-titulo {
+  display: block;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--oro);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+}
+.instagram-titulo::after { content: none; }
+.instagram-subtitulo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--suave);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 1.6rem;
+}
+@media(max-width:700px) {
+  .instagram-wrap { padding: 2.4rem 1.1rem 2.6rem; margin-top: 1.5rem; }
+  .instagram-titulo { font-size: 1.75rem; }
+}
+
 /* ── FOOTER ── */
 .hero-footer {
   width: 100%;
   max-width: 420px;
-  margin: 1rem auto 0;
-  padding-top: 1.8rem;
-  border-top: 1px solid var(--borde);
+  margin: 0 auto;
+  padding-top: 1.2rem;
   text-align: center;
 }
 .footer-social {
@@ -1246,9 +1284,11 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="bienvenida-foto-texto">EL RITUAL QUE TRANSFORMA TU IMAGEN</div>
     </div>
 
-    <!-- Frase destacada -->
-    <div class="cta-grande">
-      <div class="cta-grande-texto">El arte de la barbería</div>
+    <!-- Imagen bienvenida (duplicada) -->
+    <div class="bienvenida-foto">
+      <img src="barberia7.jpg" alt="Ritual Barber">
+      <div class="bienvenida-foto-overlay"></div>
+      <div class="bienvenida-foto-texto">EL RITUAL QUE TRANSFORMA TU IMAGEN</div>
     </div>
 
     <!-- Cuidado integral masculino -->
@@ -1407,8 +1447,10 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <div class="reseñas-dots" id="reseñas-dots"></div>
     </div>
 
-    <!-- Footer -->
-    <footer class="hero-footer">
+    <!-- Instagram -->
+    <section class="instagram-wrap">
+      <h2 class="instagram-titulo">Conecta con nuestro estilo</h2>
+      <div class="instagram-subtitulo">Instagram</div>
       <a href="https://instagram.com/ritualbarbersvh" target="_blank" rel="noopener" class="footer-social" aria-label="Instagram Ritual Barber">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
           <path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.24 2.23.41.56.21.96.47 1.38.89.42.42.68.82.89 1.38.17.42.36 1.05.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.8-.41 2.23-.21.56-.47.96-.89 1.38-.42.42-.82.68-1.38.89-.42.17-1.05.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.24-2.23-.41a3.72 3.72 0 0 1-1.38-.89 3.72 3.72 0 0 1-.89-1.38c-.17-.42-.36-1.05-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.24-1.8.41-2.23.21-.56.47-.96.89-1.38.42-.42.82-.68 1.38-.89.42-.17 1.05-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56a5.9 5.9 0 0 0-2.14 1.39A5.9 5.9 0 0 0 .61 4.16C.31 4.92.11 5.79.05 7.07.01 8.35 0 8.76 0 12s.01 3.65.07 4.93c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.39 2.14a5.9 5.9 0 0 0 2.14 1.39c.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.65-.01 4.93-.07c1.28-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.14-1.39 5.9 5.9 0 0 0 1.39-2.14c.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.93s-.01-3.65-.07-4.93c-.06-1.28-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.39-2.14A5.9 5.9 0 0 0 19.84.63c-.76-.3-1.63-.5-2.91-.56C15.65.01 15.24 0 12 0Z"/>
@@ -1417,6 +1459,10 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         </svg>
         <span>ritualbarbersvh</span>
       </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="hero-footer">
       <div class="footer-legal">
         <a href="privacidad.html">Política de Privacidad</a>
         <span class="footer-dot">·</span>
