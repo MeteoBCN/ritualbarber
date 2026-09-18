@@ -896,6 +896,28 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   object-fit: cover;
   display: block;
 }
+.cta-grande-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,18,15,0.55);
+}
+.cta-grande-texto {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.3;
+  color: var(--oro);
+  letter-spacing: 0.5px;
+}
 .cta-grande p {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
@@ -1146,6 +1168,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <!-- Frase destacada -->
     <div class="cta-grande">
       <img src="barberia7.jpg" alt="Ritual Barber">
+      <div class="cta-grande-overlay"></div>
+      <div class="cta-grande-texto">El arte de la barbería</div>
     </div>
 
     <!-- ¿Por qué elegirnos? -->
