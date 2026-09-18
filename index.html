@@ -60,6 +60,15 @@ nav {
 }
 .logo:hover { color:var(--oro2); }
 
+.nav-logo {
+  height: 38px;
+  width: auto;
+  border-radius: 8px;
+  margin-right: auto;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
 nav button {
   background:none; border:none;
   color:var(--suave);
@@ -444,17 +453,15 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   white-space: nowrap;
   flex-shrink: 0;
   transition: all 0.2s;
-  box-shadow: 0 3px 12px rgba(204,181,127,0.35);
 }
 .nav-cta-reserva:hover {
   background: var(--oro2);
-  transform: translateY(-1px);
-  box-shadow: 0 5px 16px rgba(204,181,127,0.45);
 }
 
 @media(max-width:700px) {
   nav { padding:0.3rem 1rem; min-height:60px; }
   .logo { font-size:1.1rem; letter-spacing:2px; }
+  .nav-logo { height: 32px; }
   .hamburger { display:flex; }
   .nav-cta-reserva { font-size:0.62rem; padding:0.44rem 0.9rem; margin-left:0.6rem; }
   .nav-links {
@@ -880,6 +887,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
 <!-- ════════════ NAV ════════════ -->
 <nav>
+  <img src="logo.png" alt="Ritual Barber" class="nav-logo" onclick="showSection('inicio-publica');cerrarMenu()">
   <div class="nav-links" id="nav-links">
     <button onclick="showSection('inicio-publica');cerrarMenu()" id="nav-inicio-publica" class="active">Inicio</button>
     <button onclick="window.location.href='reservar.html'" id="nav-reservar">Reservar Cita</button>
