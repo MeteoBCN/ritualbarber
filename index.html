@@ -264,6 +264,34 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .bienvenida-tagline { font-size: 1.05rem; }
 }
 
+/* ── IMAGEN BIENVENIDA ── */
+.bienvenida-foto {
+  position: relative;
+  align-self: stretch;
+  flex-shrink: 0;
+  width: auto;
+  margin-left: calc(-1 * var(--hero-px, 2rem));
+  margin-right: calc(-1 * var(--hero-px, 2rem));
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  height: 360px;
+  overflow: hidden;
+}
+.bienvenida-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.bienvenida-foto-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,18,15,0.55);
+}
+@media(max-width:700px) {
+  .bienvenida-foto { height: 240px; margin-top: 0.8rem; margin-bottom: 1.6rem; }
+}
+
 .inicio-cards {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
@@ -718,91 +746,85 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .porque-item p { font-size: 0.83rem; }
 }
 
+/* ── VÍSITANOS EN (fondo full-bleed, como porque-wrap) ── */
+.visitanos-wrap {
+  align-self: stretch;
+  flex-shrink: 0;
+  width: auto;
+  margin-left: calc(-1 * var(--hero-px, 2rem));
+  margin-right: calc(-1 * var(--hero-px, 2rem));
+  margin-top: 2.6rem;
+  padding: 3rem 1.5rem 3.2rem;
+  background: linear-gradient(160deg, #101d19 0%, #16271f 100%);
+  border-top: 1px solid rgba(204,181,127,0.18);
+  border-bottom: 1px solid rgba(204,181,127,0.18);
+  text-align: center;
+}
+@media(max-width:700px) {
+  .visitanos-wrap { padding: 2.2rem 1.1rem 2.4rem; margin-top: 2rem; }
+}
+
 /* ── HORARIO (tabla de bloques) ── */
 .horario-tabla {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 0.55rem;
   margin-top: 1rem;
   max-width: 360px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
-.horario-fila {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 0.72rem 1rem;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-}
-.horario-icono {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: rgba(22,39,31,0.08);
+.horario-icono-unico {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 0.3rem;
 }
-.horario-icono svg {
-  width: 16px;
-  height: 16px;
+.horario-icono-unico svg {
+  width: 48px;
+  height: 48px;
   fill: none;
-  stroke: #16271f;
-  stroke-width: 2;
+  stroke: var(--oro);
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+.horario-bloque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0;
+}
 .horario-dia {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.9px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: #16271f;
-  text-align: left;
-  flex: 1;
+  color: var(--oro);
   line-height: 1.2;
 }
 .horario-horas {
   font-family: 'Barlow', sans-serif;
-  font-size: 0.78rem;
-  color: #38a16e;
-  font-weight: 700;
-  text-align: right;
-  line-height: 1.35;
-  white-space: nowrap;
+  font-size: 0.86rem;
+  color: #f3efe4;
+  font-weight: 600;
+  line-height: 1.4;
 }
-.horario-cerrado {
-  background: rgba(255,255,255,0.12);
-  box-shadow: none;
-  border: 1px solid rgba(255,255,255,0.16);
-}
-.horario-cerrado .horario-icono {
-  background: rgba(255,255,255,0.14);
-}
-.horario-cerrado .horario-icono svg {
-  stroke: #ffffff;
-}
-.horario-cerrado .horario-dia {
-  color: #ffffff;
-}
-.horario-cerrado .horario-horas {
-  color: #ffffff;
+.horario-cerrado-txt {
+  color: var(--suave);
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  font-size: 0.72rem;
-  opacity: 0.85;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 @media(max-width:480px) {
-  .horario-fila { padding: 0.62rem 0.85rem; gap: 0.55rem; }
-  .horario-icono { width: 26px; height: 26px; }
-  .horario-icono svg { width: 14px; height: 14px; }
-  .horario-dia { font-size: 0.7rem; }
-  .horario-horas { font-size: 0.72rem; white-space: normal; }
+  .horario-icono-unico svg { width: 40px; height: 40px; }
+  .horario-dia { font-size: 0.74rem; }
+  .horario-horas { font-size: 0.8rem; }
 }
 
 /* ── FOTOS CON TÍTULO Y DESCRIPCIÓN ── */
@@ -1033,6 +1055,12 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <p class="bienvenida-tagline">Tu estilo merece lo mejor.</p>
     </div>
 
+    <!-- Imagen bienvenida -->
+    <div class="bienvenida-foto">
+      <img src="barberia6.jpg" alt="Ritual Barber">
+      <div class="bienvenida-foto-overlay"></div>
+    </div>
+
     <!-- Imagen barbería 1 -->
     <div class="foto-wrap">
       <img src="barberia.jpg" alt="Ritual Barber">
@@ -1133,49 +1161,44 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <div class="hero-info-plana">
       <div class="hero-info-item">
         <div class="horario-tabla">
-          <div class="horario-fila">
-            <span class="horario-icono">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
-            </span>
+          <span class="horario-icono-unico">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+          </span>
+          <div class="horario-bloque">
             <span class="horario-dia">Lunes</span>
             <span class="horario-horas">16:00 – 21:00</span>
           </div>
-          <div class="horario-fila">
-            <span class="horario-icono">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
-            </span>
+          <div class="horario-bloque">
             <span class="horario-dia">Martes a Sábado</span>
-            <span class="horario-horas">10:00–14:00 <br> 15:00–21:00</span>
+            <span class="horario-horas">10:00–14:00 · 15:00–21:00</span>
           </div>
-          <div class="horario-fila horario-cerrado">
-            <span class="horario-icono">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </span>
+          <div class="horario-bloque">
             <span class="horario-dia">Domingos y Festivos</span>
-            <span class="horario-horas">Cerrado</span>
-          </div>
-        </div>
-      </div>
-      <div class="hero-drop-divider"></div>
-      <div class="hero-info-item">
-        <div class="hero-info-titulo">VÍSITANOS EN</div>
-        <div class="hero-info-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
-        <div style="margin-top:0.9rem;">
-          <button class="btn btn-ghost btn-sm" id="btn-toggle-mapa" onclick="toggleMapa()">Ver Mapa</button>
-          <div class="hero-mapa-wrap" id="hero-mapa-wrap" style="display:none;margin-top:1rem;">
-            <iframe
-              src="https://www.google.com/maps?q=Moss%C3%A8n+Jacint+Verdaguer+205,+Sant+Vicen%C3%A7+dels+Horts,+Barcelona&output=embed"
-              width="100%"
-              height="220"
-              style="border:0;display:block;border-radius:16px;"
-              allowfullscreen=""
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
+            <span class="horario-horas horario-cerrado-txt">Cerrado</span>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Vísitanos en -->
+    <section class="visitanos-wrap">
+      <div class="hero-info-titulo">VÍSITANOS EN</div>
+      <div class="hero-info-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
+      <div style="margin-top:0.9rem;">
+        <button class="btn btn-ghost btn-sm" id="btn-toggle-mapa" onclick="toggleMapa()">Ver Mapa</button>
+        <div class="hero-mapa-wrap" id="hero-mapa-wrap" style="display:none;margin-top:1rem;">
+          <iframe
+            src="https://www.google.com/maps?q=Moss%C3%A8n+Jacint+Verdaguer+205,+Sant+Vicen%C3%A7+dels+Horts,+Barcelona&output=embed"
+            width="100%"
+            height="220"
+            style="border:0;display:block;border-radius:16px;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </section>
 
     <!-- Reseñas de Google -->
     <div class="reseñas-wrap" style="margin-top:2.2rem;">
