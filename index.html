@@ -700,8 +700,8 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 }
 .hero-info-desc {
   font-family: 'Barlow', sans-serif;
-  font-size: 0.8rem;
-  color: var(--oro);
+  font-size: 1.05rem;
+  color: #ffffff;
   letter-spacing: 0.3px;
   line-height: 1.6;
   padding-top: 0.4rem;
@@ -1209,10 +1209,10 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Vísitanos en -->
     <section class="visitanos-wrap">
-      <div class="hero-info-titulo">VÍSITANOS EN</div>
-      <div class="hero-info-desc">Mossèn Jacint Verdaguer 205 · Sant Vicenç dels Horts · Barcelona</div>
+      <div class="hero-info-titulo">VIVE LA EXPERIENCIA EN</div>
+      <div class="hero-info-desc">Mossèn Jacint Verdaguer, 205<br>Sant Vicenç dels Horts · 08620<br>Barcelona</div>
       <div style="margin-top:0.9rem;">
-        <button class="btn btn-ghost btn-sm" id="btn-toggle-mapa" onclick="toggleMapa()">Ver Mapa</button>
+        <button class="btn btn-ghost btn-sm" id="btn-toggle-mapa" onclick="toggleMapa()">Cómo llegar</button>
         <div class="hero-mapa-wrap" id="hero-mapa-wrap" style="display:none;margin-top:1rem;">
           <iframe
             src="https://www.google.com/maps?q=Moss%C3%A8n+Jacint+Verdaguer+205,+Sant+Vicen%C3%A7+dels+Horts,+Barcelona&output=embed"
@@ -1692,7 +1692,7 @@ function toggleMapa() {
   const btn  = document.getElementById('btn-toggle-mapa');
   const visible = mapa.style.display !== 'none';
   mapa.style.display = visible ? 'none' : 'block';
-  btn.textContent = visible ? '📍 Ver Mapa' : '📍 Ocultar Mapa';
+  btn.textContent = visible ? 'Cómo llegar' : 'Ocultar Mapa';
 }
 
 function toast(mensaje) {
