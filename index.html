@@ -599,15 +599,12 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 /* ── RESPONSIVE ── */
 .hamburger {
   display:none; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-  background:rgba(204,181,127,0.14);
-  border:1px solid var(--oro);
-  border-radius:9px;
+  background:transparent;
+  border:none;
   cursor:pointer;
   width:46px; height:46px;
   padding:0; margin-left:auto;
-  transition:background 0.2s;
 }
-.hamburger:hover, .hamburger:active { background:rgba(204,181,127,0.24); }
 .hamburger span { display:block; width:24px; height:3px; background:var(--oro); border-radius:2px; transition:all 0.3s; }
 .hamburger.open span:nth-child(1) { transform:translateY(9px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity:0; }
