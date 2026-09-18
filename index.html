@@ -215,6 +215,55 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .hero-carrusel-logo { width: 110px; height: 110px; border-radius: 16px; margin-bottom: 0.9rem; }
 }
 
+/* ── BIENVENIDA ── */
+.bienvenida-wrap {
+  max-width: 620px;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+}
+.bienvenida-titulo {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+  font-weight: 700;
+  color: var(--oro);
+  letter-spacing: 1px;
+  margin-bottom: 0.9rem;
+}
+.bienvenida-titulo::after { content: none; }
+.bienvenida-subtitulo {
+  font-family: 'Barlow', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #f3efe4;
+  line-height: 1.5;
+  margin-bottom: 1.1rem;
+}
+.bienvenida-texto {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--suave);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.bienvenida-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--oro2);
+  margin-top: 1.2rem;
+}
+@media(max-width:700px) {
+  .bienvenida-titulo { font-size: 1.5rem; }
+  .bienvenida-subtitulo { font-size: 0.95rem; }
+  .bienvenida-texto { font-size: 0.83rem; }
+  .bienvenida-tagline { font-size: 1.05rem; }
+}
+
 .inicio-cards {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
@@ -975,6 +1024,14 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     </div>
 
     <div class="hero-linea"></div>
+
+    <!-- Bienvenida -->
+    <div class="bienvenida-wrap">
+      <h2 class="bienvenida-titulo">En Ritual Barber convertimos el cuidado masculino en un arte.</h2>
+      <p class="bienvenida-texto">No cortamos por cortar: estudiamos tu rostro para potenciar tu identidad única con la máxima precisión.</p>
+      <p class="bienvenida-texto">Disfruta de una experiencia de alta gama: desde degradados impecables y clásicos atemporales hasta el auténtico ritual de barba a navaja con toalla caliente y productos de marcas referentes. Todo en un ambiente exclusivo diseñado para tu comodidad y relax.</p>
+      <p class="bienvenida-tagline">Tu estilo merece lo mejor.</p>
+    </div>
 
     <!-- Imagen barbería 1 -->
     <div class="foto-wrap">
