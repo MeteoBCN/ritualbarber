@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="Ritual Barber">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=Montserrat:wght@400;500;600&family=Allura&display=swap" rel="stylesheet">
 <style>
 :root {
   --fondo:    #ffffff;
@@ -917,6 +917,15 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   margin-bottom: 1.3rem;
 }
 .ritual-desc-titulo::after { content: none; }
+.ritual-desc-pre {
+  font-family: 'Allura', 'Pinyon Script', cursive;
+  font-weight: 400;
+  font-size: 2.7rem;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #fff;
+  margin-right: 0.15rem;
+}
 .ritual-desc-texto {
   font-family: 'Barlow', sans-serif;
   font-size: 0.98rem;
@@ -933,6 +942,17 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   letter-spacing: 0.3px;
   margin-bottom: 1.6rem;
 }
+.ritual-desc-enlace {
+  display: inline-block;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 1.5px;
+  color: var(--oro);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.ritual-desc-enlace:hover { color: var(--oro2); }
 .ritual-desc-lista {
   list-style: none;
   padding: 0;
@@ -1375,8 +1395,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Ritual premium: descripción -->
     <section class="ritual-desc-wrap">
-      <h2 class="ritual-desc-titulo">Ritual Premium</h2>
-      <p class="ritual-desc-texto">Desconecta del día a día y renueva tu imagen con nuestra experiencia estrella en 4 pasos:</p>
+      <h2 class="ritual-desc-titulo"><span class="ritual-desc-pre">Nuestro</span> Ritual Premium</h2>
+      <p class="ritual-desc-texto">Desconecta del día a día y renueva tu imagen con nuestra experiencia estrella:</p>
       <ul class="ritual-desc-lista">
         <li><span class="ritual-desc-lista-titulo">Cabello:</span> Lavado purificante, corte esculpido y peinado.</li>
         <li><span class="ritual-desc-lista-titulo">Barba:</span> Arreglo de máxima precisión con toalla tradicional.</li>
@@ -1384,8 +1404,8 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         <li><span class="ritual-desc-lista-titulo">Piel:</span> Limpieza facial delicada que restaura tu vitalidad.</li>
       </ul>
       <p class="ritual-desc-texto">Saldrás con una imagen impecable y una mente renovada.</p>
-      <p class="ritual-desc-meta">60 min · 36 €</p>
-      <button class="btn btn-oro" onclick="window.location.href='reservar.html'">RESERVA TU RITUAL</button>
+      <p class="ritual-desc-meta">36 €</p>
+      <a class="ritual-desc-enlace" href="reservar.html">RESERVA TU RITUAL</a>
     </section>
 
     <!-- Imagen bienvenida (duplicada) -->
