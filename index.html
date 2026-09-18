@@ -933,10 +933,45 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   letter-spacing: 0.3px;
   margin-bottom: 1.6rem;
 }
+.ritual-desc-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 1.4rem;
+  max-width: 620px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.ritual-desc-lista li {
+  position: relative;
+  padding-left: 1.6rem;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--suave);
+}
+.ritual-desc-lista li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--oro);
+}
+.ritual-desc-lista-titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  color: var(--oro);
+  letter-spacing: 0.2px;
+}
 @media(max-width:700px) {
   .ritual-desc-wrap { padding: 2.4rem 1.1rem 2.6rem; }
   .ritual-desc-titulo { font-size: 1.85rem; margin-bottom: 1.1rem; }
   .ritual-desc-texto { font-size: 0.9rem; }
+  .ritual-desc-lista li { font-size: 0.9rem; }
 }
 
 /* ── VÍSITANOS EN (fondo full-bleed, como porque-wrap) ── */
@@ -1341,7 +1376,14 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <!-- Ritual premium: descripción -->
     <section class="ritual-desc-wrap">
       <h2 class="ritual-desc-titulo">Ritual Premium</h2>
-      <p class="ritual-desc-texto">Desconecta del día a día y disfruta de un ritual premium creado para tu cuidado absoluto. Nos encargamos de esculpir tu corte de cabello y peinado tras un lavado purificante. Esculpimos tu barba con máxima precisión bajo el confort de nuestro ritual de toalla tradicional y perfeccionamos tu mirada con el marcado de cejas. El broche de oro lo aporta una delicada limpieza facial que restaura la vitalidad natural de tu piel. Saldrás con una imagen impecable y una mente renovada.</p>
+      <p class="ritual-desc-texto">Desconecta del día a día y renueva tu imagen con nuestra experiencia estrella en 4 pasos:</p>
+      <ul class="ritual-desc-lista">
+        <li><span class="ritual-desc-lista-titulo">Cabello:</span> Lavado purificante, corte esculpido y peinado.</li>
+        <li><span class="ritual-desc-lista-titulo">Barba:</span> Arreglo de máxima precisión con toalla tradicional.</li>
+        <li><span class="ritual-desc-lista-titulo">Mirada:</span> Perfeccionamiento y marcado de cejas.</li>
+        <li><span class="ritual-desc-lista-titulo">Piel:</span> Limpieza facial delicada que restaura tu vitalidad.</li>
+      </ul>
+      <p class="ritual-desc-texto">Saldrás con una imagen impecable y una mente renovada.</p>
       <p class="ritual-desc-meta">60 min · 36 €</p>
       <button class="btn btn-oro" onclick="window.location.href='reservar.html'">RESERVA TU RITUAL</button>
     </section>
