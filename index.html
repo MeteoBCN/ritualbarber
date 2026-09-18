@@ -879,16 +879,20 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 /* ── FRASE DESTACADA ── */
 .cta-grande {
   max-width: 100%;
-  margin: 2rem auto 1.4rem;
+  align-self: stretch;
+  margin-left: calc(-1 * var(--hero-px, 2rem));
+  margin-right: calc(-1 * var(--hero-px, 2rem));
+  margin-top: 2rem;
+  margin-bottom: 1.4rem;
   padding: 0;
   text-align: center;
-  min-height: 320px;
+  height: 320px;
   position: relative;
   overflow: hidden;
 }
 .cta-grande img {
   width: 100%;
-  height: 320px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
@@ -902,8 +906,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   letter-spacing: 0.5px;
 }
 @media(max-width:700px) {
-  .cta-grande { margin: 1.4rem auto 1rem; min-height: 220px; }
-  .cta-grande img { height: 220px; }
+  .cta-grande { margin-top: 1.5rem; margin-bottom: 1.6rem; height: 240px; }
 }
 
 .foto-wrap {
