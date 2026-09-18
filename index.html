@@ -883,9 +883,14 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   padding: 0;
   text-align: center;
   min-height: 320px;
-  background-image: url('barberia7.jpg');
-  background-size: cover;
-  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-grande img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  display: block;
 }
 .cta-grande p {
   font-family: 'Cormorant Garamond', serif;
@@ -898,6 +903,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 }
 @media(max-width:700px) {
   .cta-grande { margin: 1.4rem auto 1rem; min-height: 220px; }
+  .cta-grande img { height: 220px; }
 }
 
 .foto-wrap {
@@ -1123,7 +1129,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Bienvenida -->
     <div class="bienvenida-wrap">
-      <h2 class="bienvenida-titulo">EXPERIENCIA DE<br><strong style="font-size:1.15em;">ALTA GAMA</strong></h2>
+      <h2 class="bienvenida-titulo">EXPERIENCIA DE<br><strong style="font-size:1.35em;">ALTA GAMA</strong></h2>
       <p class="bienvenida-texto">Desde degradados impecables y clásicos atemporales, hasta el auténtico ritual de barba a navaja con toalla caliente y productos premium.<br>Todo en un ambiente exclusivo diseñado para tu comodidad y relax.</p>
     </div>
 
@@ -1135,7 +1141,9 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     </div>
 
     <!-- Frase destacada -->
-    <div class="cta-grande"></div>
+    <div class="cta-grande">
+      <img src="barberia7.jpg" alt="Ritual Barber">
+    </div>
 
     <!-- ¿Por qué elegirnos? -->
     <section class="porque-wrap">
@@ -1234,13 +1242,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <!-- Reseñas de Google -->
     <div class="reseñas-wrap" style="margin-top:2.2rem;">
       <div class="reseñas-cabecera">
-        <svg class="reseñas-google-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#FFC107" d="M43.6 20.5H42V20.4H24v7.2h11.3c-1.6 4.6-6 7.9-11.3 7.9-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.6 6 29 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
-          <path fill="#FF3D00" d="M6.3 14.7l5.9 4.3C13.9 15.6 18.6 12.4 24 12.4c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.6 6 29 4 24 4c-7.6 0-14.2 4.3-17.7 10.7z"/>
-          <path fill="#4CAF50" d="M24 44c5 0 9.4-1.9 12.8-5.1l-5.9-5c-2 1.5-4.5 2.4-6.9 2.4-5.2 0-9.7-3.3-11.3-7.9l-5.9 4.6C10 39.6 16.5 44 24 44z"/>
-          <path fill="#1976D2" d="M43.6 20.5H42V20.4H24v7.2h11.3c-.8 2.3-2.2 4.2-4.1 5.6l5.9 5C40.6 35.7 44 30.4 44 24c0-1.2-.1-2.4-.4-3.5z"/>
-        </svg>
-        <span class="reseñas-titulo">Reseñas de Clientes</span>
+        <span class="reseñas-titulo">LA EXPERIENCIA RITUAL</span>
       </div>
       <div class="reseñas-subtitulo"><span class="reseñas-estrellas-mini">★★★★★</span>Google Reviews</div>
 
@@ -1283,10 +1285,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       </div>
 
       <div class="reseñas-dots" id="reseñas-dots"></div>
-
-      <div class="reseñas-ver-mas">
-        <a href="https://share.google/RH9bpuSTZfnUTxG6W" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Ver todas en Google</a>
-      </div>
     </div>
 
     <!-- Footer -->
