@@ -321,6 +321,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   inset: 0;
   background: rgba(10,18,15,0.55);
 }
+.bienvenida-foto-clara .bienvenida-foto-overlay { background: rgba(10,18,15,0.2); }
 .bienvenida-foto-texto {
   position: absolute;
   inset: 0;
@@ -803,7 +804,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   margin-left: calc(-1 * var(--hero-px, 2rem));
   margin-right: calc(-1 * var(--hero-px, 2rem));
   margin-top: 2rem;
-  padding: 1.4rem 1.5rem 3.4rem;
+  padding: 1rem 1.5rem 3.4rem;
   background: linear-gradient(160deg, #101d19 0%, #16271f 100%);
   border-top: none;
   border-bottom: 1px solid rgba(204,181,127,0.18);
@@ -886,7 +887,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   margin: 0 auto;
 }
 @media(max-width:700px) {
-  .cuidado-wrap { padding: 1rem 1.1rem 2.6rem; margin-top: 0; }
+  .cuidado-wrap { padding: 0.6rem 1.1rem 2.6rem; margin-top: 0; }
   .cuidado-eyebrow { font-size: 1.4rem; }
   .cuidado-titulo { font-size: 1.85rem; margin-bottom: 1.1rem; }
   .cuidado-texto { font-size: 0.9rem; }
@@ -1387,10 +1388,9 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     </div>
 
     <!-- Imagen bienvenida -->
-    <div class="bienvenida-foto">
+    <div class="bienvenida-foto bienvenida-foto-clara">
       <img src="barberia7.jpg" alt="Ritual Barber">
       <div class="bienvenida-foto-overlay"></div>
-      <div class="bienvenida-foto-texto">EL RITUAL QUE TRANSFORMA TU IMAGEN</div>
     </div>
 
     <!-- Ritual premium: descripción -->
