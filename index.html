@@ -704,6 +704,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 .hero-info-desc {
   font-family: 'Barlow', sans-serif;
   font-size: 1.05rem;
+  font-weight: 400;
   color: #ffffff;
   letter-spacing: 0.3px;
   line-height: 1.6;
@@ -888,6 +889,53 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .cuidado-eyebrow { font-size: 1.4rem; }
   .cuidado-titulo { font-size: 1.85rem; margin-bottom: 1.1rem; }
   .cuidado-texto { font-size: 0.9rem; }
+}
+
+/* ── RITUAL PREMIUM (entre las dos fotos de bienvenida) ── */
+.ritual-desc-wrap {
+  align-self: stretch;
+  flex-shrink: 0;
+  width: auto;
+  margin-left: calc(-1 * var(--hero-px, 2rem));
+  margin-right: calc(-1 * var(--hero-px, 2rem));
+  padding: 3rem 1.5rem 3.2rem;
+  background: var(--card);
+  border-top: 1px solid rgba(204,181,127,0.18);
+  border-bottom: 1px solid rgba(204,181,127,0.18);
+  text-align: center;
+}
+.ritual-desc-titulo {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--oro);
+  letter-spacing: 0.5px;
+  margin-bottom: 1.3rem;
+}
+.ritual-desc-titulo::after { content: none; }
+.ritual-desc-texto {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--suave);
+  max-width: 620px;
+  margin: 0 auto 1.4rem;
+}
+.ritual-desc-meta {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--oro);
+  letter-spacing: 0.3px;
+  margin-bottom: 1.6rem;
+}
+@media(max-width:700px) {
+  .ritual-desc-wrap { padding: 2.4rem 1.1rem 2.6rem; }
+  .ritual-desc-titulo { font-size: 1.85rem; margin-bottom: 1.1rem; }
+  .ritual-desc-texto { font-size: 0.9rem; }
 }
 
 /* ── VÍSITANOS EN (fondo full-bleed, como porque-wrap) ── */
@@ -1284,14 +1332,22 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
 
     <!-- Imagen bienvenida -->
     <div class="bienvenida-foto">
-      <img src="barberia6.jpg" alt="Ritual Barber">
+      <img src="barberia7.jpg" alt="Ritual Barber">
       <div class="bienvenida-foto-overlay"></div>
       <div class="bienvenida-foto-texto">EL RITUAL QUE TRANSFORMA TU IMAGEN</div>
     </div>
 
+    <!-- Ritual premium: descripción -->
+    <section class="ritual-desc-wrap">
+      <h2 class="ritual-desc-titulo">Ritual Premium</h2>
+      <p class="ritual-desc-texto">Desconecta del día a día y disfruta de un ritual premium creado para tu cuidado absoluto. Nos encargamos de esculpir tu corte de cabello y peinado tras un lavado purificante. Esculpimos tu barba con máxima precisión bajo el confort de nuestro ritual de toalla tradicional y perfeccionamos tu mirada con el marcado de cejas. El broche de oro lo aporta una delicada limpieza facial que restaura la vitalidad natural de tu piel. Saldrás con una imagen impecable y una mente renovada.</p>
+      <p class="ritual-desc-meta">60 min · 36 €</p>
+      <button class="btn btn-oro" onclick="window.location.href='reservar.html'">Reservar Cita</button>
+    </section>
+
     <!-- Imagen bienvenida (duplicada) -->
     <div class="bienvenida-foto">
-      <img src="barberia7.jpg" alt="Ritual Barber">
+      <img src="barberia6.jpg" alt="Ritual Barber">
       <div class="bienvenida-foto-overlay"></div>
       <div class="bienvenida-foto-texto">EL RITUAL QUE TRANSFORMA TU IMAGEN</div>
     </div>
