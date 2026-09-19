@@ -718,84 +718,6 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   opacity: 0.4;
 }
 
-/* ── ¿POR QUÉ ELEGIRNOS? ── */
-.porque-wrap {
-  align-self: stretch;
-  flex-shrink: 0;
-  width: auto;
-  margin-left: calc(-1 * var(--hero-px, 2rem));
-  margin-right: calc(-1 * var(--hero-px, 2rem));
-  margin-top: 2.6rem;
-  padding: 3.2rem 1.5rem 3.4rem;
-  background: linear-gradient(160deg, #101d19 0%, #16271f 100%);
-  border-top: 1px solid rgba(204,181,127,0.18);
-  border-bottom: 1px solid rgba(204,181,127,0.18);
-  text-align: center;
-}
-.porque-titulo {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.4rem;
-  font-weight: 700;
-  color: var(--oro);
-  letter-spacing: 0.5px;
-  margin-bottom: 2.6rem;
-}
-.porque-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2.8rem 2rem;
-  max-width: 900px;
-  margin: 0 auto;
-}
-.porque-item {
-  padding: 0 0.6rem;
-}
-.porque-icono {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1rem;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-}
-.porque-icono svg {
-  width: 27px;
-  height: 27px;
-  stroke: var(--oro2);
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.porque-item h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.45rem;
-  font-weight: 700;
-  color: #f3efe4;
-  margin-bottom: 0.6rem;
-}
-.porque-item p {
-  font-family: 'Barlow', sans-serif;
-  font-size: 0.88rem;
-  line-height: 1.6;
-  color: var(--suave);
-  max-width: 340px;
-  margin: 0 auto;
-}
-@media(max-width:700px) {
-  .porque-wrap { padding: 2.4rem 1.1rem 2.6rem; margin-top: 2rem; }
-  .porque-titulo { font-size: 1.85rem; margin-bottom: 1.9rem; }
-  .porque-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .porque-item h3 { font-size: 1.25rem; }
-  .porque-item p { font-size: 0.83rem; }
-}
-
 /* ── CUIDADO INTEGRAL MASCULINO ── */
 .cuidado-wrap {
   align-self: stretch;
@@ -995,7 +917,106 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .ritual-desc-lista li { font-size: 0.9rem; }
 }
 
-/* ── VÍSITANOS EN (fondo full-bleed, como porque-wrap) ── */
+/* ── TARJETAS DE SERVICIOS (dentro de Ritual Premium) ── */
+.servicios-titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 1.7rem;
+  color: var(--oro);
+  letter-spacing: 0.5px;
+  margin: 3rem 0 1.6rem;
+}
+.servicios-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.4rem;
+  max-width: 1040px;
+  margin: 0 auto;
+  text-align: left;
+}
+.servicio-card {
+  flex: 0 1 calc((100% - 2.8rem) / 3);
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  background: var(--card2);
+  border: 1px solid rgba(204,181,127,0.28);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.servicio-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--oro);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+}
+.servicio-img {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--borde);
+  overflow: hidden;
+}
+.servicio-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.servicio-precio {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: var(--oro);
+  color: var(--card);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+}
+.servicio-cuerpo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.2rem 1.2rem 1.4rem;
+}
+.servicio-nombre {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--oro);
+  margin-bottom: 0.5rem;
+}
+.servicio-desc {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--suave);
+  margin-bottom: 1.2rem;
+  flex: 1;
+}
+.servicio-reservar {
+  align-self: flex-start;
+  display: inline-block;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  color: var(--oro);
+  border: 1px solid var(--oro);
+  border-radius: 6px;
+  padding: 0.55rem 1.1rem;
+  transition: background 0.2s, color 0.2s;
+}
+.servicio-reservar:hover { background: var(--oro); color: var(--card); }
+@media(max-width:700px) {
+  .servicios-titulo { font-size: 1.45rem; margin: 2.4rem 0 1.3rem; }
+  .servicio-card { flex-basis: 100%; }
+}
+
+/* ── VÍSITANOS EN (fondo full-bleed) ── */
 .visitanos-wrap {
   align-self: stretch;
   flex-shrink: 0;
@@ -1406,6 +1427,81 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
       <p class="ritual-desc-texto">Saldrás con una imagen impecable y una mente renovada.</p>
       <p class="ritual-desc-meta">36 €</p>
       <a class="ritual-desc-enlace" href="reservar.html">RESERVA TU RITUAL</a>
+
+      <h3 class="servicios-titulo">Nuestros servicios</h3>
+      <div class="servicios-grid">
+        <article class="servicio-card">
+          <div class="servicio-img">
+            <img src="barberia.jpg" alt="Ritual Premium" loading="lazy">
+            <span class="servicio-precio">36 €</span>
+          </div>
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Ritual Premium</h4>
+            <p class="servicio-desc">Lavado purificante, corte esculpido, arreglo de barba con toalla caliente, cejas y limpieza facial.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=ritual-premium">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-img">
+            <img src="barberia2.jpg" alt="Corte de cabello" loading="lazy">
+            <span class="servicio-precio">15 €</span>
+          </div>
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Corte de cabello</h4>
+            <p class="servicio-desc">Degradados y cortes clásicos a medida, con lavado y peinado final.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=corte">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-img">
+            <img src="barberia3.jpg" alt="Arreglo de barba" loading="lazy">
+            <span class="servicio-precio">12 €</span>
+          </div>
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Arreglo de barba</h4>
+            <p class="servicio-desc">Perfilado y definición a navaja con toalla caliente y aceites premium.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=barba">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-img">
+            <img src="barberia4.jpg" alt="Corte y barba" loading="lazy">
+            <span class="servicio-precio">25 €</span>
+          </div>
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Corte + barba</h4>
+            <p class="servicio-desc">La combinación completa: corte de cabello y arreglo de barba en una sola cita.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=corte-barba">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-img">
+            <img src="barberia5.jpg" alt="Limpieza facial" loading="lazy">
+            <span class="servicio-precio">18 €</span>
+          </div>
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Limpieza facial</h4>
+            <p class="servicio-desc">Tratamiento facial con mascarilla premium para una piel limpia y revitalizada.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=facial">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-img">
+            <img src="barberia6.jpg" alt="Manicura masculina" loading="lazy">
+            <span class="servicio-precio">15 €</span>
+          </div>
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Manicura masculina</h4>
+            <p class="servicio-desc">Cuidado y estética esencial para unas manos perfectas, con acabado natural.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=manicura">RESERVAR</a>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- Imagen bienvenida (duplicada) -->
@@ -1427,57 +1523,6 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         <li><span class="cuidado-lista-titulo">Manicura Masculina:</span> Estética y cuidado esencial para unas manos perfectas.</li>
       </ul>
       <p class="cuidado-cierre">Un espacio donde la excelencia y la relajación se encuentran</p>
-    </section>
-
-    <!-- ¿Por qué elegirnos? -->
-    <section class="porque-wrap">
-      <h2 class="porque-titulo">¿Por qué elegirnos?</h2>
-      <div class="porque-grid">
-
-        <div class="porque-item">
-          <div class="porque-icono">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-          </div>
-          <h3>Estilo masculino</h3>
-          <p>Especialistas en imagen masculina. Creamos cortes y barbas con precisión para potenciar tu personalidad y carácter únicos.</p>
-        </div>
-
-        <div class="porque-item">
-          <div class="porque-icono">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"/>
-              <path d="M12 7v5l3 2"/>
-            </svg>
-          </div>
-          <h3>Reserva rápida</h3>
-          <p>Reserva tu cita online en segundos, sin esperas.</p>
-        </div>
-
-        <div class="porque-item">
-          <div class="porque-icono">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 3l2.9 5.9 6.1.9-4.5 4.3 1.1 6.4-5.6-3-5.6 3 1.1-6.4L3 9.8l6.1-.9L12 3z"/>
-            </svg>
-          </div>
-          <h3>Productos premium</h3>
-          <p>Cuidamos tu piel y barba con tratamientos de alta gama. Utilizamos mascarillas y aceites premium para un acabado impecable.</p>
-        </div>
-
-        <div class="porque-item">
-          <div class="porque-icono">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="9" r="5"/>
-              <path d="M8.5 13.2L7 22l5-2.6L17 22l-1.5-8.8"/>
-            </svg>
-          </div>
-          <h3>Técnica experta</h3>
-          <p>Barberos expertos a la vanguardia. Combinamos formación técnica y visión estética para dominar las últimas tendencias.</p>
-        </div>
-
-      </div>
     </section>
 
     <!-- Info hero (texto plano) -->
