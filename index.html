@@ -1020,6 +1020,34 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .servicio-card { flex-basis: 100%; }
 }
 
+/* ── TARJETAS SIN FOTO (dentro de Cuidado Masculino) ── */
+.servicios-grid--sinfoto {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+  max-width: 1040px;
+  margin: 2.6rem auto 0;
+}
+.servicios-grid--sinfoto .servicio-card {
+  min-width: 0;
+  flex: none;
+}
+.servicios-grid--sinfoto .servicio-cuerpo { padding: 1.4rem 1.2rem 1.4rem; }
+.servicios-grid--sinfoto .servicio-nombre { font-size: 1.3rem; margin-bottom: 0.3rem; }
+.servicio-precio-texto {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 0.7rem;
+}
+@media(max-width:1000px) {
+  .servicios-grid--sinfoto { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:600px) {
+  .servicios-grid--sinfoto { grid-template-columns: 1fr; margin-top: 2rem; }
+}
+
 /* ── VÍSITANOS EN (fondo full-bleed) ── */
 .visitanos-wrap {
   align-self: stretch;
@@ -1526,7 +1554,44 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         <li><span class="cuidado-lista-titulo">Tratamientos Capilares:</span> Soluciones a medida para la salud de tu cabello.</li>
         <li><span class="cuidado-lista-titulo">Manicura Masculina:</span> Estética y cuidado esencial para unas manos perfectas.</li>
       </ul>
-      <p class="cuidado-cierre">Un espacio donde la excelencia y la relajación se encuentran</p>
+
+      <div class="servicios-grid servicios-grid--sinfoto">
+        <article class="servicio-card">
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Limpieza facial profunda</h4>
+            <div class="servicio-precio-texto">18 €</div>
+            <p class="servicio-desc">Purifica y revitaliza las capas de la piel para un rostro fresco y renovado.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=limpieza-facial">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Mascarillas personalizadas</h4>
+            <div class="servicio-precio-texto">12 €</div>
+            <p class="servicio-desc">Tratamientos de choque antifatiga e hidratantes adaptados a tu tipo de piel.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=mascarillas">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Tratamientos capilares</h4>
+            <div class="servicio-precio-texto">20 €</div>
+            <p class="servicio-desc">Soluciones a medida para la salud y el brillo de tu cabello.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=tratamientos-capilares">RESERVAR</a>
+          </div>
+        </article>
+
+        <article class="servicio-card">
+          <div class="servicio-cuerpo">
+            <h4 class="servicio-nombre">Manicura masculina</h4>
+            <div class="servicio-precio-texto">15 €</div>
+            <p class="servicio-desc">Estética y cuidado esencial para unas manos perfectas, con acabado natural.</p>
+            <a class="servicio-reservar" href="reservar.html?servicio=manicura">RESERVAR</a>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- Info hero (texto plano) -->
