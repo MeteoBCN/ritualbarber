@@ -763,51 +763,6 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   max-width: 560px;
   margin: 0 auto 2.2rem;
 }
-.cuidado-lista {
-  list-style: none;
-  padding: 0;
-  margin: 0 auto 2.4rem;
-  max-width: 560px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-.cuidado-lista li {
-  position: relative;
-  padding-left: 1.6rem;
-  font-family: 'Barlow', sans-serif;
-  font-size: 0.92rem;
-  line-height: 1.65;
-  color: var(--suave);
-}
-.cuidado-lista li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.5rem;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--oro);
-}
-.cuidado-lista-titulo {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 700;
-  color: var(--oro);
-  font-size: 1.02rem;
-  letter-spacing: 0.2px;
-}
-.cuidado-cierre {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-weight: 700;
-  font-size: clamp(1.3rem, 3.2vw, 1.7rem);
-  color: var(--oro);
-  letter-spacing: 0.3px;
-  max-width: 480px;
-  margin: 0 auto;
-}
 @media(max-width:700px) {
   .cuidado-wrap { padding: 0.6rem 1.1rem 2.6rem; margin-top: 0; }
   .cuidado-eyebrow { font-size: 1.4rem; }
@@ -1026,11 +981,12 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   grid-template-columns: repeat(4, 1fr);
   gap: 1.2rem;
   max-width: 1040px;
-  margin: 2.6rem auto 0;
+  margin: 0 auto;
 }
 .servicios-grid--sinfoto .servicio-card {
   min-width: 0;
   flex: none;
+  background: #1f352f;
 }
 .servicios-grid--sinfoto .servicio-cuerpo { padding: 1.4rem 1.2rem 1.4rem; }
 .servicios-grid--sinfoto .servicio-nombre { font-size: 1.3rem; margin-bottom: 0.3rem; }
@@ -1045,7 +1001,7 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   .servicios-grid--sinfoto { grid-template-columns: repeat(2, 1fr); }
 }
 @media(max-width:600px) {
-  .servicios-grid--sinfoto { grid-template-columns: 1fr; margin-top: 2rem; }
+  .servicios-grid--sinfoto { grid-template-columns: 1fr; }
 }
 
 /* ── VÍSITANOS EN (fondo full-bleed) ── */
@@ -1547,13 +1503,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
     <section class="cuidado-wrap">
       <span class="cuidado-eyebrow">Más allá del cabello</span>
       <h2 class="cuidado-titulo">Cuidado Masculino</h2>
-      <p class="cuidado-texto">Elevamos el cuidado masculino a la categoría de arte. Más allá de la barba y el cabello, te ofrecemos una experiencia de bienestar integral para proyectar tu mejor versión.</p>
-      <ul class="cuidado-lista">
-        <li><span class="cuidado-lista-titulo">Limpieza Facial Profunda:</span> Purifica y revitaliza las capas de la piel.</li>
-        <li><span class="cuidado-lista-titulo">Mascarillas Personalizadas:</span> Tratamientos de choque antifatiga e hidratantes.</li>
-        <li><span class="cuidado-lista-titulo">Tratamientos Capilares:</span> Soluciones a medida para la salud de tu cabello.</li>
-        <li><span class="cuidado-lista-titulo">Manicura Masculina:</span> Estética y cuidado esencial para unas manos perfectas.</li>
-      </ul>
+      <p class="cuidado-texto">Elevamos el cuidado masculino a la categoría de arte. Más allá del corte y la barba, redefinimos el concepto de bienestar con una gama de servicios de estética diseñados exclusivamente para el hombre actual.</p>
 
       <div class="servicios-grid servicios-grid--sinfoto">
         <article class="servicio-card">
