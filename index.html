@@ -905,10 +905,17 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   overflow: hidden;
   transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
-.servicio-card:hover {
+.servicio-card.activa {
   transform: translateY(-4px);
   border-color: var(--oro);
   box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+}
+@media (hover: hover) {
+  .servicio-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--oro);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+  }
 }
 .servicio-img {
   position: relative;
@@ -969,7 +976,9 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   padding: 0.55rem 1.1rem;
   transition: background 0.2s, color 0.2s;
 }
-.servicio-reservar:hover { background: var(--oro); color: var(--card); }
+@media (hover: hover) {
+  .servicio-reservar:hover { background: var(--oro); color: var(--card); }
+}
 @media(max-width:700px) {
   .servicios-titulo { font-size: 1.45rem; margin: 2.4rem 0 1.3rem; }
   .servicio-card { flex-basis: 100%; }
@@ -990,13 +999,20 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
 }
 .servicios-grid--sinfoto .servicio-cuerpo { padding: 1.4rem 1.2rem 1.4rem; }
 .servicios-grid--sinfoto .servicio-nombre { font-size: 1.3rem; margin-bottom: 0.3rem; }
+.servicios-grid--sinfoto .servicio-desc { margin-bottom: 1rem; }
+.servicio-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
 .servicio-precio-texto {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #fff;
-  margin-bottom: 0.7rem;
 }
+.servicio-pie .servicio-reservar { align-self: auto; }
 @media(max-width:1000px) {
   .servicios-grid--sinfoto { grid-template-columns: repeat(2, 1fr); }
 }
@@ -1509,36 +1525,44 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
         <article class="servicio-card">
           <div class="servicio-cuerpo">
             <h4 class="servicio-nombre">Limpieza facial profunda</h4>
-            <div class="servicio-precio-texto">18 €</div>
             <p class="servicio-desc">Purifica y revitaliza las capas de la piel para un rostro fresco y renovado.</p>
-            <a class="servicio-reservar" href="reservar.html?servicio=limpieza-facial">RESERVAR</a>
+            <div class="servicio-pie">
+              <span class="servicio-precio-texto">18 €</span>
+              <a class="servicio-reservar" href="reservar.html?servicio=limpieza-facial">RESERVAR</a>
+            </div>
           </div>
         </article>
 
         <article class="servicio-card">
           <div class="servicio-cuerpo">
             <h4 class="servicio-nombre">Mascarillas personalizadas</h4>
-            <div class="servicio-precio-texto">12 €</div>
             <p class="servicio-desc">Tratamientos de choque antifatiga e hidratantes adaptados a tu tipo de piel.</p>
-            <a class="servicio-reservar" href="reservar.html?servicio=mascarillas">RESERVAR</a>
+            <div class="servicio-pie">
+              <span class="servicio-precio-texto">12 €</span>
+              <a class="servicio-reservar" href="reservar.html?servicio=mascarillas">RESERVAR</a>
+            </div>
           </div>
         </article>
 
         <article class="servicio-card">
           <div class="servicio-cuerpo">
             <h4 class="servicio-nombre">Tratamientos capilares</h4>
-            <div class="servicio-precio-texto">20 €</div>
             <p class="servicio-desc">Soluciones a medida para la salud y el brillo de tu cabello.</p>
-            <a class="servicio-reservar" href="reservar.html?servicio=tratamientos-capilares">RESERVAR</a>
+            <div class="servicio-pie">
+              <span class="servicio-precio-texto">20 €</span>
+              <a class="servicio-reservar" href="reservar.html?servicio=tratamientos-capilares">RESERVAR</a>
+            </div>
           </div>
         </article>
 
         <article class="servicio-card">
           <div class="servicio-cuerpo">
             <h4 class="servicio-nombre">Manicura masculina</h4>
-            <div class="servicio-precio-texto">15 €</div>
             <p class="servicio-desc">Estética y cuidado esencial para unas manos perfectas, con acabado natural.</p>
-            <a class="servicio-reservar" href="reservar.html?servicio=manicura">RESERVAR</a>
+            <div class="servicio-pie">
+              <span class="servicio-precio-texto">15 €</span>
+              <a class="servicio-reservar" href="reservar.html?servicio=manicura">RESERVAR</a>
+            </div>
           </div>
         </article>
       </div>
@@ -2270,5 +2294,51 @@ function eliminarServicio(id) {
   }
 </script>
 
+<script>
+/* Tarjetas de servicios en móvil: se resalta la que está más cerca del centro de la pantalla */
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.servicio-card'));
+  if (!cards.length) return;
+  var tactil = window.matchMedia('(hover: none)');
+  var pendiente = false;
+
+  function limpiar() {
+    cards.forEach(function (c) { c.classList.remove('activa'); });
+  }
+
+  function actualizar() {
+    pendiente = false;
+    if (!tactil.matches) { limpiar(); return; }
+    var vh = window.innerHeight;
+    var centro = vh / 2;
+    var elegida = null, mejor = Infinity;
+    cards.forEach(function (c) {
+      var r = c.getBoundingClientRect();
+      if (!r.height) return;                       // oculta (otra sección)
+      var visible = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+      if (visible < r.height * 0.3) return;        // apenas se ve
+      var d = Math.abs((r.top + r.bottom) / 2 - centro);
+      if (d < mejor) { mejor = d; elegida = c; }
+    });
+    cards.forEach(function (c) { c.classList.toggle('activa', c === elegida); });
+  }
+
+  function pedir() {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(actualizar);
+  }
+
+  window.addEventListener('scroll', pedir, { passive: true });
+  window.addEventListener('resize', pedir);
+  window.addEventListener('load', pedir);
+  if (tactil.addEventListener) tactil.addEventListener('change', pedir);
+  if (window.IntersectionObserver) {
+    var io = new IntersectionObserver(pedir);
+    cards.forEach(function (c) { io.observe(c); });
+  }
+  pedir();
+})();
+</script>
 </body>
 </html>
