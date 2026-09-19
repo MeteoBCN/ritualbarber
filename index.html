@@ -930,11 +930,14 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
   gap: 1.4rem;
   max-width: 1040px;
   margin: 0 auto;
   text-align: left;
+}
+.servicio-card,
+.servicio-card * {
+  -webkit-tap-highlight-color: transparent;
 }
 .servicio-card {
   flex: 0 1 calc((100% - 2.8rem) / 3);
@@ -994,37 +997,9 @@ h2::after { content:''; flex:1; height:1px; background:linear-gradient(to right,
   font-size: 0.92rem;
   line-height: 1.6;
   color: var(--suave);
-  margin-bottom: 0.4rem;
-  min-height: calc(0.92rem * 1.6 * 5);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
-  overflow: hidden;
+  margin-bottom: 1.2rem;
+  flex: 1;
 }
-.servicio-card.abierta .servicio-desc {
-  display: block;
-  -webkit-line-clamp: unset;
-  line-clamp: unset;
-  overflow: visible;
-}
-.servicio-mas {
-  align-self: flex-start;
-  background: none;
-  border: 0;
-  padding: 0;
-  margin-bottom: 1rem;
-  font-family: 'Barlow', sans-serif;
-  font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-  color: var(--oro);
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.servicio-mas:hover { color: var(--suave); }
-.servicio-mas.oculto { visibility: hidden; pointer-events: none; }
 .servicio-reservar {
   align-self: flex-start;
   display: inline-block;
@@ -1478,7 +1453,7 @@ select option, optgroup { background:var(--fondo2); color:var(--oro); }
           </div>
           <div class="servicio-cuerpo">
             <h4 class="servicio-nombre">Corte de cabello</h4>
-            <p class="servicio-desc">Realizamos un trabajo personalizado a tijera o máquina, Si buscas un cambio de imagen actual o mantener un corte con mucha personalidad, este es tu servicio. Domamos las últimas tendencias urbanas como el Mullet, Buzz, Shag, Texturizados o degradados avanzados</p>
+            <p class="servicio-desc">Realizamos un trabajo personalizado a tijera o máquina. Si buscas un cambio de imagen actual o mantener un corte con mucha personalidad, este es tu servicio. Domamos las últimas tendencias urbanas como el Mullet, Buzz, Shag, Texturizados o degradados avanzados</p>
             <a class="servicio-reservar" href="reservar.html?servicio=corte">RESERVAR</a>
           </div>
         </article>
@@ -2280,39 +2255,5 @@ function eliminarServicio(id) {
   }
 </script>
 
-<script>
-/* Tarjetas de servicios: "Ver más / Ver menos" (solo aparece si el texto se corta) */
-(function () {
-  var cards = document.querySelectorAll('.servicio-card');
-  cards.forEach(function (card) {
-    var desc = card.querySelector('.servicio-desc');
-    if (!desc) return;
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'servicio-mas oculto';
-    btn.textContent = 'Ver más';
-    btn.setAttribute('aria-expanded', 'false');
-    desc.insertAdjacentElement('afterend', btn);
-
-    btn.addEventListener('click', function () {
-      var abierta = card.classList.toggle('abierta');
-      btn.textContent = abierta ? 'Ver menos' : 'Ver más';
-      btn.setAttribute('aria-expanded', abierta ? 'true' : 'false');
-    });
-
-    function revisar() {
-      if (card.classList.contains('abierta')) return;
-      var corta = desc.scrollHeight > desc.clientHeight + 1;
-      btn.classList.toggle('oculto', !corta);
-    }
-    if (window.ResizeObserver) {
-      new ResizeObserver(revisar).observe(desc);
-    }
-    window.addEventListener('resize', revisar);
-    window.addEventListener('load', revisar);
-    revisar();
-  });
-})();
-</script>
 </body>
 </html>
